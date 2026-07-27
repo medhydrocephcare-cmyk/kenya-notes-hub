@@ -1,20 +1,25 @@
 import { Link } from "@tanstack/react-router";
-import { ShoppingCart, User, Menu, Search, Phone, Mail, ChevronDown, X } from "lucide-react";
-import { useCart } from "@/lib/cart";
+import { ShoppingCart, User, Menu, Search, Phone, Mail, ChevronDown, X, LogOut, LayoutDashboard } from "lucide-react";
+import { useCart, openCart } from "@/lib/cart";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { courses } from "@/lib/data";
 import logo from "@/assets/logo.png";
+import { useAuth } from "@/lib/auth-context";
+import {
+  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useNavigate } from "@tanstack/react-router";
 
 export function SiteHeader() {
   const { count } = useCart();
   const [open, setOpen] = useState(false);
   const [browseOpen, setBrowseOpen] = useState(false);
+  const { user, isAdmin, signOut } = useAuth();
+  const navigate = useNavigate();
 
   return (
     <header className="sticky top-0 z-40 w-full">
-
-      {/* Announcement bar */}
       <div className="bg-brand-gradient text-primary-foreground">
         <div className="mx-auto flex h-9 max-w-7xl items-center justify-between gap-2 px-3 text-[11px] sm:text-xs sm:px-4">
           <div className="flex min-w-0 items-center gap-4">
@@ -35,7 +40,6 @@ export function SiteHeader() {
         </div>
       </div>
 
-      {/* Main bar */}
       <div className="border-b border-border/60 bg-background/95 shadow-sm backdrop-blur">
         <div className="mx-auto flex h-16 max-w-7xl items-center gap-3 px-3 sm:px-4">
           <Link to="/" className="flex items-center gap-2">
@@ -46,7 +50,6 @@ export function SiteHeader() {
             </span>
           </Link>
 
-          {/* Desktop search */}
           <form className="ml-4 hidden flex-1 lg:block" onSubmit={(e) => e.preventDefault()}>
             <div className="relative">
               <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -65,22 +68,56 @@ export function SiteHeader() {
           </form>
 
           <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
-            <Link to="/account" className="hidden md:inline-flex">
-              <Button variant="ghost" size="sm" className="gap-2">
-                <User className="h-4 w-4" /> Account
-              </Button>
-            </Link>
-            <Link to="/cart">
-              <Button variant="outline" size="sm" className="relative gap-2 border-brand/30">
-                <ShoppingCart className="h-4 w-4 text-brand" />
-                <span className="hidden sm:inline">Cart</span>
-                {count > 0 && (
-                  <span className="absolute -right-2 -top-2 grid h-5 min-w-5 place-items-center rounded-full bg-gold px-1 text-[10px] font-bold text-gold-foreground">
-                    {count}
-                  </span>
-                )}
-              </Button>
-            </Link>
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="sm" className="hidden gap-2 md:inline-flex">
+                    <div className="grid h-7 w-7 place-items-center rounded-full bg-brand/10 text-xs font-bold text-brand">
+                      {(user.email ?? "?").charAt(0).toUpperCase()}
+                    </div>
+                    <span className="max-w-[140px] truncate text-sm">{user.email}</span>
+                    <ChevronDown className="h-3 w-3" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuItem onClick={() => navigate({ to: "/account" })}>
+                    <User className="mr-2 h-4 w-4" /> My account
+                  </DropdownMenuItem>
+                  {isAdmin && (
+                    <DropdownMenuItem onClick={() => navigate({ to: "/admin" })}>
+                      <LayoutDashboard className="mr-2 h-4 w-4" /> Admin dashboard
+                    </DropdownMenuItem>
+                  )}
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={async () => { await signOut(); navigate({ to: "/" }); }}>
+                    <LogOut className="mr-2 h-4 w-4" /> Sign out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Link to="/auth" className="hidden md:inline-flex">
+                <Button variant="ghost" size="sm" className="gap-2">
+                  <User className="h-4 w-4" /> Sign in
+                </Button>
+              </Link>
+            )}
+
+            <Button
+              variant="outline"
+              size="sm"
+              className="relative gap-2 border-brand/30"
+              onClick={openCart}
+              aria-label="Open cart"
+            >
+              <ShoppingCart className="h-4 w-4 text-brand" />
+              <span className="hidden sm:inline">Cart</span>
+              {count > 0 && (
+                <span className="absolute -right-2 -top-2 grid h-5 min-w-5 place-items-center rounded-full bg-gold px-1 text-[10px] font-bold text-gold-foreground">
+                  {count}
+                </span>
+              )}
+            </Button>
+
             <Button
               variant="ghost"
               size="sm"
@@ -93,7 +130,6 @@ export function SiteHeader() {
           </div>
         </div>
 
-        {/* Category nav */}
         <div className="hidden border-t border-border/60 bg-surface/60 lg:block">
           <div className="mx-auto flex h-11 max-w-7xl items-center gap-1 px-4 text-sm">
             <div className="relative">
@@ -123,21 +159,15 @@ export function SiteHeader() {
                 </div>
               )}
             </div>
-            <Link to="/" className="rounded-md px-3 py-2 font-medium text-foreground hover:bg-muted">
-              Home
-            </Link>
-            <Link to="/courses" className="rounded-md px-3 py-2 font-medium text-foreground hover:bg-muted">
-              All papers
-            </Link>
-            <Link to="/courses" className="rounded-md px-3 py-2 font-medium text-foreground hover:bg-muted">
-              Revision kits
-            </Link>
-            <Link to="/courses" className="rounded-md px-3 py-2 font-medium text-foreground hover:bg-muted">
-              Bundles
-            </Link>
-            <Link to="/account" className="rounded-md px-3 py-2 font-medium text-foreground hover:bg-muted">
-              My downloads
-            </Link>
+            <Link to="/" className="rounded-md px-3 py-2 font-medium text-foreground hover:bg-muted">Home</Link>
+            <Link to="/courses" className="rounded-md px-3 py-2 font-medium text-foreground hover:bg-muted">All papers</Link>
+            <Link to="/courses" className="rounded-md px-3 py-2 font-medium text-foreground hover:bg-muted">Revision kits</Link>
+            <Link to="/courses" className="rounded-md px-3 py-2 font-medium text-foreground hover:bg-muted">Bundles</Link>
+            {user && (
+              <Link to="/account" className="rounded-md px-3 py-2 font-medium text-foreground hover:bg-muted">
+                My downloads
+              </Link>
+            )}
             <div className="ml-auto flex items-center gap-2 text-xs text-muted-foreground">
               <span className="grid h-6 w-6 place-items-center rounded-full bg-gold text-[10px] font-black text-gold-foreground">M</span>
               M-Pesa • Card • Bank
@@ -146,7 +176,6 @@ export function SiteHeader() {
         </div>
       </div>
 
-      {/* Mobile menu */}
       {open && (
         <div className="border-b border-border/60 bg-background lg:hidden">
           <div className="mx-auto max-w-7xl px-4 py-4">
@@ -172,9 +201,34 @@ export function SiteHeader() {
                 </Link>
               ))}
               <div className="mt-3 mb-1 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">Account</div>
-              <Link to="/account" onClick={() => setOpen(false)} className="rounded-md px-3 py-2.5 hover:bg-muted">My downloads</Link>
-              <Link to="/cart" onClick={() => setOpen(false)} className="rounded-md px-3 py-2.5 hover:bg-muted">Cart</Link>
-              <Link to="/admin" onClick={() => setOpen(false)} className="rounded-md px-3 py-2.5 hover:bg-muted">Admin</Link>
+              {user ? (
+                <>
+                  <Link to="/account" onClick={() => setOpen(false)} className="rounded-md px-3 py-2.5 hover:bg-muted">
+                    My account & downloads
+                  </Link>
+                  {isAdmin && (
+                    <Link to="/admin" onClick={() => setOpen(false)} className="rounded-md px-3 py-2.5 hover:bg-muted">
+                      Admin dashboard
+                    </Link>
+                  )}
+                  <button
+                    onClick={async () => { setOpen(false); await signOut(); navigate({ to: "/" }); }}
+                    className="rounded-md px-3 py-2.5 text-left hover:bg-muted"
+                  >
+                    Sign out
+                  </button>
+                </>
+              ) : (
+                <Link to="/auth" onClick={() => setOpen(false)} className="rounded-md px-3 py-2.5 hover:bg-muted">
+                  Sign in / Create account
+                </Link>
+              )}
+              <button
+                onClick={() => { setOpen(false); openCart(); }}
+                className="rounded-md px-3 py-2.5 text-left hover:bg-muted"
+              >
+                View cart ({count})
+              </button>
             </nav>
           </div>
         </div>
