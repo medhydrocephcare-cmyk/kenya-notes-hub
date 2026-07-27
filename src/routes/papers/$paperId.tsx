@@ -79,10 +79,10 @@ function PaperDetail() {
         </div>
       </div>
 
-      <div className="mx-auto max-w-7xl px-4 py-8">
-        <div className="grid gap-8 lg:grid-cols-[1.6fr_1fr]">
+      <div className="mx-auto max-w-7xl px-3 py-6 sm:px-4 sm:py-8">
+        <div className="grid gap-6 lg:grid-cols-[1.6fr_1fr] lg:gap-8">
           {/* Left: exam-paper preview + info */}
-          <div>
+          <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">
               <Badge className="bg-brand text-primary-foreground hover:bg-brand">{course.code}</Badge>
               <Badge variant="outline">{level.name}</Badge>
@@ -95,50 +95,48 @@ function PaperDetail() {
                 <Badge className="bg-sale text-sale-foreground hover:bg-sale">-{discount}%</Badge>
               )}
             </div>
-            <h1 className="mt-3 font-display text-3xl font-extrabold tracking-tight md:text-4xl">
+            <h1 className="mt-3 font-display text-2xl font-extrabold leading-tight tracking-tight sm:text-3xl md:text-4xl">
               {paper.title}
             </h1>
-            <div className="mt-2 flex flex-wrap items-center gap-4 text-sm">
+            <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs sm:text-sm">
               <div className="flex items-center gap-1 text-amber-500">
                 <Star className="h-4 w-4 fill-current" />
                 <span className="font-semibold text-foreground">{paper.rating.toFixed(1)}</span>
-                <span className="text-muted-foreground">({paper.reviews.length} reviews)</span>
+                <span className="text-muted-foreground">({paper.reviews.length})</span>
               </div>
-              <span className="text-muted-foreground">•</span>
               <span className="inline-flex items-center gap-1 text-muted-foreground">
                 <Users className="h-3.5 w-3.5" /> 1,240+ students
               </span>
-              <span className="text-muted-foreground">•</span>
               <span className="inline-flex items-center gap-1 text-muted-foreground">
-                <Clock className="h-3.5 w-3.5" /> Updated {paper.lastUpdated}
+                <Clock className="h-3.5 w-3.5" /> {paper.lastUpdated}
               </span>
             </div>
 
             {/* EXAM PAPER PREVIEW — mimics the real KASNEB paper */}
-            <div className="mt-6 overflow-hidden rounded-xl border border-border shadow-card">
-              <div className="flex items-center justify-between border-b border-border bg-surface px-4 py-2.5 text-xs">
-                <div className="flex items-center gap-2 font-medium text-muted-foreground">
-                  <FileText className="h-4 w-4 text-brand" />
-                  Sample from the actual {paper.examSitting} paper
+            <div className="mt-5 overflow-hidden rounded-xl border border-border shadow-card sm:mt-6">
+              <div className="flex items-center justify-between gap-2 border-b border-border bg-surface px-3 py-2 text-[11px] sm:px-4 sm:py-2.5 sm:text-xs">
+                <div className="flex min-w-0 items-center gap-1.5 font-medium text-muted-foreground">
+                  <FileText className="h-3.5 w-3.5 shrink-0 text-brand" />
+                  <span className="truncate">Sample from {paper.examSitting} paper</span>
                 </div>
-                <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">
+                <span className="shrink-0 rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">
                   Free preview
                 </span>
               </div>
 
               {/* Paper "page" — styled like a scanned KASNEB exam booklet */}
-              <div className="relative bg-[#fdfcf7] p-3 font-serif text-[11.5px] leading-relaxed text-[#1a1a1a] sm:p-8 sm:text-[13.5px]">
+              <div className="relative overflow-hidden bg-[#fdfcf7] px-3 py-4 font-serif text-[11.5px] leading-relaxed text-[#1a1a1a] sm:px-8 sm:py-6 sm:text-[13.5px]">
                 {/* Official-looking header */}
                 <div className="mx-auto max-w-2xl border-b-2 border-[#1a1a1a] pb-3 text-center sm:pb-4">
-                  <div className="text-[9px] font-bold uppercase tracking-[0.2em] text-[#1a1a1a] sm:text-[11px] sm:tracking-[0.25em]">
+                  <div className="break-words text-[8.5px] font-bold uppercase leading-snug tracking-[0.06em] text-[#1a1a1a] sm:text-[11px] sm:tracking-[0.25em]">
                     Kenya Accountants and Secretaries National Examinations Board
                   </div>
-                  <div className="mt-2 font-sans text-sm font-extrabold uppercase tracking-wider sm:mt-3 sm:text-lg">
+                  <div className="mt-2 break-words font-sans text-[13px] font-extrabold uppercase leading-tight tracking-wider sm:mt-3 sm:text-lg">
                     {course.code} — {level.name.toUpperCase()} LEVEL
                   </div>
-                  <div className="mt-1 text-[12px] font-semibold uppercase sm:text-sm">{paper.title}</div>
-                  <div className="mt-2 flex flex-wrap justify-between gap-1 text-[10px] font-semibold uppercase tracking-wide sm:mt-3 sm:text-[11px]">
-                    <span>{paper.examSitting}</span>
+                  <div className="mt-1 break-words text-[11px] font-semibold uppercase leading-snug sm:text-sm">{paper.title}</div>
+                  <div className="mt-2 flex flex-wrap justify-between gap-x-2 gap-y-0.5 text-[9.5px] font-semibold uppercase tracking-wide sm:mt-3 sm:text-[11px]">
+                    <span className="truncate">{paper.examSitting}</span>
                     <span>Time: 3 hours</span>
                   </div>
                 </div>
