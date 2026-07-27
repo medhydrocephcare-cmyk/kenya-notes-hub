@@ -185,12 +185,7 @@ export const papers: Paper[] = [
     rating: 4.9, reviews: sampleReviews,
     bundleType: "sitting",
   },
-];
 
-export function getCourse(slug: string) {
-  return courses.find((c) => c.slug === slug);
-}
-  {
     id: "cpa-f2-fin-mgmt",
     courseSlug: "cpa", levelSlug: "foundation-2",
     title: "Financial Management — Notes + Kit",
