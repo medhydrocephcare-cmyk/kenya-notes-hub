@@ -22,16 +22,46 @@ function write(items: CartItem[]) {
   emit();
 }
 
-export function addToCart(paperId: string) {
+// Cart drawer open state (global)
+let drawerOpen = false;
+const drawerListeners = new Set<() => void>();
+function emitDrawer() {
+  drawerListeners.forEach((l) => l());
+}
+export function openCart() {
+  drawerOpen = true;
+  emitDrawer();
+}
+export function closeCart() {
+  drawerOpen = false;
+  emitDrawer();
+}
+export function useCartOpen() {
+  return useSyncExternalStore(
+    (cb) => {
+      drawerListeners.add(cb);
+      return () => drawerListeners.delete(cb);
+    },
+    () => drawerOpen,
+    () => false,
+  );
+}
+
+export function addToCart(paperId: string, opts?: { openDrawer?: boolean }) {
   const items = read();
-  if (items.find((i) => i.paperId === paperId)) return;
-  write([...items, { paperId, qty: 1 }]);
+  if (!items.find((i) => i.paperId === paperId)) {
+    write([...items, { paperId, qty: 1 }]);
+  }
+  if (opts?.openDrawer !== false) openCart();
 }
 export function removeFromCart(paperId: string) {
   write(read().filter((i) => i.paperId !== paperId));
 }
 export function clearCart() {
   write([]);
+}
+export function isInCart(paperId: string): boolean {
+  return read().some((i) => i.paperId === paperId);
 }
 
 function subscribe(cb: () => void) {

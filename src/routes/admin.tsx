@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { Card } from "@/components/ui/card";
@@ -9,13 +9,15 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { courses, levels, papers } from "@/lib/data";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { useAuth } from "@/lib/auth-context";
+import { Loader2, ShieldAlert } from "lucide-react";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
     meta: [
-      { title: "Admin — Chapa Notes" },
+      { title: "Admin — Kasneb Pastpapers" },
       { name: "description", content: "Manage courses, levels, papers and orders." },
       { name: "robots", content: "noindex" },
     ],
@@ -24,24 +26,56 @@ export const Route = createFileRoute("/admin")({
 });
 
 function AdminPage() {
+  const { user, isAdmin, loading } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!loading && !user) navigate({ to: "/auth" });
+  }, [loading, user, navigate]);
+
+  if (loading) {
+    return <div className="grid min-h-screen place-items-center"><Loader2 className="h-6 w-6 animate-spin" /></div>;
+  }
+
+  if (!user) return null;
+
+  if (!isAdmin) {
+    return (
+      <div className="min-h-screen bg-background">
+        <SiteHeader />
+        <div className="mx-auto max-w-lg px-4 py-20 text-center">
+          <ShieldAlert className="mx-auto h-10 w-10 text-amber-500" />
+          <h1 className="mt-4 text-2xl font-bold">Admin access required</h1>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Your account ({user.email}) does not have admin privileges.
+          </p>
+          <Link to="/" className="mt-6 inline-block">
+            <Button variant="outline">← Back to shop</Button>
+          </Link>
+        </div>
+        <SiteFooter />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
-      <div className="mx-auto max-w-6xl px-4 py-12">
-        <h1 className="text-3xl font-semibold tracking-tight">Admin dashboard</h1>
+      <div className="mx-auto max-w-6xl px-4 py-8 sm:py-12">
+        <h1 className="font-display text-3xl font-extrabold tracking-tight">Admin dashboard</h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Manage catalog and orders. Role gating & persistence activate when Lovable Cloud is enabled.
+          Signed in as <span className="font-medium text-foreground">{user.email}</span> — admin.
         </p>
 
         <div className="mt-8 grid grid-cols-2 gap-3 md:grid-cols-4">
           <Stat label="Courses" value={courses.length} />
           <Stat label="Levels" value={levels.length} />
           <Stat label="Papers" value={papers.length} />
-          <Stat label="Orders (mock)" value={12} />
+          <Stat label="Orders (DB)" value="—" />
         </div>
 
         <Tabs defaultValue="papers" className="mt-10">
-          <TabsList>
+          <TabsList className="w-full justify-start overflow-x-auto">
             <TabsTrigger value="papers">Papers</TabsTrigger>
             <TabsTrigger value="new">Add paper</TabsTrigger>
             <TabsTrigger value="courses">Courses & levels</TabsTrigger>
@@ -50,34 +84,34 @@ function AdminPage() {
 
           <TabsContent value="papers">
             <Card className="mt-4 overflow-hidden">
-              <table className="w-full text-sm">
-                <thead className="bg-muted/40 text-left text-xs uppercase tracking-wide text-muted-foreground">
-                  <tr>
-                    <th className="px-4 py-3">Title</th>
-                    <th className="px-4 py-3">Course / Level</th>
-                    <th className="px-4 py-3">Price</th>
-                    <th className="px-4 py-3">Sitting</th>
-                    <th className="px-4 py-3">Updated</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {papers.map((p) => (
-                    <tr key={p.id} className="border-t border-border/60">
-                      <td className="px-4 py-3 font-medium">{p.title}</td>
-                      <td className="px-4 py-3 text-muted-foreground">{p.courseSlug.toUpperCase()} / {p.levelSlug}</td>
-                      <td className="px-4 py-3">KSh {p.price}</td>
-                      <td className="px-4 py-3">{p.examSitting}</td>
-                      <td className="px-4 py-3">{p.lastUpdated}</td>
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-[720px] text-sm">
+                  <thead className="bg-muted/40 text-left text-xs uppercase tracking-wide text-muted-foreground">
+                    <tr>
+                      <th className="px-4 py-3">Title</th>
+                      <th className="px-4 py-3">Course / Level</th>
+                      <th className="px-4 py-3">Price</th>
+                      <th className="px-4 py-3">Sitting</th>
+                      <th className="px-4 py-3">Updated</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {papers.map((p) => (
+                      <tr key={p.id} className="border-t border-border/60">
+                        <td className="px-4 py-3 font-medium">{p.title}</td>
+                        <td className="px-4 py-3 text-muted-foreground">{p.courseSlug.toUpperCase()} / {p.levelSlug}</td>
+                        <td className="px-4 py-3">KSh {p.price}</td>
+                        <td className="px-4 py-3">{p.examSitting}</td>
+                        <td className="px-4 py-3">{p.lastUpdated}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </Card>
           </TabsContent>
 
-          <TabsContent value="new">
-            <AddPaperForm />
-          </TabsContent>
+          <TabsContent value="new"><AddPaperForm /></TabsContent>
 
           <TabsContent value="courses">
             <div className="mt-4 grid gap-4 md:grid-cols-2">
@@ -99,35 +133,10 @@ function AdminPage() {
 
           <TabsContent value="orders">
             <Card className="mt-4 p-6 text-sm text-muted-foreground">
-              Orders will appear here after checkout is wired to the database.
-              Each row will show the Palpluss transaction reference, buyer, items and payment status.
+              Live order list from the database — wire the server function next.
             </Card>
           </TabsContent>
         </Tabs>
-
-        <Card className="mt-10 p-6">
-          <h2 className="text-lg font-semibold">Admin API</h2>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Programmatically add papers with a <code className="rounded bg-muted px-1.5 py-0.5">POST</code> to:
-          </p>
-          <pre className="mt-3 overflow-x-auto rounded-lg bg-muted p-4 text-xs">
-{`POST /api/admin/papers
-Content-Type: application/json
-
-{
-  "course": "cpa",
-  "level": "foundation-1",
-  "title": "Business Law — Notes + Kit",
-  "description": "…",
-  "price": 450,
-  "originalPrice": 800,
-  "fileUrl": "https://r2.chapanotes.co.ke/…pdf",
-  "previewUrl": "https://r2.chapanotes.co.ke/…preview.pdf",
-  "examSitting": "August 2026",
-  "lastUpdated": "2026-07-01"
-}`}
-          </pre>
-        </Card>
       </div>
       <SiteFooter />
     </div>
@@ -157,8 +166,7 @@ function AddPaperForm() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        course,
-        level,
+        course, level,
         title: form.get("title"),
         description: form.get("description"),
         price: Number(form.get("price")),
@@ -170,7 +178,7 @@ function AddPaperForm() {
     });
     setLoading(false);
     if (res.ok) {
-      toast.success("Paper created (in-memory — persistence pending Cloud)");
+      toast.success("Paper created");
       (e.target as HTMLFormElement).reset();
     } else {
       toast.error("Failed to create paper");
@@ -184,18 +192,14 @@ function AddPaperForm() {
           <Label>Course</Label>
           <Select value={course} onValueChange={(v) => { setCourse(v); const first = levels.filter((l) => l.courseSlug === v)[0]?.slug ?? ""; setLevel(first); }}>
             <SelectTrigger className="mt-1.5"><SelectValue /></SelectTrigger>
-            <SelectContent>
-              {courses.map((c) => <SelectItem key={c.slug} value={c.slug}>{c.name}</SelectItem>)}
-            </SelectContent>
+            <SelectContent>{courses.map((c) => <SelectItem key={c.slug} value={c.slug}>{c.name}</SelectItem>)}</SelectContent>
           </Select>
         </div>
         <div>
           <Label>Level</Label>
           <Select value={level} onValueChange={setLevel}>
             <SelectTrigger className="mt-1.5"><SelectValue /></SelectTrigger>
-            <SelectContent>
-              {courseLevels.map((l) => <SelectItem key={l.slug} value={l.slug}>{l.name}</SelectItem>)}
-            </SelectContent>
+            <SelectContent>{courseLevels.map((l) => <SelectItem key={l.slug} value={l.slug}>{l.name}</SelectItem>)}</SelectContent>
           </Select>
         </div>
         <div className="md:col-span-2">
@@ -227,7 +231,9 @@ function AddPaperForm() {
           <Input id="lastUpdated" name="lastUpdated" type="date" className="mt-1.5" />
         </div>
         <div className="md:col-span-2">
-          <Button type="submit" disabled={loading}>{loading ? "Creating…" : "Create paper"}</Button>
+          <Button type="submit" disabled={loading} className="bg-brand hover:brightness-110">
+            {loading ? "Creating…" : "Create paper"}
+          </Button>
         </div>
       </form>
     </Card>

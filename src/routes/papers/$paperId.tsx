@@ -34,7 +34,7 @@ export const Route = createFileRoute("/papers/$paperId")({
     meta: loaderData
       ? [
           { title: `${loaderData.paper.title} — ${loaderData.course.code} ${loaderData.level.name} past papers & answers` },
-          { name: "description", content: `${loaderData.paper.description} Free preview. Instant PDF download. Pay with M-Pesa via Palpluss.` },
+          { name: "description", content: `${loaderData.paper.description} Free preview. Instant PDF download. Pay securely with M-Pesa.` },
           { property: "og:title", content: `${loaderData.paper.title} — Kasneb Pastpapers` },
           { property: "og:description", content: loaderData.paper.description },
           { property: "og:type", content: "product" },
@@ -127,7 +127,7 @@ function PaperDetail() {
               </div>
 
               {/* Paper "page" — styled like a scanned KASNEB exam booklet */}
-              <div className="relative bg-[#fdfcf7] p-6 font-serif text-[13.5px] leading-relaxed text-[#1a1a1a] sm:p-10">
+              <div className="relative bg-[#fdfcf7] p-4 font-serif text-[12.5px] leading-relaxed text-[#1a1a1a] sm:p-8 sm:text-[13.5px]">
                 {/* Official-looking header */}
                 <div className="mx-auto max-w-2xl border-b-2 border-[#1a1a1a] pb-4 text-center">
                   <div className="text-[11px] font-bold uppercase tracking-[0.25em] text-[#1a1a1a]">
@@ -171,13 +171,13 @@ function PaperDetail() {
                   </p>
 
                   {/* Mini trial-balance table */}
-                  <div className="mt-3 overflow-hidden rounded border border-[#c9c4b3]">
-                    <table className="w-full border-collapse text-[12px]">
+                  <div className="mt-3 -mx-1 overflow-x-auto rounded border border-[#c9c4b3]">
+                    <table className="w-full min-w-[420px] border-collapse text-[11.5px] sm:text-[12px]">
                       <thead className="bg-[#f2ede0]">
                         <tr>
-                          <th className="border-b border-[#c9c4b3] px-3 py-1.5 text-left font-bold">Account</th>
-                          <th className="border-b border-[#c9c4b3] px-3 py-1.5 text-right font-bold">Dr (Sh.)</th>
-                          <th className="border-b border-[#c9c4b3] px-3 py-1.5 text-right font-bold">Cr (Sh.)</th>
+                          <th className="border-b border-[#c9c4b3] px-2 py-1.5 text-left font-bold sm:px-3">Account</th>
+                          <th className="border-b border-[#c9c4b3] px-2 py-1.5 text-right font-bold sm:px-3">Dr (Sh.)</th>
+                          <th className="border-b border-[#c9c4b3] px-2 py-1.5 text-right font-bold sm:px-3">Cr (Sh.)</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -190,9 +190,9 @@ function PaperDetail() {
                           ["Trade receivables / payables", "410,000", "295,000"],
                         ].map(([a, d, c], i) => (
                           <tr key={i} className="odd:bg-white even:bg-[#faf7ed]">
-                            <td className="border-b border-[#e6dfc8] px-3 py-1">{a}</td>
-                            <td className="border-b border-[#e6dfc8] px-3 py-1 text-right tabular-nums">{d}</td>
-                            <td className="border-b border-[#e6dfc8] px-3 py-1 text-right tabular-nums">{c}</td>
+                            <td className="border-b border-[#e6dfc8] px-2 py-1 sm:px-3">{a}</td>
+                            <td className="border-b border-[#e6dfc8] px-2 py-1 text-right tabular-nums sm:px-3">{d}</td>
+                            <td className="border-b border-[#e6dfc8] px-2 py-1 text-right tabular-nums sm:px-3">{c}</td>
                           </tr>
                         ))}
                       </tbody>
@@ -237,11 +237,11 @@ function PaperDetail() {
 
             {/* Tabs — what's inside / answers preview / reviews */}
             <Tabs defaultValue="inside" className="mt-8">
-              <TabsList className="w-full justify-start overflow-x-auto">
-                <TabsTrigger value="inside">What&apos;s inside</TabsTrigger>
-                <TabsTrigger value="answers">Answer sample</TabsTrigger>
-                <TabsTrigger value="reviews">Reviews ({paper.reviews.length})</TabsTrigger>
-                <TabsTrigger value="faq">FAQ</TabsTrigger>
+              <TabsList className="flex h-auto w-full flex-wrap justify-start gap-1 bg-muted/40 p-1">
+                <TabsTrigger value="inside" className="flex-1 whitespace-nowrap text-xs sm:text-sm">Inside</TabsTrigger>
+                <TabsTrigger value="answers" className="flex-1 whitespace-nowrap text-xs sm:text-sm">Answers</TabsTrigger>
+                <TabsTrigger value="reviews" className="flex-1 whitespace-nowrap text-xs sm:text-sm">Reviews ({paper.reviews.length})</TabsTrigger>
+                <TabsTrigger value="faq" className="flex-1 whitespace-nowrap text-xs sm:text-sm">FAQ</TabsTrigger>
               </TabsList>
 
               <TabsContent value="inside">
@@ -316,7 +316,7 @@ function PaperDetail() {
                     ["How do I get the file after paying?", "You receive an instant download link on the confirmation page and by email/SMS the moment M-Pesa confirms."],
                     ["Which sitting does this cover?", `${paper.examSitting}. Future updates for this sitting are free.`],
                     ["Can I read on my phone?", "Yes — PDF works on any phone, tablet or laptop, online or offline."],
-                    ["Is payment secure?", "Yes. Payment is processed by Palpluss — M-Pesa, card and bank supported."],
+                    ["Is payment secure?", "Yes — 256-bit SSL and PCI-DSS compliant. M-Pesa, Visa, Mastercard and bank supported."],
                   ].map(([q, a]) => (
                     <details key={q} className="group p-4">
                       <summary className="cursor-pointer list-none font-medium">
@@ -375,7 +375,7 @@ function PaperDetail() {
 
                 <div className="mt-5 space-y-2 rounded-lg bg-surface/60 p-3 text-xs">
                   <div className="flex items-center gap-2"><Download className="h-3.5 w-3.5 text-brand" /> Instant PDF download</div>
-                  <div className="flex items-center gap-2"><ShieldCheck className="h-3.5 w-3.5 text-brand" /> Secured by Palpluss (M-Pesa · Card · Bank)</div>
+                  <div className="flex items-center gap-2"><ShieldCheck className="h-3.5 w-3.5 text-brand" /> 256-bit SSL · M-Pesa · Card · Bank</div>
                   <div className="flex items-center gap-2"><RefreshCw className="h-3.5 w-3.5 text-brand" /> Free updates this sitting</div>
                   <div className="flex items-center gap-2"><BookOpen className="h-3.5 w-3.5 text-brand" /> 240 pages · notes + answers</div>
                   <div className="flex items-center gap-2"><Calendar className="h-3.5 w-3.5 text-brand" /> Covers <b>{paper.examSitting}</b> sitting</div>

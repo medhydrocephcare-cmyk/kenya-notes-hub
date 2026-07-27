@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
-import { getRequestHost } from "@tanstack/react-start/server";
+import { getRequestHost, getRequestHeader } from "@tanstack/react-start/server";
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { z } from "zod";
 
 const initiateSchema = z.object({
@@ -18,11 +19,22 @@ const initiateSchema = z.object({
     .max(50),
 });
 
+async function resolveUserIdFromBearer(): Promise<string | null> {
+  const auth = getRequestHeader("authorization");
+  const token = auth?.replace(/^Bearer\s+/i, "");
+  if (!token) return null;
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const { data } = await supabaseAdmin.auth.getUser(token);
+  return data.user?.id ?? null;
+}
+
 export const initiateCheckout = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => initiateSchema.parse(data))
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { initiateStk } = await import("./palpluss.server");
+
+    const userId = await resolveUserIdFromBearer();
 
     const subtotal = data.items.reduce((s, i) => s + i.price, 0);
     const shortRef = "KP" + Math.random().toString(36).slice(2, 10).toUpperCase();
@@ -36,6 +48,7 @@ export const initiateCheckout = createServerFn({ method: "POST" })
         buyer_name: data.buyerName,
         subtotal_kes: subtotal,
         status: "pending",
+        user_id: userId,
       })
       .select("id, reference")
       .single();
@@ -112,8 +125,21 @@ export const getDownloadUrl = createServerFn({ method: "POST" })
     const item = order.order_items?.find((i: { paper_id: string }) => i.paper_id === data.paperId);
     if (!item) throw new Error("Paper not part of order");
 
-    // Fallback key convention: papers/<paperId>.pdf when no explicit file_key set yet.
     const key = (item as { file_key: string | null }).file_key ?? `papers/${data.paperId}.pdf`;
     const url = await presignGet(key, 60 * 30);
     return { url, expiresIn: 1800 };
+  });
+
+export const getMyOrders = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { data, error } = await context.supabase
+      .from("orders")
+      .select(
+        "id, reference, status, subtotal_kes, mpesa_receipt, created_at, order_items(paper_id, title, price_kes)",
+      )
+      .eq("user_id", context.userId)
+      .order("created_at", { ascending: false });
+    if (error) throw new Error(error.message);
+    return data ?? [];
   });
