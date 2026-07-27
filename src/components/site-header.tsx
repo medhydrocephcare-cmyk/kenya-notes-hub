@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { ShoppingCart, User, Menu, Search, Phone, Mail, ChevronDown, X } from "lucide-react";
 import { useCart } from "@/lib/cart";
 import { Button } from "@/components/ui/button";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { courses } from "@/lib/data";
 import logo from "@/assets/logo.png";
 
