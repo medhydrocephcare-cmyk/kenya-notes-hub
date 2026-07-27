@@ -20,6 +20,7 @@ import { Route as PapersPaperIdRouteImport } from './routes/papers/$paperId'
 import { Route as CoursesCourseSlugIndexRouteImport } from './routes/courses/$courseSlug/index'
 import { Route as ApiAdminPapersRouteImport } from './routes/api/admin/papers'
 import { Route as CoursesCourseSlugLevelSlugIndexRouteImport } from './routes/courses/$courseSlug/$levelSlug/index'
+import { Route as ApiPublicPalplussWebhookSecretRouteImport } from './routes/api/public/palpluss/webhook/$secret'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -77,6 +78,12 @@ const CoursesCourseSlugLevelSlugIndexRoute =
     path: '/courses/$courseSlug/$levelSlug/',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicPalplussWebhookSecretRoute =
+  ApiPublicPalplussWebhookSecretRouteImport.update({
+    id: '/api/public/palpluss/webhook/$secret',
+    path: '/api/public/palpluss/webhook/$secret',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -90,6 +97,7 @@ export interface FileRoutesByFullPath {
   '/api/admin/papers': typeof ApiAdminPapersRoute
   '/courses/$courseSlug/': typeof CoursesCourseSlugIndexRoute
   '/courses/$courseSlug/$levelSlug/': typeof CoursesCourseSlugLevelSlugIndexRoute
+  '/api/public/palpluss/webhook/$secret': typeof ApiPublicPalplussWebhookSecretRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -103,6 +111,7 @@ export interface FileRoutesByTo {
   '/api/admin/papers': typeof ApiAdminPapersRoute
   '/courses/$courseSlug': typeof CoursesCourseSlugIndexRoute
   '/courses/$courseSlug/$levelSlug': typeof CoursesCourseSlugLevelSlugIndexRoute
+  '/api/public/palpluss/webhook/$secret': typeof ApiPublicPalplussWebhookSecretRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -117,6 +126,7 @@ export interface FileRoutesById {
   '/api/admin/papers': typeof ApiAdminPapersRoute
   '/courses/$courseSlug/': typeof CoursesCourseSlugIndexRoute
   '/courses/$courseSlug/$levelSlug/': typeof CoursesCourseSlugLevelSlugIndexRoute
+  '/api/public/palpluss/webhook/$secret': typeof ApiPublicPalplussWebhookSecretRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -132,6 +142,7 @@ export interface FileRouteTypes {
     | '/api/admin/papers'
     | '/courses/$courseSlug/'
     | '/courses/$courseSlug/$levelSlug/'
+    | '/api/public/palpluss/webhook/$secret'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -145,6 +156,7 @@ export interface FileRouteTypes {
     | '/api/admin/papers'
     | '/courses/$courseSlug'
     | '/courses/$courseSlug/$levelSlug'
+    | '/api/public/palpluss/webhook/$secret'
   id:
     | '__root__'
     | '/'
@@ -158,6 +170,7 @@ export interface FileRouteTypes {
     | '/api/admin/papers'
     | '/courses/$courseSlug/'
     | '/courses/$courseSlug/$levelSlug/'
+    | '/api/public/palpluss/webhook/$secret'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -172,6 +185,7 @@ export interface RootRouteChildren {
   ApiAdminPapersRoute: typeof ApiAdminPapersRoute
   CoursesCourseSlugIndexRoute: typeof CoursesCourseSlugIndexRoute
   CoursesCourseSlugLevelSlugIndexRoute: typeof CoursesCourseSlugLevelSlugIndexRoute
+  ApiPublicPalplussWebhookSecretRoute: typeof ApiPublicPalplussWebhookSecretRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -253,6 +267,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CoursesCourseSlugLevelSlugIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/palpluss/webhook/$secret': {
+      id: '/api/public/palpluss/webhook/$secret'
+      path: '/api/public/palpluss/webhook/$secret'
+      fullPath: '/api/public/palpluss/webhook/$secret'
+      preLoaderRoute: typeof ApiPublicPalplussWebhookSecretRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -268,6 +289,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiAdminPapersRoute: ApiAdminPapersRoute,
   CoursesCourseSlugIndexRoute: CoursesCourseSlugIndexRoute,
   CoursesCourseSlugLevelSlugIndexRoute: CoursesCourseSlugLevelSlugIndexRoute,
+  ApiPublicPalplussWebhookSecretRoute: ApiPublicPalplussWebhookSecretRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

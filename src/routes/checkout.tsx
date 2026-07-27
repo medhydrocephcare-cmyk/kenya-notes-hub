@@ -9,12 +9,14 @@ import { useCart, clearCart } from "@/lib/cart";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Loader2, ShieldCheck } from "lucide-react";
+import { useServerFn } from "@tanstack/react-start";
+import { initiateCheckout } from "@/lib/checkout.functions";
 
 export const Route = createFileRoute("/checkout")({
   head: () => ({
     meta: [
-      { title: "Checkout — Chapa Notes" },
-      { name: "description", content: "Pay securely with Palpluss (M-Pesa, card, bank)." },
+      { title: "Checkout — Kasneb Pastpapers" },
+      { name: "description", content: "Pay securely with Palpluss M-Pesa STK Push." },
       { name: "robots", content: "noindex" },
     ],
   }),
@@ -28,24 +30,34 @@ function CheckoutPage() {
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const initiate = useServerFn(initiateCheckout);
 
   async function handlePay(e: React.FormEvent) {
     e.preventDefault();
     if (!items.length) return;
     setLoading(true);
-
-    // Placeholder Palpluss integration.
-    // Later this will POST to /api/checkout/palpluss which creates a session
-    // via the Palpluss API (https://www.palpluss.com/) and returns a hosted
-    // checkout URL to redirect to. For now we simulate a successful order.
-    await new Promise((r) => setTimeout(r, 1200));
-
-    const ref = "PP-" + Math.random().toString(36).slice(2, 10).toUpperCase();
-    toast.success("Payment initiated — check your phone for the M-Pesa prompt");
-    clearCart();
-    setTimeout(() => {
-      navigate({ to: "/account", search: { ref } as never });
-    }, 800);
+    try {
+      const res = await initiate({
+        data: {
+          buyerName: name,
+          email,
+          phone,
+          items: items.map(({ paper }) => ({
+            paperId: paper.id,
+            title: paper.title,
+            price: paper.price,
+          })),
+        },
+      });
+      toast.success("STK push sent — check your phone for the M-Pesa PIN prompt");
+      clearCart();
+      navigate({ to: "/order/$reference", params: { reference: res.reference } });
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Payment failed to start";
+      toast.error(msg);
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -84,15 +96,10 @@ function CheckoutPage() {
               <div className="mt-8 rounded-lg border border-border/60 bg-muted/40 p-4">
                 <div className="flex items-center gap-2 text-sm font-medium">
                   <ShieldCheck className="h-4 w-4 text-primary" />
-                  Payment via Palpluss
+                  Payment via Palpluss M-Pesa
                 </div>
                 <p className="mt-2 text-xs text-muted-foreground">
-                  Clicking pay opens a secure Palpluss checkout. You'll receive an M-Pesa STK push on your
-                  phone. After confirming, your downloads unlock instantly.
-                </p>
-                <p className="mt-2 text-xs text-muted-foreground">
-                  <span className="font-medium text-foreground">Sandbox mode:</span> no real payment will be
-                  taken until live Palpluss credentials are configured.
+                  We'll send an M-Pesa STK Push to your phone. Enter your PIN to confirm — downloads unlock instantly once payment is received.
                 </p>
               </div>
             </Card>
@@ -115,9 +122,9 @@ function CheckoutPage() {
               </div>
               <Button type="submit" size="lg" className="mt-6 w-full" disabled={loading}>
                 {loading ? (
-                  <><Loader2 className="h-4 w-4 animate-spin" /> Contacting Palpluss…</>
+                  <><Loader2 className="h-4 w-4 animate-spin" /> Sending STK push…</>
                 ) : (
-                  <>Pay KSh {subtotal} with Palpluss</>
+                  <>Pay KSh {subtotal} with M-Pesa</>
                 )}
               </Button>
             </Card>
