@@ -10,33 +10,10 @@ export function SiteHeader() {
   const { count } = useCart();
   const [open, setOpen] = useState(false);
   const [browseOpen, setBrowseOpen] = useState(false);
-  const [hidden, setHidden] = useState(false);
-  const lastY = useRef(0);
-
-  useEffect(() => {
-    const onScroll = () => {
-      const y = window.scrollY;
-      const delta = y - lastY.current;
-      if (y < 80) {
-        setHidden(false);
-      } else if (delta > 6) {
-        setHidden(true);
-        setBrowseOpen(false);
-      } else if (delta < -6) {
-        setHidden(false);
-      }
-      lastY.current = y;
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
   return (
-    <header
-      className={`sticky top-0 z-40 w-full transition-transform duration-300 will-change-transform ${
-        hidden ? "-translate-y-full" : "translate-y-0"
-      }`}
-    >
+    <header className="sticky top-0 z-40 w-full">
+
       {/* Announcement bar */}
       <div className="bg-brand-gradient text-primary-foreground">
         <div className="mx-auto flex h-9 max-w-7xl items-center justify-between gap-2 px-3 text-[11px] sm:text-xs sm:px-4">
