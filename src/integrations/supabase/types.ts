@@ -14,7 +14,92 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      order_items: {
+        Row: {
+          created_at: string
+          file_key: string | null
+          id: string
+          order_id: string
+          paper_id: string
+          price_kes: number
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          file_key?: string | null
+          id?: string
+          order_id: string
+          paper_id: string
+          price_kes: number
+          title: string
+        }
+        Update: {
+          created_at?: string
+          file_key?: string | null
+          id?: string
+          order_id?: string
+          paper_id?: string
+          price_kes?: number
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_items_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orders: {
+        Row: {
+          buyer_name: string
+          created_at: string
+          email: string
+          id: string
+          mpesa_receipt: string | null
+          palpluss_transaction_id: string | null
+          phone: string
+          reference: string
+          result_desc: string | null
+          status: string
+          subtotal_kes: number
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          buyer_name: string
+          created_at?: string
+          email: string
+          id?: string
+          mpesa_receipt?: string | null
+          palpluss_transaction_id?: string | null
+          phone: string
+          reference: string
+          result_desc?: string | null
+          status?: string
+          subtotal_kes: number
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          buyer_name?: string
+          created_at?: string
+          email?: string
+          id?: string
+          mpesa_receipt?: string | null
+          palpluss_transaction_id?: string | null
+          phone?: string
+          reference?: string
+          result_desc?: string | null
+          status?: string
+          subtotal_kes?: number
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
