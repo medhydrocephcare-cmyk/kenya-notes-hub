@@ -1,0 +1,235 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { SiteHeader } from "@/components/site-header";
+import { SiteFooter } from "@/components/site-footer";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { courses, levels, papers } from "@/lib/data";
+import { useState } from "react";
+import { toast } from "sonner";
+
+export const Route = createFileRoute("/admin")({
+  head: () => ({
+    meta: [
+      { title: "Admin — Chapa Notes" },
+      { name: "description", content: "Manage courses, levels, papers and orders." },
+      { name: "robots", content: "noindex" },
+    ],
+  }),
+  component: AdminPage,
+});
+
+function AdminPage() {
+  return (
+    <div className="min-h-screen bg-background">
+      <SiteHeader />
+      <div className="mx-auto max-w-6xl px-4 py-12">
+        <h1 className="text-3xl font-semibold tracking-tight">Admin dashboard</h1>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Manage catalog and orders. Role gating & persistence activate when Lovable Cloud is enabled.
+        </p>
+
+        <div className="mt-8 grid grid-cols-2 gap-3 md:grid-cols-4">
+          <Stat label="Courses" value={courses.length} />
+          <Stat label="Levels" value={levels.length} />
+          <Stat label="Papers" value={papers.length} />
+          <Stat label="Orders (mock)" value={12} />
+        </div>
+
+        <Tabs defaultValue="papers" className="mt-10">
+          <TabsList>
+            <TabsTrigger value="papers">Papers</TabsTrigger>
+            <TabsTrigger value="new">Add paper</TabsTrigger>
+            <TabsTrigger value="courses">Courses & levels</TabsTrigger>
+            <TabsTrigger value="orders">Orders</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="papers">
+            <Card className="mt-4 overflow-hidden">
+              <table className="w-full text-sm">
+                <thead className="bg-muted/40 text-left text-xs uppercase tracking-wide text-muted-foreground">
+                  <tr>
+                    <th className="px-4 py-3">Title</th>
+                    <th className="px-4 py-3">Course / Level</th>
+                    <th className="px-4 py-3">Price</th>
+                    <th className="px-4 py-3">Sitting</th>
+                    <th className="px-4 py-3">Updated</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {papers.map((p) => (
+                    <tr key={p.id} className="border-t border-border/60">
+                      <td className="px-4 py-3 font-medium">{p.title}</td>
+                      <td className="px-4 py-3 text-muted-foreground">{p.courseSlug.toUpperCase()} / {p.levelSlug}</td>
+                      <td className="px-4 py-3">KSh {p.price}</td>
+                      <td className="px-4 py-3">{p.examSitting}</td>
+                      <td className="px-4 py-3">{p.lastUpdated}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="new">
+            <AddPaperForm />
+          </TabsContent>
+
+          <TabsContent value="courses">
+            <div className="mt-4 grid gap-4 md:grid-cols-2">
+              {courses.map((c) => (
+                <Card key={c.slug} className="p-5">
+                  <div className="flex items-center justify-between">
+                    <div className="font-semibold">{c.name}</div>
+                    <span className="text-xs text-muted-foreground">{c.code}</span>
+                  </div>
+                  <ul className="mt-3 space-y-1 text-sm text-muted-foreground">
+                    {levels.filter((l) => l.courseSlug === c.slug).map((l) => (
+                      <li key={l.slug}>• {l.name}</li>
+                    ))}
+                  </ul>
+                </Card>
+              ))}
+            </div>
+          </TabsContent>
+
+          <TabsContent value="orders">
+            <Card className="mt-4 p-6 text-sm text-muted-foreground">
+              Orders will appear here after checkout is wired to the database.
+              Each row will show the Palpluss transaction reference, buyer, items and payment status.
+            </Card>
+          </TabsContent>
+        </Tabs>
+
+        <Card className="mt-10 p-6">
+          <h2 className="text-lg font-semibold">Admin API</h2>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Programmatically add papers with a <code className="rounded bg-muted px-1.5 py-0.5">POST</code> to:
+          </p>
+          <pre className="mt-3 overflow-x-auto rounded-lg bg-muted p-4 text-xs">
+{`POST /api/admin/papers
+Content-Type: application/json
+
+{
+  "course": "cpa",
+  "level": "foundation-1",
+  "title": "Business Law — Notes + Kit",
+  "description": "…",
+  "price": 450,
+  "originalPrice": 800,
+  "fileUrl": "https://r2.chapanotes.co.ke/…pdf",
+  "previewUrl": "https://r2.chapanotes.co.ke/…preview.pdf",
+  "examSitting": "August 2026",
+  "lastUpdated": "2026-07-01"
+}`}
+          </pre>
+        </Card>
+      </div>
+      <SiteFooter />
+    </div>
+  );
+}
+
+function Stat({ label, value }: { label: string; value: number | string }) {
+  return (
+    <Card className="p-4">
+      <div className="text-xs uppercase tracking-wide text-muted-foreground">{label}</div>
+      <div className="mt-1 text-2xl font-semibold">{value}</div>
+    </Card>
+  );
+}
+
+function AddPaperForm() {
+  const [course, setCourse] = useState(courses[0].slug);
+  const [level, setLevel] = useState(levels.filter((l) => l.courseSlug === courses[0].slug)[0]?.slug ?? "");
+  const [loading, setLoading] = useState(false);
+  const courseLevels = levels.filter((l) => l.courseSlug === course);
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const form = new FormData(e.currentTarget);
+    setLoading(true);
+    const res = await fetch("/api/admin/papers", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        course,
+        level,
+        title: form.get("title"),
+        description: form.get("description"),
+        price: Number(form.get("price")),
+        fileUrl: form.get("fileUrl"),
+        previewUrl: form.get("previewUrl"),
+        examSitting: form.get("examSitting"),
+        lastUpdated: form.get("lastUpdated"),
+      }),
+    });
+    setLoading(false);
+    if (res.ok) {
+      toast.success("Paper created (in-memory — persistence pending Cloud)");
+      (e.target as HTMLFormElement).reset();
+    } else {
+      toast.error("Failed to create paper");
+    }
+  }
+
+  return (
+    <Card className="mt-4 p-6">
+      <form onSubmit={handleSubmit} className="grid gap-4 md:grid-cols-2">
+        <div>
+          <Label>Course</Label>
+          <Select value={course} onValueChange={(v) => { setCourse(v); const first = levels.filter((l) => l.courseSlug === v)[0]?.slug ?? ""; setLevel(first); }}>
+            <SelectTrigger className="mt-1.5"><SelectValue /></SelectTrigger>
+            <SelectContent>
+              {courses.map((c) => <SelectItem key={c.slug} value={c.slug}>{c.name}</SelectItem>)}
+            </SelectContent>
+          </Select>
+        </div>
+        <div>
+          <Label>Level</Label>
+          <Select value={level} onValueChange={setLevel}>
+            <SelectTrigger className="mt-1.5"><SelectValue /></SelectTrigger>
+            <SelectContent>
+              {courseLevels.map((l) => <SelectItem key={l.slug} value={l.slug}>{l.name}</SelectItem>)}
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="md:col-span-2">
+          <Label htmlFor="title">Title</Label>
+          <Input id="title" name="title" required className="mt-1.5" />
+        </div>
+        <div className="md:col-span-2">
+          <Label htmlFor="description">Description</Label>
+          <Textarea id="description" name="description" rows={3} className="mt-1.5" />
+        </div>
+        <div>
+          <Label htmlFor="price">Price (KSh)</Label>
+          <Input id="price" name="price" type="number" required className="mt-1.5" />
+        </div>
+        <div>
+          <Label htmlFor="examSitting">Exam sitting</Label>
+          <Input id="examSitting" name="examSitting" placeholder="August 2026" className="mt-1.5" />
+        </div>
+        <div>
+          <Label htmlFor="fileUrl">File URL (R2)</Label>
+          <Input id="fileUrl" name="fileUrl" placeholder="https://…pdf" className="mt-1.5" />
+        </div>
+        <div>
+          <Label htmlFor="previewUrl">Preview URL</Label>
+          <Input id="previewUrl" name="previewUrl" placeholder="https://…preview.pdf" className="mt-1.5" />
+        </div>
+        <div>
+          <Label htmlFor="lastUpdated">Last updated</Label>
+          <Input id="lastUpdated" name="lastUpdated" type="date" className="mt-1.5" />
+        </div>
+        <div className="md:col-span-2">
+          <Button type="submit" disabled={loading}>{loading ? "Creating…" : "Create paper"}</Button>
+        </div>
+      </form>
+    </Card>
+  );
+}
