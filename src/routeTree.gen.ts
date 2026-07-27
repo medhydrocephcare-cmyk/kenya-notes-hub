@@ -17,9 +17,11 @@ import { Route as AccountRouteImport } from './routes/account'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CoursesIndexRouteImport } from './routes/courses/index'
 import { Route as PapersPaperIdRouteImport } from './routes/papers/$paperId'
+import { Route as OrderReferenceRouteImport } from './routes/order/$reference'
 import { Route as CoursesCourseSlugIndexRouteImport } from './routes/courses/$courseSlug/index'
 import { Route as ApiAdminPapersRouteImport } from './routes/api/admin/papers'
 import { Route as CoursesCourseSlugLevelSlugIndexRouteImport } from './routes/courses/$courseSlug/$levelSlug/index'
+import { Route as ApiPublicPalplussWebhookSecretRouteImport } from './routes/api/public/palpluss/webhook/$secret'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -61,6 +63,11 @@ const PapersPaperIdRoute = PapersPaperIdRouteImport.update({
   path: '/papers/$paperId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OrderReferenceRoute = OrderReferenceRouteImport.update({
+  id: '/order/$reference',
+  path: '/order/$reference',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CoursesCourseSlugIndexRoute = CoursesCourseSlugIndexRouteImport.update({
   id: '/courses/$courseSlug/',
   path: '/courses/$courseSlug/',
@@ -77,6 +84,12 @@ const CoursesCourseSlugLevelSlugIndexRoute =
     path: '/courses/$courseSlug/$levelSlug/',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicPalplussWebhookSecretRoute =
+  ApiPublicPalplussWebhookSecretRouteImport.update({
+    id: '/api/public/palpluss/webhook/$secret',
+    path: '/api/public/palpluss/webhook/$secret',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -85,11 +98,13 @@ export interface FileRoutesByFullPath {
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/order/$reference': typeof OrderReferenceRoute
   '/papers/$paperId': typeof PapersPaperIdRoute
   '/courses/': typeof CoursesIndexRoute
   '/api/admin/papers': typeof ApiAdminPapersRoute
   '/courses/$courseSlug/': typeof CoursesCourseSlugIndexRoute
   '/courses/$courseSlug/$levelSlug/': typeof CoursesCourseSlugLevelSlugIndexRoute
+  '/api/public/palpluss/webhook/$secret': typeof ApiPublicPalplussWebhookSecretRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -98,11 +113,13 @@ export interface FileRoutesByTo {
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/order/$reference': typeof OrderReferenceRoute
   '/papers/$paperId': typeof PapersPaperIdRoute
   '/courses': typeof CoursesIndexRoute
   '/api/admin/papers': typeof ApiAdminPapersRoute
   '/courses/$courseSlug': typeof CoursesCourseSlugIndexRoute
   '/courses/$courseSlug/$levelSlug': typeof CoursesCourseSlugLevelSlugIndexRoute
+  '/api/public/palpluss/webhook/$secret': typeof ApiPublicPalplussWebhookSecretRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -112,11 +129,13 @@ export interface FileRoutesById {
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/order/$reference': typeof OrderReferenceRoute
   '/papers/$paperId': typeof PapersPaperIdRoute
   '/courses/': typeof CoursesIndexRoute
   '/api/admin/papers': typeof ApiAdminPapersRoute
   '/courses/$courseSlug/': typeof CoursesCourseSlugIndexRoute
   '/courses/$courseSlug/$levelSlug/': typeof CoursesCourseSlugLevelSlugIndexRoute
+  '/api/public/palpluss/webhook/$secret': typeof ApiPublicPalplussWebhookSecretRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -127,11 +146,13 @@ export interface FileRouteTypes {
     | '/cart'
     | '/checkout'
     | '/sitemap.xml'
+    | '/order/$reference'
     | '/papers/$paperId'
     | '/courses/'
     | '/api/admin/papers'
     | '/courses/$courseSlug/'
     | '/courses/$courseSlug/$levelSlug/'
+    | '/api/public/palpluss/webhook/$secret'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -140,11 +161,13 @@ export interface FileRouteTypes {
     | '/cart'
     | '/checkout'
     | '/sitemap.xml'
+    | '/order/$reference'
     | '/papers/$paperId'
     | '/courses'
     | '/api/admin/papers'
     | '/courses/$courseSlug'
     | '/courses/$courseSlug/$levelSlug'
+    | '/api/public/palpluss/webhook/$secret'
   id:
     | '__root__'
     | '/'
@@ -153,11 +176,13 @@ export interface FileRouteTypes {
     | '/cart'
     | '/checkout'
     | '/sitemap.xml'
+    | '/order/$reference'
     | '/papers/$paperId'
     | '/courses/'
     | '/api/admin/papers'
     | '/courses/$courseSlug/'
     | '/courses/$courseSlug/$levelSlug/'
+    | '/api/public/palpluss/webhook/$secret'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -167,11 +192,13 @@ export interface RootRouteChildren {
   CartRoute: typeof CartRoute
   CheckoutRoute: typeof CheckoutRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  OrderReferenceRoute: typeof OrderReferenceRoute
   PapersPaperIdRoute: typeof PapersPaperIdRoute
   CoursesIndexRoute: typeof CoursesIndexRoute
   ApiAdminPapersRoute: typeof ApiAdminPapersRoute
   CoursesCourseSlugIndexRoute: typeof CoursesCourseSlugIndexRoute
   CoursesCourseSlugLevelSlugIndexRoute: typeof CoursesCourseSlugLevelSlugIndexRoute
+  ApiPublicPalplussWebhookSecretRoute: typeof ApiPublicPalplussWebhookSecretRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -232,6 +259,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PapersPaperIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/order/$reference': {
+      id: '/order/$reference'
+      path: '/order/$reference'
+      fullPath: '/order/$reference'
+      preLoaderRoute: typeof OrderReferenceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/courses/$courseSlug/': {
       id: '/courses/$courseSlug/'
       path: '/courses/$courseSlug'
@@ -253,6 +287,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CoursesCourseSlugLevelSlugIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/palpluss/webhook/$secret': {
+      id: '/api/public/palpluss/webhook/$secret'
+      path: '/api/public/palpluss/webhook/$secret'
+      fullPath: '/api/public/palpluss/webhook/$secret'
+      preLoaderRoute: typeof ApiPublicPalplussWebhookSecretRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -263,11 +304,13 @@ const rootRouteChildren: RootRouteChildren = {
   CartRoute: CartRoute,
   CheckoutRoute: CheckoutRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  OrderReferenceRoute: OrderReferenceRoute,
   PapersPaperIdRoute: PapersPaperIdRoute,
   CoursesIndexRoute: CoursesIndexRoute,
   ApiAdminPapersRoute: ApiAdminPapersRoute,
   CoursesCourseSlugIndexRoute: CoursesCourseSlugIndexRoute,
   CoursesCourseSlugLevelSlugIndexRoute: CoursesCourseSlugLevelSlugIndexRoute,
+  ApiPublicPalplussWebhookSecretRoute: ApiPublicPalplussWebhookSecretRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
