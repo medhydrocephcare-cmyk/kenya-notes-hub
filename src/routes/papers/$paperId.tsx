@@ -126,7 +126,7 @@ function PaperDetail() {
               </TabsContent>
               <TabsContent value="reviews">
                 <div className="mt-4 space-y-3">
-                  {paper.reviews.map((r, i) => (
+                  {paper.reviews.map((r: (typeof paper.reviews)[number], i: number) => (
                     <Card key={i} className="p-5">
                       <div className="flex items-center justify-between">
                         <div className="font-medium">{r.author}</div>

@@ -9,38 +9,208 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as CheckoutRouteImport } from './routes/checkout'
+import { Route as CartRouteImport } from './routes/cart'
+import { Route as AdminRouteImport } from './routes/admin'
+import { Route as AccountRouteImport } from './routes/account'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CoursesIndexRouteImport } from './routes/courses/index'
+import { Route as PapersPaperIdRouteImport } from './routes/papers/$paperId'
+import { Route as CoursesCourseSlugIndexRouteImport } from './routes/courses/$courseSlug/index'
+import { Route as ApiAdminPapersRouteImport } from './routes/api/admin/papers'
+import { Route as CoursesCourseSlugLevelSlugIndexRouteImport } from './routes/courses/$courseSlug/$levelSlug/index'
 
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CheckoutRoute = CheckoutRouteImport.update({
+  id: '/checkout',
+  path: '/checkout',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CartRoute = CartRouteImport.update({
+  id: '/cart',
+  path: '/cart',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountRoute = AccountRouteImport.update({
+  id: '/account',
+  path: '/account',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CoursesIndexRoute = CoursesIndexRouteImport.update({
+  id: '/courses/',
+  path: '/courses/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PapersPaperIdRoute = PapersPaperIdRouteImport.update({
+  id: '/papers/$paperId',
+  path: '/papers/$paperId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CoursesCourseSlugIndexRoute = CoursesCourseSlugIndexRouteImport.update({
+  id: '/courses/$courseSlug/',
+  path: '/courses/$courseSlug/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminPapersRoute = ApiAdminPapersRouteImport.update({
+  id: '/api/admin/papers',
+  path: '/api/admin/papers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CoursesCourseSlugLevelSlugIndexRoute =
+  CoursesCourseSlugLevelSlugIndexRouteImport.update({
+    id: '/courses/$courseSlug/$levelSlug/',
+    path: '/courses/$courseSlug/$levelSlug/',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/account': typeof AccountRoute
+  '/admin': typeof AdminRoute
+  '/cart': typeof CartRoute
+  '/checkout': typeof CheckoutRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/papers/$paperId': typeof PapersPaperIdRoute
+  '/courses/': typeof CoursesIndexRoute
+  '/api/admin/papers': typeof ApiAdminPapersRoute
+  '/courses/$courseSlug/': typeof CoursesCourseSlugIndexRoute
+  '/courses/$courseSlug/$levelSlug/': typeof CoursesCourseSlugLevelSlugIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/account': typeof AccountRoute
+  '/admin': typeof AdminRoute
+  '/cart': typeof CartRoute
+  '/checkout': typeof CheckoutRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/papers/$paperId': typeof PapersPaperIdRoute
+  '/courses': typeof CoursesIndexRoute
+  '/api/admin/papers': typeof ApiAdminPapersRoute
+  '/courses/$courseSlug': typeof CoursesCourseSlugIndexRoute
+  '/courses/$courseSlug/$levelSlug': typeof CoursesCourseSlugLevelSlugIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/account': typeof AccountRoute
+  '/admin': typeof AdminRoute
+  '/cart': typeof CartRoute
+  '/checkout': typeof CheckoutRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/papers/$paperId': typeof PapersPaperIdRoute
+  '/courses/': typeof CoursesIndexRoute
+  '/api/admin/papers': typeof ApiAdminPapersRoute
+  '/courses/$courseSlug/': typeof CoursesCourseSlugIndexRoute
+  '/courses/$courseSlug/$levelSlug/': typeof CoursesCourseSlugLevelSlugIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/account'
+    | '/admin'
+    | '/cart'
+    | '/checkout'
+    | '/sitemap.xml'
+    | '/papers/$paperId'
+    | '/courses/'
+    | '/api/admin/papers'
+    | '/courses/$courseSlug/'
+    | '/courses/$courseSlug/$levelSlug/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/account'
+    | '/admin'
+    | '/cart'
+    | '/checkout'
+    | '/sitemap.xml'
+    | '/papers/$paperId'
+    | '/courses'
+    | '/api/admin/papers'
+    | '/courses/$courseSlug'
+    | '/courses/$courseSlug/$levelSlug'
+  id:
+    | '__root__'
+    | '/'
+    | '/account'
+    | '/admin'
+    | '/cart'
+    | '/checkout'
+    | '/sitemap.xml'
+    | '/papers/$paperId'
+    | '/courses/'
+    | '/api/admin/papers'
+    | '/courses/$courseSlug/'
+    | '/courses/$courseSlug/$levelSlug/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AccountRoute: typeof AccountRoute
+  AdminRoute: typeof AdminRoute
+  CartRoute: typeof CartRoute
+  CheckoutRoute: typeof CheckoutRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  PapersPaperIdRoute: typeof PapersPaperIdRoute
+  CoursesIndexRoute: typeof CoursesIndexRoute
+  ApiAdminPapersRoute: typeof ApiAdminPapersRoute
+  CoursesCourseSlugIndexRoute: typeof CoursesCourseSlugIndexRoute
+  CoursesCourseSlugLevelSlugIndexRoute: typeof CoursesCourseSlugLevelSlugIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/checkout': {
+      id: '/checkout'
+      path: '/checkout'
+      fullPath: '/checkout'
+      preLoaderRoute: typeof CheckoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cart': {
+      id: '/cart'
+      path: '/cart'
+      fullPath: '/cart'
+      preLoaderRoute: typeof CartRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/account': {
+      id: '/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AccountRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +218,56 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/courses/': {
+      id: '/courses/'
+      path: '/courses'
+      fullPath: '/courses/'
+      preLoaderRoute: typeof CoursesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/papers/$paperId': {
+      id: '/papers/$paperId'
+      path: '/papers/$paperId'
+      fullPath: '/papers/$paperId'
+      preLoaderRoute: typeof PapersPaperIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/courses/$courseSlug/': {
+      id: '/courses/$courseSlug/'
+      path: '/courses/$courseSlug'
+      fullPath: '/courses/$courseSlug/'
+      preLoaderRoute: typeof CoursesCourseSlugIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/papers': {
+      id: '/api/admin/papers'
+      path: '/api/admin/papers'
+      fullPath: '/api/admin/papers'
+      preLoaderRoute: typeof ApiAdminPapersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/courses/$courseSlug/$levelSlug/': {
+      id: '/courses/$courseSlug/$levelSlug/'
+      path: '/courses/$courseSlug/$levelSlug'
+      fullPath: '/courses/$courseSlug/$levelSlug/'
+      preLoaderRoute: typeof CoursesCourseSlugLevelSlugIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AccountRoute: AccountRoute,
+  AdminRoute: AdminRoute,
+  CartRoute: CartRoute,
+  CheckoutRoute: CheckoutRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
+  PapersPaperIdRoute: PapersPaperIdRoute,
+  CoursesIndexRoute: CoursesIndexRoute,
+  ApiAdminPapersRoute: ApiAdminPapersRoute,
+  CoursesCourseSlugIndexRoute: CoursesCourseSlugIndexRoute,
+  CoursesCourseSlugLevelSlugIndexRoute: CoursesCourseSlugLevelSlugIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
