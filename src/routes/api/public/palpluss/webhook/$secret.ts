@@ -48,7 +48,12 @@ export const Route = createFileRoute("/api/public/palpluss/webhook/$secret")({
               : "pending";
 
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-        const patch: Record<string, unknown> = { status, mpesa_receipt: receipt, result_desc: desc };
+        const patch: {
+          status: string;
+          mpesa_receipt: string | null;
+          result_desc: string | null;
+          palpluss_transaction_id?: string;
+        } = { status, mpesa_receipt: receipt, result_desc: desc };
         if (providerTxId) patch.palpluss_transaction_id = providerTxId;
 
         const { error } = await supabaseAdmin.from("orders").update(patch).eq("reference", reference);
