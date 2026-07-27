@@ -41,16 +41,19 @@ export type Paper = {
 };
 
 export const courses: Course[] = [
-  { slug: "cpa", code: "CPA", name: "Certified Public Accountant", description: "The premier accounting qualification in Kenya, six levels from Foundation to Advanced.", color: "from-emerald-500/20 to-emerald-500/5" },
+  { slug: "cpa", code: "CPA", name: "Certified Public Accountant", description: "The premier accounting qualification in Kenya — Foundation, Intermediate and Advanced levels.", color: "from-emerald-500/20 to-emerald-500/5" },
   { slug: "atd", code: "ATD", name: "Accounting Technicians Diploma", description: "Practical accounting technician certification, three progressive levels.", color: "from-sky-500/20 to-sky-500/5" },
   { slug: "cs", code: "CS", name: "Certified Secretaries", description: "Governance, compliance and company secretarial practice.", color: "from-violet-500/20 to-violet-500/5" },
   { slug: "cifa", code: "CIFA", name: "Certified Investment & Financial Analysts", description: "Investment analysis, portfolio management and financial markets.", color: "from-amber-500/20 to-amber-500/5" },
-  { slug: "ccp", code: "CCP", name: "Certified Credit Professionals", description: "Credit management, risk and debt recovery.", color: "from-rose-500/20 to-rose-500/5" },
-  { slug: "cict", code: "CICT", name: "Certified Information Communication Technologists", description: "ICT project management, systems and cybersecurity fundamentals.", color: "from-cyan-500/20 to-cyan-500/5" },
+  { slug: "ccp", code: "CCP", name: "Certified Credit Professionals", description: "Credit management, risk assessment and debt recovery.", color: "from-rose-500/20 to-rose-500/5" },
+  { slug: "cict", code: "CICT", name: "Certified Information Communication Technologists", description: "ICT project management, systems, networks and cybersecurity.", color: "from-cyan-500/20 to-cyan-500/5" },
+  { slug: "dcm", code: "DCM", name: "Diploma in Credit Management", description: "Credit control, collections and portfolio management fundamentals.", color: "from-pink-500/20 to-pink-500/5" },
+  { slug: "dict", code: "DICT", name: "Diploma in ICT", description: "Foundational ICT diploma covering programming, hardware and networks.", color: "from-teal-500/20 to-teal-500/5" },
+  { slug: "fab", code: "FAB", name: "Foundation in Accountancy & Business", description: "Entry-level accounting and business foundation programme.", color: "from-lime-500/20 to-lime-500/5" },
 ];
 
 export const levels: Level[] = [
-  // CPA
+  // CPA (new syllabus — Foundation, Intermediate, Advanced with 2 levels each)
   { slug: "foundation-1", courseSlug: "cpa", name: "Foundation Level 1", order: 1 },
   { slug: "foundation-2", courseSlug: "cpa", name: "Foundation Level 2", order: 2 },
   { slug: "intermediate-1", courseSlug: "cpa", name: "Intermediate Level 1", order: 3 },
@@ -77,6 +80,14 @@ export const levels: Level[] = [
   { slug: "foundation", courseSlug: "cict", name: "Foundation Level", order: 1 },
   { slug: "intermediate", courseSlug: "cict", name: "Intermediate Level", order: 2 },
   { slug: "advanced", courseSlug: "cict", name: "Advanced Level", order: 3 },
+  // DCM
+  { slug: "level-1", courseSlug: "dcm", name: "Level I", order: 1 },
+  { slug: "level-2", courseSlug: "dcm", name: "Level II", order: 2 },
+  // DICT
+  { slug: "level-1", courseSlug: "dict", name: "Level I", order: 1 },
+  { slug: "level-2", courseSlug: "dict", name: "Level II", order: 2 },
+  // FAB
+  { slug: "foundation", courseSlug: "fab", name: "Foundation", order: 1 },
 ];
 
 const sampleReviews: Review[] = [

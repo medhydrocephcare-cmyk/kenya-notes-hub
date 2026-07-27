@@ -1,16 +1,18 @@
 import { Link } from "@tanstack/react-router";
-import { Star, Eye, ShoppingCart, FileText } from "lucide-react";
+import { Star, Eye, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { addToCart } from "@/lib/cart";
 import { toast } from "sonner";
 import type { Paper } from "@/lib/data";
 import { getCourse } from "@/lib/data";
+import { subjectImageFor } from "@/lib/subject-image";
 
 export function ProductCard({ paper }: { paper: Paper }) {
   const course = getCourse(paper.courseSlug);
   const discount = paper.originalPrice
     ? Math.round(((paper.originalPrice - paper.price) / paper.originalPrice) * 100)
     : 0;
+  const cover = subjectImageFor(paper.title, paper.courseSlug);
 
   return (
     <div className="group relative flex flex-col overflow-hidden rounded-2xl border border-border/60 bg-card transition hover:-translate-y-1 hover:border-brand/40 hover:shadow-card">
@@ -18,35 +20,31 @@ export function ProductCard({ paper }: { paper: Paper }) {
       <Link
         to="/papers/$paperId"
         params={{ paperId: paper.id }}
-        className="relative block aspect-[4/3] overflow-hidden bg-brand-gradient"
+        className="relative block aspect-[4/3] overflow-hidden bg-surface"
       >
-        <div className="absolute inset-0 opacity-20" style={{
-          backgroundImage:
-            "radial-gradient(circle at 20% 20%, white 1px, transparent 1px), radial-gradient(circle at 80% 60%, white 1px, transparent 1px)",
-          backgroundSize: "24px 24px, 32px 32px",
-        }} />
-        <div className="relative flex h-full flex-col justify-between p-5 text-primary-foreground">
-          <div className="flex items-center justify-between">
-            <span className="rounded-md bg-white/20 px-2 py-1 text-[10px] font-bold uppercase tracking-wider backdrop-blur">
-              {course?.code}
-            </span>
-            <FileText className="h-5 w-5 opacity-70" />
-          </div>
-          <div>
-            <div className="text-[10px] font-semibold uppercase tracking-widest opacity-80">Notes • Kit • Answers</div>
-            <div className="mt-1 line-clamp-2 font-display text-base font-bold leading-tight">
-              {paper.title.split("—")[0]}
-            </div>
-          </div>
+        <img
+          src={cover}
+          alt={paper.title}
+          loading="lazy"
+          width={800}
+          height={600}
+          className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+        />
+        <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/60 to-transparent" />
+        <div className="absolute left-3 top-3 rounded-md bg-brand px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-primary-foreground shadow">
+          {course?.code}
+        </div>
+        <div className="absolute inset-x-3 bottom-3 line-clamp-2 font-display text-sm font-bold leading-tight text-white drop-shadow">
+          {paper.title.split("—")[0]}
         </div>
 
         {discount > 0 && (
-          <div className="absolute right-3 top-3 grid h-12 w-12 place-items-center rounded-full bg-sale text-xs font-black text-white shadow-lg">
+          <div className="absolute right-3 top-3 grid h-11 w-11 place-items-center rounded-full bg-sale text-[11px] font-black text-white shadow-lg">
             -{discount}%
           </div>
         )}
         {paper.bundleType && paper.bundleType !== "single" && (
-          <div className="absolute left-3 bottom-3 rounded-full bg-gold px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-gold-foreground">
+          <div className="absolute right-3 bottom-3 rounded-full bg-gold px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-gold-foreground shadow">
             {paper.bundleType} bundle
           </div>
         )}
