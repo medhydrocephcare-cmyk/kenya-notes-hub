@@ -98,6 +98,17 @@ const sampleReviews: Review[] = [
 
 export const papers: Paper[] = [
   {
+    id: "test-1ksh",
+    courseSlug: "cpa", levelSlug: "foundation-1",
+    title: "TEST PRODUCT — KSh 1 (Palpluss checkout test)",
+    description: "Temporary test product for verifying the Palpluss M-Pesa STK Push and webhook confirmation flow.",
+    price: 1,
+    fileUrl: "", previewUrl: "",
+    examSitting: "TEST", lastUpdated: "2026-07-27",
+    rating: 5, reviews: [],
+    bundleType: "single",
+  },
+  {
     id: "cpa-f1-fa",
     courseSlug: "cpa", levelSlug: "foundation-1",
     title: "Financial Accounting — Notes + Revision Kit",
