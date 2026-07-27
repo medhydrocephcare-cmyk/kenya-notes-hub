@@ -2,46 +2,69 @@ import { Link } from "@tanstack/react-router";
 import { ShoppingCart, User, Menu, Search, Phone, Mail, ChevronDown, X } from "lucide-react";
 import { useCart } from "@/lib/cart";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { courses } from "@/lib/data";
+import logo from "@/assets/logo.png";
 
 export function SiteHeader() {
   const { count } = useCart();
   const [open, setOpen] = useState(false);
   const [browseOpen, setBrowseOpen] = useState(false);
+  const [hidden, setHidden] = useState(false);
+  const lastY = useRef(0);
+
+  useEffect(() => {
+    const onScroll = () => {
+      const y = window.scrollY;
+      const delta = y - lastY.current;
+      if (y < 80) {
+        setHidden(false);
+      } else if (delta > 6) {
+        setHidden(true);
+        setBrowseOpen(false);
+      } else if (delta < -6) {
+        setHidden(false);
+      }
+      lastY.current = y;
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
-    <header className="sticky top-0 z-40 w-full">
+    <header
+      className={`sticky top-0 z-40 w-full transition-transform duration-300 will-change-transform ${
+        hidden ? "-translate-y-full" : "translate-y-0"
+      }`}
+    >
       {/* Announcement bar */}
       <div className="bg-brand-gradient text-primary-foreground">
-        <div className="mx-auto flex h-9 max-w-7xl items-center justify-between px-4 text-xs">
-          <div className="flex items-center gap-4">
+        <div className="mx-auto flex h-9 max-w-7xl items-center justify-between gap-2 px-3 text-[11px] sm:text-xs sm:px-4">
+          <div className="flex min-w-0 items-center gap-4">
             <span className="hidden items-center gap-1.5 sm:inline-flex">
               <Phone className="h-3 w-3" /> 0712 345 678
             </span>
             <span className="hidden items-center gap-1.5 md:inline-flex">
-              <Mail className="h-3 w-3" /> hello@kasneb.com
+              <Mail className="h-3 w-3" /> hello@casneb.com
             </span>
+            <span className="truncate sm:hidden">📞 0712 345 678 · Pay with M-Pesa</span>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex shrink-0 items-center gap-2 sm:gap-3">
             <span className="rounded-full bg-gold px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-gold-foreground">
               Sale
             </span>
             <span className="hidden sm:inline">Free preview on every paper • August 2026 sitting live</span>
-            <span className="sm:hidden">Aug 2026 sitting live</span>
           </div>
         </div>
       </div>
 
       {/* Main bar */}
-      <div className="border-b border-border/60 bg-background/95 backdrop-blur">
-        <div className="mx-auto flex h-16 max-w-7xl items-center gap-4 px-4">
-          <Link to="/" className="flex items-center gap-2.5">
-            <span className="grid h-10 w-10 place-items-center rounded-xl bg-brand-gradient text-primary-foreground shadow-card">
-              <span className="font-display text-lg font-extrabold">K</span>
-            </span>
+      <div className="border-b border-border/60 bg-background/95 shadow-sm backdrop-blur">
+        <div className="mx-auto flex h-16 max-w-7xl items-center gap-3 px-3 sm:px-4">
+          <Link to="/" className="flex items-center gap-2">
+            <img src={logo} alt="Kasneb Pastpapers logo" width={40} height={40} className="h-10 w-10" />
             <span className="flex flex-col leading-none">
-              <span className="font-display text-lg font-extrabold tracking-tight">Kasneb</span>
+              <span className="font-display text-base font-extrabold tracking-tight sm:text-lg">Kasneb</span>
               <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-brand">Pastpapers</span>
             </span>
           </Link>
@@ -64,7 +87,7 @@ export function SiteHeader() {
             </div>
           </form>
 
-          <div className="ml-auto flex items-center gap-2">
+          <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
             <Link to="/account" className="hidden md:inline-flex">
               <Button variant="ghost" size="sm" className="gap-2">
                 <User className="h-4 w-4" /> Account
@@ -106,7 +129,7 @@ export function SiteHeader() {
                 <ChevronDown className="h-3 w-3" />
               </button>
               {browseOpen && (
-                <div className="absolute left-0 top-11 z-50 w-72 rounded-b-xl border border-border/60 bg-background shadow-xl">
+                <div className="absolute left-0 top-11 z-50 w-80 rounded-b-xl border border-border/60 bg-background shadow-xl">
                   {courses.map((c) => (
                     <Link
                       key={c.slug}
@@ -154,7 +177,7 @@ export function SiteHeader() {
               <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <input
                 type="search"
-                placeholder="Search…"
+                placeholder="Search papers, notes, kits…"
                 className="h-11 w-full rounded-full border border-border bg-muted/40 pl-10 pr-4 text-sm outline-none focus:border-brand"
               />
             </form>
