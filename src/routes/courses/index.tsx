@@ -1,16 +1,18 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
-import { Card } from "@/components/ui/card";
-import { courses, countPapersInCourse } from "@/lib/data";
+import { CategorySidebar } from "@/components/category-sidebar";
+import { ProductCard } from "@/components/product-card";
+import { papers, courses } from "@/lib/data";
+import { LayoutGrid } from "lucide-react";
 
 export const Route = createFileRoute("/courses/")({
   head: () => ({
     meta: [
-      { title: "All courses — Chapa Notes" },
-      { name: "description", content: "Browse every KASNEB and KNEC course we cover: CPA, ATD, CS, CIFA, CCP, CICT and more." },
-      { property: "og:title", content: "All KASNEB & KNEC courses — Chapa Notes" },
-      { property: "og:description", content: "Notes and past-paper answers organised by course and level." },
+      { title: "Shop all KASNEB & KNEC papers — Kasneb Pastpapers" },
+      { name: "description", content: "Browse every KASNEB and KNEC paper, note and revision kit. CPA, ATD, CS, CIFA, CCP, CICT and more. Free preview on every product." },
+      { property: "og:title", content: "All KASNEB & KNEC papers — Kasneb Pastpapers" },
+      { property: "og:description", content: "Notes, revision kits and past-paper answers organised by course and level." },
     ],
   }),
   component: CoursesPage,
@@ -20,24 +22,47 @@ function CoursesPage() {
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
-      <div className="mx-auto max-w-6xl px-4 py-12">
-        <h1 className="text-3xl font-semibold tracking-tight">All courses</h1>
-        <p className="mt-2 text-sm text-muted-foreground">Pick a course to see its levels and papers.</p>
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {courses.map((c) => (
-            <Link key={c.slug} to="/courses/$courseSlug" params={{ courseSlug: c.slug }}>
-              <Card className={`h-full bg-gradient-to-br ${c.color} p-6 transition hover:shadow-md`}>
-                <div className="flex items-center justify-between text-xs">
-                  <span className="rounded-md bg-background/80 px-2 py-1 font-medium">{c.code}</span>
-                  <span className="text-muted-foreground">{countPapersInCourse(c.slug)} papers</span>
-                </div>
-                <div className="mt-4 text-lg font-semibold">{c.name}</div>
-                <div className="mt-2 text-sm text-muted-foreground">{c.description}</div>
-              </Card>
-            </Link>
-          ))}
+
+      {/* Page header */}
+      <div className="bg-brand-gradient text-primary-foreground">
+        <div className="mx-auto max-w-7xl px-4 py-10">
+          <div className="text-xs font-bold uppercase tracking-widest text-gold">Shop</div>
+          <h1 className="mt-1 font-display text-3xl font-extrabold md:text-4xl">All courses &amp; papers</h1>
+          <p className="mt-2 max-w-2xl text-white/80">
+            {papers.length} products across {courses.length} KASNEB courses. Every product has a free answer preview.
+          </p>
         </div>
       </div>
+
+      <div className="mx-auto max-w-7xl px-4 py-10">
+        <div className="grid gap-8 lg:grid-cols-[280px_1fr]">
+          <div className="hidden lg:block">
+            <CategorySidebar />
+          </div>
+
+          <div>
+            <div className="mb-5 flex items-center justify-between rounded-xl border border-border/60 bg-card px-4 py-3 text-sm shadow-card">
+              <div className="flex items-center gap-2 text-muted-foreground">
+                <LayoutGrid className="h-4 w-4" />
+                Showing <b className="text-foreground">{papers.length}</b> results
+              </div>
+              <select className="rounded-md border border-border bg-background px-2 py-1.5 text-xs">
+                <option>Sort: Popularity</option>
+                <option>Price: low to high</option>
+                <option>Price: high to low</option>
+                <option>Newest</option>
+              </select>
+            </div>
+
+            <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+              {papers.map((p) => (
+                <ProductCard key={p.id} paper={p} />
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
       <SiteFooter />
     </div>
   );

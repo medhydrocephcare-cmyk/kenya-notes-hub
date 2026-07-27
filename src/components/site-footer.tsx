@@ -1,43 +1,115 @@
 import { Link } from "@tanstack/react-router";
+import { Phone, Mail, MapPin, Facebook, Twitter, Instagram, ShieldCheck } from "lucide-react";
+import { courses } from "@/lib/data";
 
 export function SiteFooter() {
   return (
-    <footer className="mt-24 border-t border-border/60 bg-muted/30">
-      <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 md:grid-cols-4">
-        <div>
-          <div className="font-semibold">Chapa Notes</div>
-          <p className="mt-2 text-sm text-muted-foreground">
-            KASNEB & KNEC study notes, revision kits and past papers with model answers.
-            Updated every sitting.
-          </p>
-        </div>
-        <div>
-          <div className="text-sm font-medium">Courses</div>
-          <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-            <li><Link to="/courses" className="hover:text-foreground">All courses</Link></li>
-            <li><Link to="/courses" className="hover:text-foreground">CPA</Link></li>
-            <li><Link to="/courses" className="hover:text-foreground">ATD</Link></li>
-            <li><Link to="/courses" className="hover:text-foreground">CS / CIFA / CCP</Link></li>
-          </ul>
-        </div>
-        <div>
-          <div className="text-sm font-medium">Account</div>
-          <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-            <li><Link to="/account" className="hover:text-foreground">My downloads</Link></li>
-            <li><Link to="/cart" className="hover:text-foreground">Cart</Link></li>
-            <li><Link to="/admin" className="hover:text-foreground">Admin</Link></li>
-          </ul>
-        </div>
-        <div>
-          <div className="text-sm font-medium">Payments</div>
-          <p className="mt-3 text-sm text-muted-foreground">
-            Secure checkout powered by <span className="font-medium text-foreground">Palpluss</span>.
-            M-Pesa, card and bank transfer.
-          </p>
+    <footer className="mt-24">
+      {/* Trust strip */}
+      <div className="border-y border-border/60 bg-surface/60">
+        <div className="mx-auto grid max-w-7xl grid-cols-2 gap-6 px-4 py-8 md:grid-cols-4">
+          {[
+            { t: "Free answer preview", s: "See real content on every product" },
+            { t: "Instant M-Pesa payment", s: "STK push, download unlocks in seconds" },
+            { t: "Updated every sitting", s: "Sitting date shown on every product" },
+            { t: "Trusted by 12,400+ students", s: "Nairobi, Mombasa, Kisumu & beyond" },
+          ].map((f) => (
+            <div key={f.t} className="flex items-start gap-3">
+              <span className="grid h-9 w-9 flex-shrink-0 place-items-center rounded-lg bg-brand/10 text-brand">
+                <ShieldCheck className="h-4 w-4" />
+              </span>
+              <div>
+                <div className="text-sm font-semibold">{f.t}</div>
+                <div className="text-xs text-muted-foreground">{f.s}</div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
-      <div className="border-t border-border/60 py-4 text-center text-xs text-muted-foreground">
-        © {new Date().getFullYear()} Chapa Notes. Not affiliated with KASNEB or KNEC.
+
+      {/* Main footer */}
+      <div className="bg-sidebar text-sidebar-foreground">
+        <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 md:grid-cols-5">
+          <div className="md:col-span-2">
+            <div className="flex items-center gap-2.5">
+              <span className="grid h-10 w-10 place-items-center rounded-xl bg-gold-gradient text-gold-foreground">
+                <span className="font-display text-lg font-extrabold">K</span>
+              </span>
+              <span className="flex flex-col leading-none">
+                <span className="font-display text-lg font-extrabold tracking-tight">Kasneb</span>
+                <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-gold">Pastpapers</span>
+              </span>
+            </div>
+            <p className="mt-4 max-w-sm text-sm text-sidebar-foreground/80">
+              Kenya's home for updated KASNEB & KNEC study notes, revision kits and past papers with model answers.
+              Preview real answers before you pay.
+            </p>
+            <div className="mt-5 space-y-2 text-sm text-sidebar-foreground/80">
+              <div className="flex items-center gap-2"><Phone className="h-4 w-4 text-gold" /> 0712 345 678</div>
+              <div className="flex items-center gap-2"><Mail className="h-4 w-4 text-gold" /> hello@kasneb.com</div>
+              <div className="flex items-center gap-2"><MapPin className="h-4 w-4 text-gold" /> Nairobi, Kenya</div>
+            </div>
+            <div className="mt-5 flex gap-2">
+              {[Facebook, Twitter, Instagram].map((Icon, i) => (
+                <a key={i} href="#" className="grid h-9 w-9 place-items-center rounded-full bg-sidebar-accent transition hover:bg-gold hover:text-gold-foreground">
+                  <Icon className="h-4 w-4" />
+                </a>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <div className="text-sm font-bold uppercase tracking-wider text-gold">Courses</div>
+            <ul className="mt-4 space-y-2.5 text-sm text-sidebar-foreground/80">
+              {courses.map((c) => (
+                <li key={c.slug}>
+                  <Link to="/courses/$courseSlug" params={{ courseSlug: c.slug }} className="transition hover:text-gold">
+                    {c.code} — {c.name.split(" ").slice(0, 2).join(" ")}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <div className="text-sm font-bold uppercase tracking-wider text-gold">Shop</div>
+            <ul className="mt-4 space-y-2.5 text-sm text-sidebar-foreground/80">
+              <li><Link to="/courses" className="hover:text-gold">All papers</Link></li>
+              <li><Link to="/courses" className="hover:text-gold">Revision kits</Link></li>
+              <li><Link to="/courses" className="hover:text-gold">Bundles</Link></li>
+              <li><Link to="/cart" className="hover:text-gold">Cart</Link></li>
+              <li><Link to="/account" className="hover:text-gold">My downloads</Link></li>
+            </ul>
+          </div>
+
+          <div>
+            <div className="text-sm font-bold uppercase tracking-wider text-gold">Get updates</div>
+            <p className="mt-4 text-sm text-sidebar-foreground/80">
+              Sitting alerts and free past-paper drops. No spam.
+            </p>
+            <form onSubmit={(e) => e.preventDefault()} className="mt-3 flex overflow-hidden rounded-full bg-sidebar-accent">
+              <input
+                type="email"
+                placeholder="you@email.com"
+                className="flex-1 bg-transparent px-4 py-2.5 text-sm text-sidebar-foreground placeholder:text-sidebar-foreground/50 outline-none"
+              />
+              <button type="submit" className="bg-gold px-4 text-xs font-bold uppercase text-gold-foreground">
+                Join
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <div className="border-t border-sidebar-border/50">
+          <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-4 py-5 text-xs text-sidebar-foreground/70 md:flex-row">
+            <div>© {new Date().getFullYear()} Kasneb Pastpapers. Not affiliated with KASNEB or KNEC.</div>
+            <div className="flex gap-4">
+              <a href="#" className="hover:text-gold">Terms</a>
+              <a href="#" className="hover:text-gold">Privacy</a>
+              <a href="#" className="hover:text-gold">Refunds</a>
+            </div>
+          </div>
+        </div>
       </div>
     </footer>
   );
