@@ -17,6 +17,7 @@ import { Route as AccountRouteImport } from './routes/account'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CoursesIndexRouteImport } from './routes/courses/index'
 import { Route as PapersPaperIdRouteImport } from './routes/papers/$paperId'
+import { Route as OrderReferenceRouteImport } from './routes/order/$reference'
 import { Route as CoursesCourseSlugIndexRouteImport } from './routes/courses/$courseSlug/index'
 import { Route as ApiAdminPapersRouteImport } from './routes/api/admin/papers'
 import { Route as CoursesCourseSlugLevelSlugIndexRouteImport } from './routes/courses/$courseSlug/$levelSlug/index'
@@ -62,6 +63,11 @@ const PapersPaperIdRoute = PapersPaperIdRouteImport.update({
   path: '/papers/$paperId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OrderReferenceRoute = OrderReferenceRouteImport.update({
+  id: '/order/$reference',
+  path: '/order/$reference',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CoursesCourseSlugIndexRoute = CoursesCourseSlugIndexRouteImport.update({
   id: '/courses/$courseSlug/',
   path: '/courses/$courseSlug/',
@@ -92,6 +98,7 @@ export interface FileRoutesByFullPath {
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/order/$reference': typeof OrderReferenceRoute
   '/papers/$paperId': typeof PapersPaperIdRoute
   '/courses/': typeof CoursesIndexRoute
   '/api/admin/papers': typeof ApiAdminPapersRoute
@@ -106,6 +113,7 @@ export interface FileRoutesByTo {
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/order/$reference': typeof OrderReferenceRoute
   '/papers/$paperId': typeof PapersPaperIdRoute
   '/courses': typeof CoursesIndexRoute
   '/api/admin/papers': typeof ApiAdminPapersRoute
@@ -121,6 +129,7 @@ export interface FileRoutesById {
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/order/$reference': typeof OrderReferenceRoute
   '/papers/$paperId': typeof PapersPaperIdRoute
   '/courses/': typeof CoursesIndexRoute
   '/api/admin/papers': typeof ApiAdminPapersRoute
@@ -137,6 +146,7 @@ export interface FileRouteTypes {
     | '/cart'
     | '/checkout'
     | '/sitemap.xml'
+    | '/order/$reference'
     | '/papers/$paperId'
     | '/courses/'
     | '/api/admin/papers'
@@ -151,6 +161,7 @@ export interface FileRouteTypes {
     | '/cart'
     | '/checkout'
     | '/sitemap.xml'
+    | '/order/$reference'
     | '/papers/$paperId'
     | '/courses'
     | '/api/admin/papers'
@@ -165,6 +176,7 @@ export interface FileRouteTypes {
     | '/cart'
     | '/checkout'
     | '/sitemap.xml'
+    | '/order/$reference'
     | '/papers/$paperId'
     | '/courses/'
     | '/api/admin/papers'
@@ -180,6 +192,7 @@ export interface RootRouteChildren {
   CartRoute: typeof CartRoute
   CheckoutRoute: typeof CheckoutRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  OrderReferenceRoute: typeof OrderReferenceRoute
   PapersPaperIdRoute: typeof PapersPaperIdRoute
   CoursesIndexRoute: typeof CoursesIndexRoute
   ApiAdminPapersRoute: typeof ApiAdminPapersRoute
@@ -246,6 +259,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PapersPaperIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/order/$reference': {
+      id: '/order/$reference'
+      path: '/order/$reference'
+      fullPath: '/order/$reference'
+      preLoaderRoute: typeof OrderReferenceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/courses/$courseSlug/': {
       id: '/courses/$courseSlug/'
       path: '/courses/$courseSlug'
@@ -284,6 +304,7 @@ const rootRouteChildren: RootRouteChildren = {
   CartRoute: CartRoute,
   CheckoutRoute: CheckoutRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  OrderReferenceRoute: OrderReferenceRoute,
   PapersPaperIdRoute: PapersPaperIdRoute,
   CoursesIndexRoute: CoursesIndexRoute,
   ApiAdminPapersRoute: ApiAdminPapersRoute,
@@ -294,3 +315,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
