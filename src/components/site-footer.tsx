@@ -46,8 +46,8 @@ export function SiteFooter() {
             </p>
             <div className="mt-5 space-y-2 text-sm text-sidebar-foreground/80">
               <div className="flex items-center gap-2"><Phone className="h-4 w-4 text-gold" /> 0712 345 678</div>
-              <div className="flex items-center gap-2"><Mail className="h-4 w-4 text-gold" /> hello@kasneb.com</div>
-              <div className="flex items-center gap-2"><MapPin className="h-4 w-4 text-gold" /> Nairobi, Kenya</div>
+              <div className="flex items-center gap-2"><Mail className="h-4 w-4 text-gold" /> hello@kasnebpapers.com</div>
+              <div className="flex items-center gap-2"><MapPin className="h-4 w-4 text-gold" /> Nairobi, Kenya · kasnebpapers.com</div>
             </div>
             <div className="mt-5 flex gap-2">
               {[Facebook, Twitter, Instagram].map((Icon, i) => (

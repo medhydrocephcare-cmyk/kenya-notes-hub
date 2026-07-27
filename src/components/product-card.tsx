@@ -1,11 +1,13 @@
 import { Link } from "@tanstack/react-router";
-import { Star, Eye, ShoppingCart, Check, FileText, BookOpen, Layers } from "lucide-react";
+import { Star, Eye, ShoppingCart, Check, Layers } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { addToCart, isInCart } from "@/lib/cart";
 import { toast } from "sonner";
 import { useSyncExternalStore } from "react";
 import type { Paper } from "@/lib/data";
 import { getCourse } from "@/lib/data";
+import { subjectImageFor } from "@/lib/subject-image";
+
 
 /** Subtle course palette used by the thumbnail. */
 const COURSE_TINT: Record<string, { bg: string; ring: string; icon: string }> = {
@@ -41,11 +43,7 @@ export function ProductCard({ paper }: { paper: Paper }) {
   ) === "1";
 
   const shortTitle = paper.title.split("—")[0].trim();
-  const Icon = paper.bundleType && paper.bundleType !== "single"
-    ? Layers
-    : /(notes|kit|paper|answer)/i.test(paper.title)
-      ? FileText
-      : BookOpen;
+  const cover = subjectImageFor(paper.title, paper.courseSlug);
 
   return (
     <div className="group relative flex flex-col overflow-hidden rounded-2xl border border-border/60 bg-card transition hover:-translate-y-0.5 hover:border-brand/40 hover:shadow-card">
@@ -54,35 +52,33 @@ export function ProductCard({ paper }: { paper: Paper }) {
         params={{ paperId: paper.id }}
         className="relative block aspect-[4/3] overflow-hidden"
       >
-        {/* Solid gradient tile */}
-        <div className={`absolute inset-0 bg-gradient-to-br ${tint.bg}`} />
-        {/* subtle geometric pattern */}
-        <svg className="absolute inset-0 h-full w-full opacity-15 mix-blend-overlay" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <pattern id={`p-${paper.id}`} width="24" height="24" patternUnits="userSpaceOnUse">
-              <path d="M0 24 L24 0" stroke="white" strokeWidth="0.6" />
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill={`url(#p-${paper.id})`} />
-        </svg>
+        {/* Subject photo */}
+        <img
+          src={cover}
+          alt={shortTitle}
+          loading="lazy"
+          className="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-[1.04]"
+        />
+        {/* Color wash for readability + brand */}
+        <div className={`absolute inset-0 bg-gradient-to-br ${tint.bg} opacity-55 mix-blend-multiply`} />
+        <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
 
         {/* Content */}
         <div className="relative flex h-full flex-col p-4 text-white">
           <div className="flex items-center gap-2">
-            <span className="rounded-md bg-white/20 px-2 py-0.5 text-[10px] font-black uppercase tracking-wider backdrop-blur">
+            <span className="rounded-md bg-white/25 px-2 py-0.5 text-[10px] font-black uppercase tracking-wider backdrop-blur">
               {course?.code}
             </span>
-            <span className="rounded-md bg-black/20 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider backdrop-blur">
+            <span className="rounded-md bg-black/30 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider backdrop-blur">
               {paper.levelSlug.replace(/-/g, " ")}
             </span>
           </div>
 
           <div className="mt-auto">
-            <Icon className={`mb-2 h-7 w-7 ${tint.icon} drop-shadow`} />
-            <div className="line-clamp-3 font-display text-[15px] font-extrabold leading-tight drop-shadow-sm">
+            <div className="line-clamp-3 font-display text-[15px] font-extrabold leading-tight drop-shadow-md">
               {shortTitle}
             </div>
-            <div className="mt-1.5 text-[10px] font-semibold uppercase tracking-wider text-white/80">
+            <div className="mt-1.5 text-[10px] font-semibold uppercase tracking-wider text-white/85">
               {paper.examSitting} · KASNEB
             </div>
           </div>
@@ -94,8 +90,8 @@ export function ProductCard({ paper }: { paper: Paper }) {
           </div>
         )}
         {paper.bundleType && paper.bundleType !== "single" && (
-          <div className="absolute right-3 bottom-3 rounded-full bg-gold px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-gold-foreground shadow">
-            {paper.bundleType} bundle
+          <div className="absolute right-3 bottom-3 inline-flex items-center gap-1 rounded-full bg-gold px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-gold-foreground shadow">
+            <Layers className="h-3 w-3" /> {paper.bundleType} bundle
           </div>
         )}
       </Link>

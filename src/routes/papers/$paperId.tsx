@@ -127,19 +127,19 @@ function PaperDetail() {
               </div>
 
               {/* Paper "page" — styled like a scanned KASNEB exam booklet */}
-              <div className="relative bg-[#fdfcf7] p-4 font-serif text-[12.5px] leading-relaxed text-[#1a1a1a] sm:p-8 sm:text-[13.5px]">
+              <div className="relative bg-[#fdfcf7] p-3 font-serif text-[11.5px] leading-relaxed text-[#1a1a1a] sm:p-8 sm:text-[13.5px]">
                 {/* Official-looking header */}
-                <div className="mx-auto max-w-2xl border-b-2 border-[#1a1a1a] pb-4 text-center">
-                  <div className="text-[11px] font-bold uppercase tracking-[0.25em] text-[#1a1a1a]">
+                <div className="mx-auto max-w-2xl border-b-2 border-[#1a1a1a] pb-3 text-center sm:pb-4">
+                  <div className="text-[9px] font-bold uppercase tracking-[0.2em] text-[#1a1a1a] sm:text-[11px] sm:tracking-[0.25em]">
                     Kenya Accountants and Secretaries National Examinations Board
                   </div>
-                  <div className="mt-3 font-sans text-lg font-extrabold uppercase tracking-wider">
+                  <div className="mt-2 font-sans text-sm font-extrabold uppercase tracking-wider sm:mt-3 sm:text-lg">
                     {course.code} — {level.name.toUpperCase()} LEVEL
                   </div>
-                  <div className="mt-1 text-sm font-semibold uppercase">{paper.title}</div>
-                  <div className="mt-3 flex justify-between text-[11px] font-semibold uppercase tracking-wide">
+                  <div className="mt-1 text-[12px] font-semibold uppercase sm:text-sm">{paper.title}</div>
+                  <div className="mt-2 flex flex-wrap justify-between gap-1 text-[10px] font-semibold uppercase tracking-wide sm:mt-3 sm:text-[11px]">
                     <span>{paper.examSitting}</span>
-                    <span>Time Allowed: 3 hours</span>
+                    <span>Time: 3 hours</span>
                   </div>
                 </div>
 
@@ -313,10 +313,10 @@ function PaperDetail() {
               <TabsContent value="faq">
                 <Card className="mt-4 divide-y divide-border p-0">
                   {[
-                    ["How do I get the file after paying?", "You receive an instant download link on the confirmation page and by email/SMS the moment M-Pesa confirms."],
+                    ["How do I get the file after paying?", "You receive an instant download link on the confirmation page and by email the moment M-Pesa confirms."],
                     ["Which sitting does this cover?", `${paper.examSitting}. Future updates for this sitting are free.`],
                     ["Can I read on my phone?", "Yes — PDF works on any phone, tablet or laptop, online or offline."],
-                    ["Is payment secure?", "Yes — 256-bit SSL and PCI-DSS compliant. M-Pesa, Visa, Mastercard and bank supported."],
+                    ["Is payment secure?", "Yes — 256-bit SSL encrypted checkout, paid securely with M-Pesa."],
                   ].map(([q, a]) => (
                     <details key={q} className="group p-4">
                       <summary className="cursor-pointer list-none font-medium">
@@ -375,17 +375,16 @@ function PaperDetail() {
 
                 <div className="mt-5 space-y-2 rounded-lg bg-surface/60 p-3 text-xs">
                   <div className="flex items-center gap-2"><Download className="h-3.5 w-3.5 text-brand" /> Instant PDF download</div>
-                  <div className="flex items-center gap-2"><ShieldCheck className="h-3.5 w-3.5 text-brand" /> 256-bit SSL · M-Pesa · Card · Bank</div>
+                  <div className="flex items-center gap-2"><ShieldCheck className="h-3.5 w-3.5 text-brand" /> 256-bit SSL secure checkout</div>
                   <div className="flex items-center gap-2"><RefreshCw className="h-3.5 w-3.5 text-brand" /> Free updates this sitting</div>
                   <div className="flex items-center gap-2"><BookOpen className="h-3.5 w-3.5 text-brand" /> 240 pages · notes + answers</div>
                   <div className="flex items-center gap-2"><Calendar className="h-3.5 w-3.5 text-brand" /> Covers <b>{paper.examSitting}</b> sitting</div>
                 </div>
 
-                <div className="mt-4 flex items-center justify-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                  <span className="rounded bg-emerald-600 px-1.5 py-0.5 text-white">M-PESA</span>
-                  <span className="rounded bg-blue-600 px-1.5 py-0.5 text-white">VISA</span>
-                  <span className="rounded bg-orange-500 px-1.5 py-0.5 text-white">MASTERCARD</span>
-                  <span className="rounded bg-slate-700 px-1.5 py-0.5 text-white">BANK</span>
+                <div className="mt-4 flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                  <span className="inline-flex items-center gap-1 rounded bg-emerald-600 px-2 py-1 text-white">
+                    <Lock className="h-3 w-3" /> Pay with M-Pesa
+                  </span>
                 </div>
               </div>
             </Card>

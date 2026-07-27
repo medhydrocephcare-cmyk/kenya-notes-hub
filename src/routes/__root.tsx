@@ -4,10 +4,12 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useRouterState,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
+
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -82,9 +84,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { name: "theme-color", content: "#0f5132" },
       { title: "Kasneb Pastpapers — KASNEB & KNEC notes, revision kits & past papers" },
-      { name: "description", content: "Kenya's fastest-growing shop for KASNEB & KNEC study notes, revision kits and past papers with model answers. Updated every sitting. Pay with M-Pesa." },
+      { name: "description", content: "kasnebpapers.com — Kenya's home for updated KASNEB & KNEC study notes, revision kits and past papers with model answers. Pay securely with M-Pesa." },
       { property: "og:title", content: "Kasneb Pastpapers — KASNEB & KNEC study notes" },
-      { property: "og:description", content: "Notes, revision kits and past-paper answers for CPA, ATD, CS, CIFA, CCP, CICT and KNEC. Free preview on every product." },
+      { property: "og:description", content: "Notes, revision kits and past-paper answers for CPA, ATD, CS, CIFA, CCP, CICT and KNEC. Free preview on every product. kasnebpapers.com" },
+      { property: "og:url", content: "https://www.kasnebpapers.com" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -118,11 +121,14 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <Outlet />
+        <div key={pathname} className="page-transition">
+          <Outlet />
+        </div>
         <CartDrawer />
         <Toaster />
       </AuthProvider>
