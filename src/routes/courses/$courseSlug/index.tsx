@@ -1,9 +1,9 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
-import { Card } from "@/components/ui/card";
+import { CategorySidebar } from "@/components/category-sidebar";
 import { getCourse, getLevelsForCourse, getPapersForLevel } from "@/lib/data";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, FileText, ArrowRight } from "lucide-react";
 
 export const Route = createFileRoute("/courses/$courseSlug/")({
   loader: ({ params }) => {
@@ -14,9 +14,9 @@ export const Route = createFileRoute("/courses/$courseSlug/")({
   head: ({ loaderData }) => ({
     meta: loaderData
       ? [
-          { title: `${loaderData.course.name} — Notes & past papers | Chapa Notes` },
-          { name: "description", content: `${loaderData.course.name} (${loaderData.course.code}) notes, revision kits and past-paper answers organised by level.` },
-          { property: "og:title", content: `${loaderData.course.name} — Chapa Notes` },
+          { title: `${loaderData.course.name} — Notes & past papers | Kasneb Pastpapers` },
+          { name: "description", content: `${loaderData.course.name} (${loaderData.course.code}) notes, revision kits and past-paper answers organised by level. Free preview on every product.` },
+          { property: "og:title", content: `${loaderData.course.name} — Kasneb Pastpapers` },
           { property: "og:description", content: loaderData.course.description },
         ]
       : [{ title: "Course not found" }, { name: "robots", content: "noindex" }],
@@ -27,40 +27,79 @@ export const Route = createFileRoute("/courses/$courseSlug/")({
 function CourseLevels() {
   const { course } = Route.useLoaderData();
   const levels = getLevelsForCourse(course.slug);
+
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
-      <div className="mx-auto max-w-6xl px-4 py-12">
-        <nav className="text-xs text-muted-foreground">
-          <Link to="/courses" className="hover:text-foreground">Courses</Link>
-          <span className="mx-2">/</span>
-          <span>{course.code}</span>
-        </nav>
-        <h1 className="mt-3 text-3xl font-semibold tracking-tight">{course.name}</h1>
-        <p className="mt-2 max-w-2xl text-sm text-muted-foreground">{course.description}</p>
 
-        <h2 className="mt-10 text-lg font-semibold">Levels</h2>
-        <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {levels.map((lv) => {
-            const count = getPapersForLevel(course.slug, lv.slug).length;
-            return (
-              <Link
-                key={lv.slug}
-                to="/courses/$courseSlug/$levelSlug"
-                params={{ courseSlug: course.slug, levelSlug: lv.slug }}
-              >
-                <Card className="flex items-center justify-between p-5 transition hover:border-primary/40 hover:shadow-md">
-                  <div>
-                    <div className="font-medium">{lv.name}</div>
-                    <div className="mt-1 text-xs text-muted-foreground">{count} papers available</div>
-                  </div>
-                  <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                </Card>
-              </Link>
-            );
-          })}
+      {/* Hero */}
+      <div className="bg-brand-gradient text-primary-foreground">
+        <div className="mx-auto max-w-7xl px-4 py-10">
+          <nav className="flex items-center gap-2 text-xs text-white/70">
+            <Link to="/courses" className="hover:text-white">Shop</Link>
+            <ChevronRight className="h-3 w-3" />
+            <span className="text-white">{course.code}</span>
+          </nav>
+          <div className="mt-3 flex flex-wrap items-center gap-3">
+            <span className="rounded-lg bg-gold px-3 py-1.5 font-display text-sm font-extrabold text-gold-foreground">
+              {course.code}
+            </span>
+            <h1 className="font-display text-3xl font-extrabold md:text-4xl">{course.name}</h1>
+          </div>
+          <p className="mt-3 max-w-2xl text-white/85">{course.description}</p>
         </div>
       </div>
+
+      <div className="mx-auto max-w-7xl px-4 py-10">
+        <div className="grid gap-8 lg:grid-cols-[280px_1fr]">
+          <div className="hidden lg:block">
+            <CategorySidebar activeCourse={course.slug} />
+          </div>
+
+          <div>
+            <h2 className="font-display text-2xl font-extrabold">Pick a level</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {levels.length} levels available in {course.code}. Each level lists every paper.
+            </p>
+
+            <div className="mt-6 grid gap-4 sm:grid-cols-2">
+              {levels.map((lv, i) => {
+                const count = getPapersForLevel(course.slug, lv.slug).length;
+                return (
+                  <Link
+                    key={lv.slug}
+                    to="/courses/$courseSlug/$levelSlug"
+                    params={{ courseSlug: course.slug, levelSlug: lv.slug }}
+                    className="group relative overflow-hidden rounded-2xl border border-border/60 bg-card p-6 transition hover:-translate-y-1 hover:border-brand/40 hover:shadow-card"
+                  >
+                    <div
+                      aria-hidden
+                      className={`absolute -right-6 -top-6 h-24 w-24 rounded-full opacity-60 blur-2xl ${
+                        ["bg-emerald-300", "bg-amber-300", "bg-sky-300", "bg-rose-300", "bg-violet-300", "bg-cyan-300"][i % 6]
+                      }`}
+                    />
+                    <div className="relative flex items-start gap-4">
+                      <div className="grid h-12 w-12 flex-shrink-0 place-items-center rounded-xl bg-brand-gradient text-primary-foreground">
+                        <FileText className="h-5 w-5" />
+                      </div>
+                      <div className="flex-1">
+                        <div className="font-display text-lg font-bold">{lv.name}</div>
+                        <div className="mt-1 text-xs text-muted-foreground">
+                          {count} paper{count === 1 ? "" : "s"} • Notes, revision kits &amp; model answers
+                        </div>
+                        <div className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-brand">
+                          View papers <ArrowRight className="h-3.5 w-3.5 transition group-hover:translate-x-1" />
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </div>
+
       <SiteFooter />
     </div>
   );

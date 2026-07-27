@@ -1,13 +1,10 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { CategorySidebar } from "@/components/category-sidebar";
+import { ProductCard } from "@/components/product-card";
 import { getCourse, getLevel, getPapersForLevel } from "@/lib/data";
-import { Star, Eye } from "lucide-react";
-import { addToCart } from "@/lib/cart";
-import { toast } from "sonner";
+import { ChevronRight, LayoutGrid } from "lucide-react";
 
 export const Route = createFileRoute("/courses/$courseSlug/$levelSlug/")({
   loader: ({ params }) => {
@@ -21,7 +18,7 @@ export const Route = createFileRoute("/courses/$courseSlug/$levelSlug/")({
       ? [
           { title: `${loaderData.course.code} ${loaderData.level.name} — Notes & past papers` },
           { name: "description", content: `${loaderData.course.name} ${loaderData.level.name} notes, revision kits and past-paper answers. Free preview on every paper.` },
-          { property: "og:title", content: `${loaderData.course.code} ${loaderData.level.name} — Chapa Notes` },
+          { property: "og:title", content: `${loaderData.course.code} ${loaderData.level.name} — Kasneb Pastpapers` },
           { property: "og:description", content: `Papers, notes and answers for ${loaderData.course.name} ${loaderData.level.name}.` },
         ]
       : [{ title: "Not found" }, { name: "robots", content: "noindex" }],
@@ -32,72 +29,69 @@ export const Route = createFileRoute("/courses/$courseSlug/$levelSlug/")({
 function LevelPapers() {
   const { course, level } = Route.useLoaderData();
   const papers = getPapersForLevel(course.slug, level.slug);
+
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
-      <div className="mx-auto max-w-6xl px-4 py-12">
-        <nav className="text-xs text-muted-foreground">
-          <Link to="/courses" className="hover:text-foreground">Courses</Link>
-          <span className="mx-2">/</span>
-          <Link to="/courses/$courseSlug" params={{ courseSlug: course.slug }} className="hover:text-foreground">
-            {course.code}
-          </Link>
-          <span className="mx-2">/</span>
-          <span>{level.name}</span>
-        </nav>
-        <h1 className="mt-3 text-3xl font-semibold tracking-tight">
-          {course.code} {level.name}
-        </h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          {papers.length} paper{papers.length === 1 ? "" : "s"} available. Each product includes a free answer preview.
-        </p>
 
-        <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {papers.map((p) => (
-            <Card key={p.id} className="flex flex-col p-5">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1 text-amber-500">
-                  <Star className="h-4 w-4 fill-current" />
-                  <span className="text-sm font-medium">{p.rating.toFixed(1)}</span>
-                </div>
-                {p.bundleType && p.bundleType !== "single" && (
-                  <Badge variant="secondary" className="capitalize">{p.bundleType} bundle</Badge>
-                )}
-              </div>
-              <Link to="/papers/$paperId" params={{ paperId: p.id }} className="mt-3">
-                <div className="font-semibold leading-snug hover:text-primary">{p.title}</div>
-              </Link>
-              <div className="mt-1 text-xs text-muted-foreground">
-                {p.examSitting} • updated {p.lastUpdated}
-              </div>
-              <p className="mt-3 line-clamp-2 text-sm text-muted-foreground">{p.description}</p>
-              <div className="mt-4 flex items-baseline gap-2">
-                <span className="text-lg font-semibold">KSh {p.price}</span>
-                {p.originalPrice && (
-                  <span className="text-sm text-muted-foreground line-through">KSh {p.originalPrice}</span>
-                )}
-              </div>
-              <div className="mt-4 flex gap-2">
-                <Link to="/papers/$paperId" params={{ paperId: p.id }} className="flex-1">
-                  <Button variant="outline" size="sm" className="w-full">
-                    <Eye className="h-4 w-4" /> Preview
-                  </Button>
-                </Link>
-                <Button
-                  size="sm"
-                  className="flex-1"
-                  onClick={() => {
-                    addToCart(p.id);
-                    toast.success("Added to cart");
-                  }}
-                >
-                  Add to cart
-                </Button>
-              </div>
-            </Card>
-          ))}
+      <div className="bg-brand-gradient text-primary-foreground">
+        <div className="mx-auto max-w-7xl px-4 py-10">
+          <nav className="flex items-center gap-2 text-xs text-white/70">
+            <Link to="/courses" className="hover:text-white">Shop</Link>
+            <ChevronRight className="h-3 w-3" />
+            <Link to="/courses/$courseSlug" params={{ courseSlug: course.slug }} className="hover:text-white">
+              {course.code}
+            </Link>
+            <ChevronRight className="h-3 w-3" />
+            <span className="text-white">{level.name}</span>
+          </nav>
+          <div className="mt-3 flex flex-wrap items-center gap-3">
+            <span className="rounded-lg bg-gold px-3 py-1.5 font-display text-sm font-extrabold text-gold-foreground">
+              {course.code}
+            </span>
+            <h1 className="font-display text-3xl font-extrabold md:text-4xl">{level.name}</h1>
+          </div>
+          <p className="mt-3 text-white/85">
+            {papers.length} product{papers.length === 1 ? "" : "s"} • Free preview on every paper
+          </p>
         </div>
       </div>
+
+      <div className="mx-auto max-w-7xl px-4 py-10">
+        <div className="grid gap-8 lg:grid-cols-[280px_1fr]">
+          <div className="hidden lg:block">
+            <CategorySidebar activeCourse={course.slug} />
+          </div>
+
+          <div>
+            <div className="mb-5 flex items-center justify-between rounded-xl border border-border/60 bg-card px-4 py-3 text-sm shadow-card">
+              <div className="flex items-center gap-2 text-muted-foreground">
+                <LayoutGrid className="h-4 w-4" />
+                <b className="text-foreground">{papers.length}</b> product{papers.length === 1 ? "" : "s"}
+              </div>
+              <select className="rounded-md border border-border bg-background px-2 py-1.5 text-xs">
+                <option>Sort: Popularity</option>
+                <option>Price: low to high</option>
+                <option>Price: high to low</option>
+                <option>Newest</option>
+              </select>
+            </div>
+
+            {papers.length === 0 ? (
+              <div className="rounded-xl border border-dashed border-border p-10 text-center text-sm text-muted-foreground">
+                No papers uploaded for this level yet — check back soon.
+              </div>
+            ) : (
+              <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+                {papers.map((p) => (
+                  <ProductCard key={p.id} paper={p} />
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
       <SiteFooter />
     </div>
   );
