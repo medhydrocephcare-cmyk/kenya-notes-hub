@@ -185,8 +185,9 @@ export const papers: Paper[] = [
     rating: 4.9, reviews: sampleReviews,
     bundleType: "sitting",
   },
-
+  {
     id: "cpa-f2-fin-mgmt",
+
     courseSlug: "cpa", levelSlug: "foundation-2",
     title: "Financial Management — Notes + Kit",
     description: "Time value of money, capital budgeting, working capital and financing decisions with full past-paper answers.",
