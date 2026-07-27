@@ -27,7 +27,7 @@ export function SiteHeader() {
               <Phone className="h-3 w-3" /> 0712 345 678
             </span>
             <span className="hidden items-center gap-1.5 md:inline-flex">
-              <Mail className="h-3 w-3" /> hello@casneb.com
+              <Mail className="h-3 w-3" /> hello@kasnebpapers.com
             </span>
             <span className="truncate sm:hidden">📞 0712 345 678 · Pay with M-Pesa</span>
           </div>
