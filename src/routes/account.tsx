@@ -49,13 +49,12 @@ function AccountPage() {
   useEffect(() => {
     if (!user) return;
     setLoadingOrders(true);
-    fetchOrders({ data: undefined as never }).then((data) => {
-      setOrders(data as Order[]);
-      setLoadingOrders(false);
-    }).catch((e) => {
-      toast.error(e instanceof Error ? e.message : "Failed to load orders");
-      setLoadingOrders(false);
-    });
+    (fetchOrders as unknown as () => Promise<Order[]>)()
+      .then((data) => { setOrders(data); setLoadingOrders(false); })
+      .catch((e) => {
+        toast.error(e instanceof Error ? e.message : "Failed to load orders");
+        setLoadingOrders(false);
+      });
   }, [user, fetchOrders]);
 
   if (loading || !user) {
