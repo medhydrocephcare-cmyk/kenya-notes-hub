@@ -114,6 +114,10 @@ function AdminInner({ accessToken, email }: { accessToken: string; email: string
             <TabsTrigger value="papers">Papers ({papers.length})</TabsTrigger>
             <TabsTrigger value="orders">Orders ({orders.length})</TabsTrigger>
             <TabsTrigger value="new">Add paper</TabsTrigger>
+            <TabsTrigger value="categories">Categories</TabsTrigger>
+            <TabsTrigger value="blog">Blog</TabsTrigger>
+            <TabsTrigger value="testimonials">Testimonials</TabsTrigger>
+            <TabsTrigger value="reviews">Reviews</TabsTrigger>
             <TabsTrigger value="courses">Courses & levels</TabsTrigger>
           </TabsList>
 
@@ -150,6 +154,11 @@ function AdminInner({ accessToken, email }: { accessToken: string; email: string
           </TabsContent>
 
           <TabsContent value="new"><AddPaperForm accessToken={accessToken} /></TabsContent>
+
+          <TabsContent value="categories"><AdminCategoriesPanel /></TabsContent>
+          <TabsContent value="blog"><AdminBlogPanel /></TabsContent>
+          <TabsContent value="testimonials"><AdminTestimonialsPanel /></TabsContent>
+          <TabsContent value="reviews"><AdminReviewsPanel /></TabsContent>
 
           <TabsContent value="courses">
             <div className="mt-4 grid gap-4 md:grid-cols-2">
