@@ -1,9 +1,9 @@
 # Financial Management
 
 **Course:** CPA — Certified Public Accountant
-**Level:** Foundation Level 2
+**Level:** Intermediate Level 1
 **Last updated:** 28 July 2026
-**Syllabus version:** Based on the standard KASNEB CPA Foundation Level 2 Financial Management syllabus structure (time value of money, capital budgeting, sources of finance, and working capital management). Authored from general professional finance knowledge and standard syllabus topic coverage, not copied from any existing notes provider. Cross-check the topic list against the current official KASNEB syllabus gazette before the exam.
+**Syllabus version:** Based on the standard KASNEB CPA Intermediate Level Financial Management syllabus structure (time value of money, capital budgeting, sources of finance, and working capital management). Authored from general professional finance knowledge and standard syllabus topic coverage, not copied from any existing notes provider. Cross-check the topic list against the current official KASNEB syllabus gazette before the exam.
 
 > **Original work notice.** Every explanation, example, and question in this document was written from scratch for this paper. No text has been copied or paraphrased from any KASNEB past paper, textbook, or third-party notes website. Practice questions are original scenarios written to test the same competencies KASNEB examines — they are not reproductions of real KASNEB exam questions. All numerical workings in this document have been independently recalculated and verified before publication.
 

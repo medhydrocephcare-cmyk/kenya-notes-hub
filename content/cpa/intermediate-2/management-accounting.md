@@ -1,9 +1,9 @@
 # Management Accounting — Nature, Purpose and Classification of Costs
 
 **Course:** CPA — Certified Public Accountant
-**Level:** Foundation Level 2
+**Level:** Intermediate Level 2
 **Last updated:** 28 July 2026
-**Syllabus version:** Based on the standard KASNEB CPA Foundation Level Management Accounting syllabus topics — nature and purpose of cost/management accounting, the cost accountant's functions, scope of cost accounting, and cost classification. Authored from general professional cost-and-management-accounting knowledge and standard syllabus topic coverage, not copied from any existing notes provider or study guide. Cross-check terminology and emphasis against the current KASNEB syllabus and examiner's reports before the exam.
+**Syllabus version:** Based on the standard KASNEB CPA Intermediate Level Management Accounting syllabus topics — nature and purpose of cost/management accounting, the cost accountant's functions, scope of cost accounting, and cost classification. Authored from general professional cost-and-management-accounting knowledge and standard syllabus topic coverage, not copied from any existing notes provider or study guide. Cross-check terminology and emphasis against the current KASNEB syllabus and examiner's reports before the exam.
 
 > **Original work notice.** Every explanation, worked example, and question in this document was written from scratch for this paper. No text has been copied or paraphrased from any KASNEB past paper, textbook, or third-party notes/study guide. The worked example and practice questions are original scenarios — they are not reproductions of any real exam question or any other author's teaching example.
 

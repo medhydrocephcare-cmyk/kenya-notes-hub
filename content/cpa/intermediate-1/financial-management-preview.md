@@ -1,6 +1,6 @@
 # Financial Management — PREVIEW
 
-**Course:** CPA — Certified Public Accountant | **Level:** Foundation Level 2
+**Course:** CPA — Certified Public Accountant | **Level:** Intermediate Level 1
 **This is a free preview covering the introduction and Section 1 only.**
 
 ---

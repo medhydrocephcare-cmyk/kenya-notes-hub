@@ -1,6 +1,6 @@
 # Management Accounting — Nature, Purpose and Classification of Costs — PREVIEW
 
-**Course:** CPA — Certified Public Accountant | **Level:** Foundation Level 2
+**Course:** CPA — Certified Public Accountant | **Level:** Intermediate Level 2
 **This is a free preview. It shows the exam-paper layout used throughout the full document, plus the introduction section.**
 
 ---

@@ -1,9 +1,9 @@
 # Auditing and Assurance — Foundations of the Audit Function
 
 **Course:** CPA — Certified Public Accountant
-**Level:** Advanced Level 2
+**Level:** Intermediate Level 2
 **Last updated:** 28 July 2026
-**Syllabus version:** Based on the KASNEB CPA Advanced Level Auditing and Assurance syllabus (topics: the general audit environment, the auditor and the Companies Act, audit planning, internal control, audit evidence, and the auditor's report). Aligned to the International Standards on Auditing (ISAs). Verify specific ISA references against the current handbook.
+**Syllabus version:** Based on the KASNEB CPA Intermediate Level Auditing and Assurance syllabus (topics: the general audit environment, the auditor and the Companies Act, audit planning, internal control, audit evidence, and the auditor's report). Aligned to the International Standards on Auditing (ISAs). Verify specific ISA references against the current handbook.
 
 > **Original work notice.** All text, examples, and questions in this document were written from scratch. Nothing is copied or paraphrased from any KASNEB past paper, textbook, or third-party study guide.
 
