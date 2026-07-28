@@ -14,6 +14,54 @@ export type Database = {
   }
   public: {
     Tables: {
+      blog_posts: {
+        Row: {
+          author: string
+          content_md: string
+          cover_image_url: string | null
+          created_at: string
+          excerpt: string
+          id: string
+          published: boolean
+          published_at: string | null
+          reading_minutes: number
+          slug: string
+          tags: string[]
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          author?: string
+          content_md?: string
+          cover_image_url?: string | null
+          created_at?: string
+          excerpt?: string
+          id?: string
+          published?: boolean
+          published_at?: string | null
+          reading_minutes?: number
+          slug: string
+          tags?: string[]
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          author?: string
+          content_md?: string
+          cover_image_url?: string | null
+          created_at?: string
+          excerpt?: string
+          id?: string
+          published?: boolean
+          published_at?: string | null
+          reading_minutes?: number
+          slug?: string
+          tags?: string[]
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       order_items: {
         Row: {
           created_at: string
@@ -100,6 +148,86 @@ export type Database = {
         }
         Relationships: []
       }
+      paper_categories: {
+        Row: {
+          color: string
+          created_at: string
+          description: string
+          icon: string
+          id: string
+          name: string
+          slug: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          color?: string
+          created_at?: string
+          description?: string
+          icon?: string
+          id?: string
+          name: string
+          slug: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          color?: string
+          created_at?: string
+          description?: string
+          icon?: string
+          id?: string
+          name?: string
+          slug?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      paper_reviews: {
+        Row: {
+          approved: boolean
+          author_name: string
+          comment: string
+          created_at: string
+          id: string
+          paper_id: string
+          rating: number
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          approved?: boolean
+          author_name: string
+          comment?: string
+          created_at?: string
+          id?: string
+          paper_id: string
+          rating: number
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          approved?: boolean
+          author_name?: string
+          comment?: string
+          created_at?: string
+          id?: string
+          paper_id?: string
+          rating?: number
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "paper_reviews_paper_id_fkey"
+            columns: ["paper_id"]
+            isOneToOne: false
+            referencedRelation: "papers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       papers: {
         Row: {
           category: string
@@ -175,6 +303,45 @@ export type Database = {
           title?: string
           updated_at?: string
           year?: number | null
+        }
+        Relationships: []
+      }
+      testimonials: {
+        Row: {
+          approved: boolean
+          author_name: string
+          avatar_url: string | null
+          created_at: string
+          featured: boolean
+          id: string
+          quote: string
+          rating: number
+          role: string
+          updated_at: string
+        }
+        Insert: {
+          approved?: boolean
+          author_name: string
+          avatar_url?: string | null
+          created_at?: string
+          featured?: boolean
+          id?: string
+          quote: string
+          rating?: number
+          role?: string
+          updated_at?: string
+        }
+        Update: {
+          approved?: boolean
+          author_name?: string
+          avatar_url?: string | null
+          created_at?: string
+          featured?: boolean
+          id?: string
+          quote?: string
+          rating?: number
+          role?: string
+          updated_at?: string
         }
         Relationships: []
       }
