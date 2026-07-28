@@ -115,6 +115,7 @@ export type Database = {
           level: string
           pages: number | null
           preview_pdf_key: string | null
+          preview_text: string | null
           price_kes: number
           published: boolean
           sitting: string | null
@@ -139,6 +140,7 @@ export type Database = {
           level: string
           pages?: number | null
           preview_pdf_key?: string | null
+          preview_text?: string | null
           price_kes: number
           published?: boolean
           sitting?: string | null
@@ -163,6 +165,7 @@ export type Database = {
           level?: string
           pages?: number | null
           preview_pdf_key?: string | null
+          preview_text?: string | null
           price_kes?: number
           published?: boolean
           sitting?: string | null
