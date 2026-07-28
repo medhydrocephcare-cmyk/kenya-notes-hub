@@ -12,6 +12,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { courses, levels } from "@/lib/data";
 import { listAdminPapers, listAdminOrders } from "@/lib/admin.functions";
+import { BlogAdmin, TestimonialsAdmin, ReviewsAdmin, CategoriesAdmin } from "@/components/admin-content-tabs";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useAuth } from "@/lib/auth-context";
@@ -114,6 +115,10 @@ function AdminInner({ accessToken, email }: { accessToken: string; email: string
             <TabsTrigger value="papers">Papers ({papers.length})</TabsTrigger>
             <TabsTrigger value="orders">Orders ({orders.length})</TabsTrigger>
             <TabsTrigger value="new">Add paper</TabsTrigger>
+            <TabsTrigger value="categories">Categories</TabsTrigger>
+            <TabsTrigger value="blog">Blog</TabsTrigger>
+            <TabsTrigger value="testimonials">Testimonials</TabsTrigger>
+            <TabsTrigger value="reviews">Reviews</TabsTrigger>
             <TabsTrigger value="courses">Courses & levels</TabsTrigger>
           </TabsList>
 
@@ -150,6 +155,10 @@ function AdminInner({ accessToken, email }: { accessToken: string; email: string
           </TabsContent>
 
           <TabsContent value="new"><AddPaperForm accessToken={accessToken} /></TabsContent>
+          <TabsContent value="categories"><CategoriesAdmin /></TabsContent>
+          <TabsContent value="blog"><BlogAdmin /></TabsContent>
+          <TabsContent value="testimonials"><TestimonialsAdmin /></TabsContent>
+          <TabsContent value="reviews"><ReviewsAdmin /></TabsContent>
 
           <TabsContent value="courses">
             <div className="mt-4 grid gap-4 md:grid-cols-2">
