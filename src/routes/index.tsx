@@ -1,16 +1,22 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useSuspenseQuery, useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { CategorySidebar } from "@/components/category-sidebar";
 import { ProductCard } from "@/components/product-card";
+import { TestimonialsSection } from "@/components/testimonials-section";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { courses } from "@/lib/data";
 import {
   allPapersQueryOptions,
   catalogStatsQueryOptions,
 } from "@/lib/papers.queries";
 import { countByCourse } from "@/lib/paper-catalog";
+import { listBlogPosts } from "@/lib/blog.functions";
+import { listCategories } from "@/lib/categories.functions";
 import { SITE, SITE_URL } from "@/lib/site-config";
 import {
   ArrowRight,
@@ -297,10 +303,91 @@ function Home() {
         </div>
       </section>
 
+      <CategoryStrip />
+
+      <TestimonialsSection />
+
+      <LatestBlogStrip />
+
       <SiteFooter />
     </div>
   );
 }
+
+function CategoryStrip() {
+  const fetchCats = useServerFn(listCategories);
+  const q = useQuery({ queryKey: ["categories"], queryFn: () => fetchCats(), staleTime: 60_000 });
+  const cats = q.data ?? [];
+  if (cats.length === 0) return null;
+  return (
+    <section className="border-y border-border/60 bg-background py-12 sm:py-16">
+      <div className="mx-auto max-w-7xl px-4">
+        <p className="text-xs font-bold uppercase tracking-[0.18em] text-brand">Shop by category</p>
+        <h2 className="mt-2 font-display text-2xl font-extrabold tracking-tight sm:text-3xl">Find exactly what you need</h2>
+        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {cats.map((c) => (
+            <Link key={c.id} to="/courses" className="group">
+              <Card className="flex h-full flex-col p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
+                <span className="text-4xl">{c.icon}</span>
+                <h3 className="mt-3 font-display text-lg font-bold group-hover:text-brand">{c.name}</h3>
+                <p className="mt-2 flex-1 text-sm text-muted-foreground">{c.description}</p>
+                <span className="mt-4 text-xs font-semibold text-brand">Browse →</span>
+              </Card>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function LatestBlogStrip() {
+  const fetchPosts = useServerFn(listBlogPosts);
+  const q = useQuery({ queryKey: ["blog", "list"], queryFn: () => fetchPosts(), staleTime: 60_000 });
+  const posts = (q.data ?? []).slice(0, 3);
+  if (posts.length === 0) return null;
+  return (
+    <section className="py-12 sm:py-16">
+      <div className="mx-auto max-w-7xl px-4">
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-brand">From the blog</p>
+            <h2 className="mt-2 font-display text-2xl font-extrabold tracking-tight sm:text-3xl">Study tips & KASNEB updates</h2>
+          </div>
+          <Link to="/blog" className="text-sm font-semibold text-brand hover:underline">All articles →</Link>
+        </div>
+        <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {posts.map((p) => (
+            <Link key={p.id} to="/blog/$slug" params={{ slug: p.slug }} className="group block">
+              <Card className="flex h-full flex-col overflow-hidden shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
+                <div className="relative aspect-[16/10] w-full overflow-hidden bg-brand-gradient">
+                  {p.cover_image_url ? (
+                    <img src={p.cover_image_url} alt={p.title} className="h-full w-full object-cover transition group-hover:scale-105" />
+                  ) : (
+                    <div className="grid h-full w-full place-items-center text-primary-foreground/70">
+                      <span className="font-display text-3xl font-black">{SITE.name.split(" ")[0]}</span>
+                    </div>
+                  )}
+                </div>
+                <div className="flex flex-1 flex-col p-5">
+                  <div className="text-[11px] text-muted-foreground">
+                    {p.reading_minutes} min · {new Date(p.published_at ?? p.created_at).toLocaleDateString()}
+                  </div>
+                  <h3 className="mt-2 font-display text-lg font-bold leading-snug group-hover:text-brand">{p.title}</h3>
+                  <p className="mt-2 line-clamp-3 flex-1 text-sm text-muted-foreground">{p.excerpt}</p>
+                  <div className="mt-4 flex flex-wrap gap-1.5">
+                    {p.tags.slice(0, 2).map((t) => <Badge key={t} variant="secondary" className="text-[10px] uppercase">{t}</Badge>)}
+                  </div>
+                </div>
+              </Card>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 
 function Stat({ number, label }: { number: string; label: string }) {
   return (

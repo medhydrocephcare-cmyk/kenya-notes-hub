@@ -76,6 +76,7 @@ export function SiteFooter() {
             <div className="text-sm font-bold uppercase tracking-wider text-gold">Shop</div>
             <ul className="mt-4 space-y-2.5 text-sm text-sidebar-foreground/80">
               <li><Link to="/courses" className="hover:text-gold">All papers</Link></li>
+              <li><Link to="/blog" className="hover:text-gold">Blog</Link></li>
               <li><Link to="/courses" className="hover:text-gold">Revision kits</Link></li>
               <li><Link to="/courses" className="hover:text-gold">Bundles</Link></li>
               <li><Link to="/cart" className="hover:text-gold">Cart</Link></li>

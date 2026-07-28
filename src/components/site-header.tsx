@@ -174,6 +174,7 @@ export function SiteHeader() {
             </div>
             <Link to="/" className="rounded-md px-3 py-2 font-medium text-foreground hover:bg-muted">Home</Link>
             <Link to="/courses" className="rounded-md px-3 py-2 font-medium text-foreground hover:bg-muted">All papers</Link>
+            <Link to="/blog" className="rounded-md px-3 py-2 font-medium text-foreground hover:bg-muted">Blog</Link>
             <Link to="/courses" className="rounded-md px-3 py-2 font-medium text-foreground hover:bg-muted">Revision kits</Link>
             <Link to="/courses" className="rounded-md px-3 py-2 font-medium text-foreground hover:bg-muted">Bundles</Link>
             {user && (
