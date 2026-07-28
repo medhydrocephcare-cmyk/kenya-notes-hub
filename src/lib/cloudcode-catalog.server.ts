@@ -39,6 +39,7 @@ const TITLE_OVERRIDES: Record<string, string> = {
   "financial-management": "Financial Management",
   "foundation-accountancy-business": "Foundation Accountancy & Business",
   "introduction-to-accounting": "Introduction to Accounting",
+  "management-accounting": "Management Accounting",
 };
 
 function requiredEnv(name: string) {
