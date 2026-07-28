@@ -35,11 +35,14 @@ const TITLE_OVERRIDES: Record<string, string> = {
   "advanced-taxation-business-income": "Advanced Taxation — Business Income",
   "business-environment": "Business Environment",
   "business-law": "Business Law",
+  "credit-management": "Credit Management",
   economics: "Economics",
   "financial-accounting": "Financial Accounting",
   "financial-management": "Financial Management",
   "foundation-accountancy-business": "Foundation Accountancy & Business",
+  "fundamentals-of-credit-management": "Fundamentals of Credit Management",
   "introduction-to-accounting": "Introduction to Accounting",
+  "introduction-to-computing": "Introduction to Computing",
   "management-accounting": "Management Accounting",
 };
 
