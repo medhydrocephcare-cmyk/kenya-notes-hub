@@ -4,6 +4,7 @@ import { useCart, openCart } from "@/lib/cart";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { courses } from "@/lib/data";
+import { SITE } from "@/lib/site-config";
 import logo from "@/assets/logo.png";
 import { useAuth } from "@/lib/auth-context";
 import {
@@ -24,12 +25,12 @@ export function SiteHeader() {
         <div className="mx-auto flex h-9 max-w-7xl items-center justify-between gap-2 px-3 text-[11px] sm:text-xs sm:px-4">
           <div className="flex min-w-0 items-center gap-4">
             <span className="hidden items-center gap-1.5 sm:inline-flex">
-              <Phone className="h-3 w-3" /> 0712 345 678
+              <Phone className="h-3 w-3" /> {SITE.supportPhone}
             </span>
             <span className="hidden items-center gap-1.5 md:inline-flex">
-              <Mail className="h-3 w-3" /> hello@kasnebpapers.com
+              <Mail className="h-3 w-3" /> {SITE.supportEmail}
             </span>
-            <span className="truncate sm:hidden">📞 0712 345 678 · Pay with M-Pesa</span>
+            <span className="truncate sm:hidden">📞 {SITE.supportPhone} · Pay with M-Pesa</span>
           </div>
           <div className="flex shrink-0 items-center gap-2 sm:gap-3">
             <span className="rounded-full bg-gold px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-gold-foreground">

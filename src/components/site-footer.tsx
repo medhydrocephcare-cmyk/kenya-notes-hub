@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Phone, Mail, MapPin, Facebook, Twitter, Instagram, ShieldCheck } from "lucide-react";
 import { courses } from "@/lib/data";
+import { SITE } from "@/lib/site-config";
 
 export function SiteFooter() {
   return (
@@ -45,9 +46,9 @@ export function SiteFooter() {
               Preview real answers before you pay.
             </p>
             <div className="mt-5 space-y-2 text-sm text-sidebar-foreground/80">
-              <div className="flex items-center gap-2"><Phone className="h-4 w-4 text-gold" /> 0712 345 678</div>
-              <div className="flex items-center gap-2"><Mail className="h-4 w-4 text-gold" /> hello@kasnebpapers.com</div>
-              <div className="flex items-center gap-2"><MapPin className="h-4 w-4 text-gold" /> Nairobi, Kenya · kasnebpapers.com</div>
+              <div className="flex items-center gap-2"><Phone className="h-4 w-4 text-gold" /> {SITE.supportPhone}</div>
+              <div className="flex items-center gap-2"><Mail className="h-4 w-4 text-gold" /> {SITE.supportEmail}</div>
+              <div className="flex items-center gap-2"><MapPin className="h-4 w-4 text-gold" /> Nairobi, Kenya · {SITE.domain}</div>
             </div>
             <div className="mt-5 flex gap-2">
               {[Facebook, Twitter, Instagram].map((Icon, i) => (
@@ -102,7 +103,7 @@ export function SiteFooter() {
 
         <div className="border-t border-sidebar-border/50">
           <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-4 py-5 text-xs text-sidebar-foreground/70 md:flex-row">
-            <div>© {new Date().getFullYear()} Kasneb Pastpapers. Not affiliated with KASNEB or KNEC.</div>
+            <div>© {new Date().getFullYear()} {SITE.name}. Not affiliated with KASNEB or KNEC.</div>
             <div className="flex gap-4">
               <a href="#" className="hover:text-gold">Terms</a>
               <a href="#" className="hover:text-gold">Privacy</a>

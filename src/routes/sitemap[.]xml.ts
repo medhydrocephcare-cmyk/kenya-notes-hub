@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
-import type {} from "@tanstack/react-start";
-import { courses, levels, papers } from "@/lib/data";
-
-const BASE_URL = "";
+import { createClient } from "@supabase/supabase-js";
+import type { Database } from "@/integrations/supabase/types";
+import { courses, levels } from "@/lib/data";
+import { SITE_URL } from "@/lib/site-config";
 
 export const Route = createFileRoute("/sitemap.xml")({
   server: {
@@ -18,14 +18,32 @@ export const Route = createFileRoute("/sitemap.xml")({
             entries.push({ path: `/courses/${c.slug}/${l.slug}`, changefreq: "weekly", priority: "0.7" });
           }
         }
-        for (const p of papers) {
-          entries.push({ path: `/papers/${p.id}`, changefreq: "monthly", priority: "0.6" });
+        try {
+          const url = process.env.SUPABASE_URL!;
+          const key = process.env.SUPABASE_PUBLISHABLE_KEY!;
+          const supabase = createClient<Database>(url, key, {
+            auth: { persistSession: false, autoRefreshToken: false, storage: undefined },
+            global: {
+              fetch: (input, init) => {
+                const h = new Headers(init?.headers);
+                if (key.startsWith("sb_") && h.get("Authorization") === `Bearer ${key}`) h.delete("Authorization");
+                h.set("apikey", key);
+                return fetch(input, { ...init, headers: h });
+              },
+            },
+          });
+          const { data } = await supabase.from("papers").select("id").eq("published", true);
+          for (const p of data ?? []) {
+            entries.push({ path: `/papers/${p.id}`, changefreq: "monthly", priority: "0.6" });
+          }
+        } catch {
+          // If DB is unreachable, still emit the static portion of the sitemap.
         }
 
         const urls = entries.map((e) =>
           [
             `  <url>`,
-            `    <loc>${BASE_URL}${e.path}</loc>`,
+            `    <loc>${SITE_URL}${e.path}</loc>`,
             e.changefreq ? `    <changefreq>${e.changefreq}</changefreq>` : null,
             e.priority ? `    <priority>${e.priority}</priority>` : null,
             `  </url>`,

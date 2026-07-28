@@ -1,4 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { Card } from "@/components/ui/card";
@@ -8,26 +9,33 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { courses, levels, papers } from "@/lib/data";
+import { courses, levels } from "@/lib/data";
+import { allPapersQueryOptions } from "@/lib/papers.functions";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useAuth } from "@/lib/auth-context";
 import { Loader2, ShieldAlert } from "lucide-react";
+import { SITE } from "@/lib/site-config";
 
 export const Route = createFileRoute("/admin")({
+  loader: ({ context }) => context.queryClient.ensureQueryData(allPapersQueryOptions),
   head: () => ({
     meta: [
-      { title: "Admin — Kasneb Pastpapers" },
+      { title: `Admin — ${SITE.name}` },
       { name: "description", content: "Manage courses, levels, papers and orders." },
       { name: "robots", content: "noindex" },
     ],
   }),
+  errorComponent: ({ error }) => (
+    <div className="grid min-h-screen place-items-center p-8 text-sm text-muted-foreground">{error.message}</div>
+  ),
   component: AdminPage,
 });
 
 function AdminPage() {
   const { user, isAdmin, loading } = useAuth();
   const navigate = useNavigate();
+  const { data: papers } = useSuspenseQuery(allPapersQueryOptions);
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/auth" });
@@ -36,7 +44,6 @@ function AdminPage() {
   if (loading) {
     return <div className="grid min-h-screen place-items-center"><Loader2 className="h-6 w-6 animate-spin" /></div>;
   }
-
   if (!user) return null;
 
   if (!isAdmin) {
@@ -71,7 +78,7 @@ function AdminPage() {
           <Stat label="Courses" value={courses.length} />
           <Stat label="Levels" value={levels.length} />
           <Stat label="Papers" value={papers.length} />
-          <Stat label="Orders (DB)" value="—" />
+          <Stat label="Orders" value="—" />
         </div>
 
         <Tabs defaultValue="papers" className="mt-10">
@@ -79,7 +86,6 @@ function AdminPage() {
             <TabsTrigger value="papers">Papers</TabsTrigger>
             <TabsTrigger value="new">Add paper</TabsTrigger>
             <TabsTrigger value="courses">Courses & levels</TabsTrigger>
-            <TabsTrigger value="orders">Orders</TabsTrigger>
           </TabsList>
 
           <TabsContent value="papers">
@@ -101,7 +107,7 @@ function AdminPage() {
                         <td className="px-4 py-3 font-medium">{p.title}</td>
                         <td className="px-4 py-3 text-muted-foreground">{p.courseSlug.toUpperCase()} / {p.levelSlug}</td>
                         <td className="px-4 py-3">KSh {p.price}</td>
-                        <td className="px-4 py-3">{p.examSitting}</td>
+                        <td className="px-4 py-3">{p.examSitting || "—"}</td>
                         <td className="px-4 py-3">{p.lastUpdated}</td>
                       </tr>
                     ))}
@@ -129,12 +135,6 @@ function AdminPage() {
                 </Card>
               ))}
             </div>
-          </TabsContent>
-
-          <TabsContent value="orders">
-            <Card className="mt-4 p-6 text-sm text-muted-foreground">
-              Live order list from the database — wire the server function next.
-            </Card>
           </TabsContent>
         </Tabs>
       </div>
