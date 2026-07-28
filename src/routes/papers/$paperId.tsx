@@ -40,6 +40,7 @@ export const Route = createFileRoute("/papers/$paperId")({
       seoDesc: paper.description,
       price: paper.price,
       thumbnailUrl: paper.thumbnailUrl,
+      previewText: paper.previewText ?? "",
     };
   },
   head: ({ loaderData }) => ({
@@ -80,6 +81,29 @@ export const Route = createFileRoute("/papers/$paperId")({
               },
             }),
           },
+          ...(loaderData.previewText
+            ? [
+                {
+                  type: "application/ld+json",
+                  children: JSON.stringify({
+                    "@context": "https://schema.org",
+                    "@type": "Article",
+                    headline: loaderData.seoTitle,
+                    description: loaderData.seoDesc,
+                    articleBody: loaderData.previewText.slice(0, 5000),
+                    inLanguage: "en-KE",
+                    isAccessibleForFree: false,
+                    hasPart: {
+                      "@type": "WebPageElement",
+                      isAccessibleForFree: false,
+                      cssSelector: "#full-content-paywall",
+                    },
+                    about: `${loaderData.course.code} ${loaderData.level.name}`,
+                    url: `https://www.kasnebpapers.com/papers/${loaderData.paperId}`,
+                  }),
+                },
+              ]
+            : []),
         ]
       : undefined,
   }),
@@ -233,6 +257,7 @@ function PaperDetail() {
                 <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#fdfcf7] via-[#fdfcf7]/90 to-transparent" />
               </div>
 
+
               <div className="border-t border-border bg-surface/80 px-4 py-4 text-center backdrop-blur">
                 <div className="flex flex-col items-center gap-1">
                   <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground">
@@ -246,6 +271,42 @@ function PaperDetail() {
                 </div>
               </div>
             </div>
+
+            {paper.previewText && (
+              <section
+                id="full-content-paywall"
+                aria-label="Indexed content preview"
+                className="mt-6 overflow-hidden rounded-xl border border-border bg-card shadow-card"
+              >
+                <header className="flex items-center justify-between gap-2 border-b border-border bg-surface px-4 py-2.5 text-xs">
+                  <div className="flex min-w-0 items-center gap-1.5 font-medium text-muted-foreground">
+                    <BookOpen className="h-3.5 w-3.5 shrink-0 text-brand" />
+                    <span className="truncate">Content from this document</span>
+                  </div>
+                  <span className="shrink-0 rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-amber-800 dark:bg-amber-950 dark:text-amber-300">
+                    Read-only excerpt
+                  </span>
+                </header>
+                <div className="relative max-h-[520px] overflow-hidden px-4 py-5 sm:px-6 sm:py-6">
+                  <article className="prose prose-sm max-w-none whitespace-pre-wrap break-words text-[13px] leading-relaxed text-foreground/90 selection:bg-brand/10">
+                    {paper.previewText}
+                  </article>
+                  <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-card via-card/90 to-transparent" />
+                </div>
+                <footer className="flex flex-col items-center gap-1 border-t border-border bg-surface/80 px-4 py-4 text-center">
+                  <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground">
+                    <Lock className="h-3.5 w-3.5" />
+                    Full PDF + model answers unlock after purchase
+                  </div>
+                  <p className="max-w-md text-[11px] leading-relaxed text-muted-foreground">
+                    You can read and search this excerpt for free. Download of the complete file is
+                    reserved for buyers.
+                  </p>
+                </footer>
+              </section>
+            )}
+
+
 
             <Tabs defaultValue="inside" className="mt-8">
               <TabsList className="flex h-auto w-full flex-wrap justify-start gap-1 bg-muted/40 p-1">
