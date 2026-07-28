@@ -1,8 +1,12 @@
 import { Link } from "@tanstack/react-router";
-import { courses, countPapersInCourse, getLevelsForCourse, getPapersForLevel } from "@/lib/data";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { courses, getLevelsForCourse } from "@/lib/data";
+import { allPapersQueryOptions, countByCourse, papersByLevel } from "@/lib/papers.functions";
 import { ChevronRight } from "lucide-react";
 
 export function CategorySidebar({ activeCourse }: { activeCourse?: string }) {
+  const { data: papers } = useSuspenseQuery(allPapersQueryOptions);
+
   return (
     <aside className="rounded-2xl border border-border/60 bg-card shadow-card">
       <div className="rounded-t-2xl bg-brand-gradient px-5 py-4">
@@ -35,13 +39,13 @@ export function CategorySidebar({ activeCourse }: { activeCourse?: string }) {
                   <span>{c.name.split(" ").slice(0, 2).join(" ")}</span>
                 </span>
                 <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                  ({countPapersInCourse(c.slug)}) <ChevronRight className="h-3 w-3" />
+                  ({countByCourse(papers, c.slug)}) <ChevronRight className="h-3 w-3" />
                 </span>
               </Link>
               {active && (
                 <ul className="mb-2 ml-10 border-l border-border pl-3">
                   {levels.map((lv) => {
-                    const n = getPapersForLevel(c.slug, lv.slug).length;
+                    const n = papersByLevel(papers, c.slug, lv.slug).length;
                     return (
                       <li key={lv.slug}>
                         <Link
@@ -62,11 +66,10 @@ export function CategorySidebar({ activeCourse }: { activeCourse?: string }) {
         })}
       </ul>
 
-      {/* Promo block */}
       <div className="m-3 overflow-hidden rounded-xl bg-gold-gradient p-5 text-gold-foreground">
         <div className="text-[10px] font-bold uppercase tracking-wider">Save 40%</div>
         <div className="mt-1 font-display text-lg font-extrabold leading-tight">
-          Full course bundles for the August sitting
+          Full course bundles for the current sitting
         </div>
         <Link
           to="/courses"

@@ -1,8 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import type {} from "@tanstack/react-start";
-import { courses, levels, papers } from "@/lib/data";
-
-const BASE_URL = "";
+import { courses, levels } from "@/lib/data";
+import { listPapers } from "@/lib/papers.functions";
+import { SITE_URL } from "@/lib/site-config";
 
 export const Route = createFileRoute("/sitemap.xml")({
   server: {
@@ -18,14 +17,19 @@ export const Route = createFileRoute("/sitemap.xml")({
             entries.push({ path: `/courses/${c.slug}/${l.slug}`, changefreq: "weekly", priority: "0.7" });
           }
         }
-        for (const p of papers) {
-          entries.push({ path: `/papers/${p.id}`, changefreq: "monthly", priority: "0.6" });
+        try {
+          const papers = await listPapers();
+          for (const p of papers) {
+            entries.push({ path: `/papers/${p.id}`, changefreq: "monthly", priority: "0.6" });
+          }
+        } catch {
+          // If DB is unreachable, still emit the static portion of the sitemap.
         }
 
         const urls = entries.map((e) =>
           [
             `  <url>`,
-            `    <loc>${BASE_URL}${e.path}</loc>`,
+            `    <loc>${SITE_URL}${e.path}</loc>`,
             e.changefreq ? `    <changefreq>${e.changefreq}</changefreq>` : null,
             e.priority ? `    <priority>${e.priority}</priority>` : null,
             `  </url>`,

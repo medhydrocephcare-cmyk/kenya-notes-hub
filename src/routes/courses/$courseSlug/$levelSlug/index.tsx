@@ -1,34 +1,45 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { CategorySidebar } from "@/components/category-sidebar";
 import { ProductCard } from "@/components/product-card";
-import { getCourse, getLevel, getPapersForLevel } from "@/lib/data";
+import { getCourse, getLevel } from "@/lib/data";
+import { allPapersQueryOptions, papersByLevel } from "@/lib/papers.functions";
+import { SITE } from "@/lib/site-config";
 import { ChevronRight, LayoutGrid } from "lucide-react";
 
 export const Route = createFileRoute("/courses/$courseSlug/$levelSlug/")({
-  loader: ({ params }) => {
+  loader: ({ params, context }) => {
     const course = getCourse(params.courseSlug);
     const level = getLevel(params.courseSlug, params.levelSlug);
     if (!course || !level) throw notFound();
+    context.queryClient.ensureQueryData(allPapersQueryOptions);
     return { course, level };
   },
   head: ({ loaderData }) => ({
     meta: loaderData
       ? [
-          { title: `${loaderData.course.code} ${loaderData.level.name} — Notes & past papers` },
+          { title: `${loaderData.course.code} ${loaderData.level.name} — Notes & past papers | ${SITE.name}` },
           { name: "description", content: `${loaderData.course.name} ${loaderData.level.name} notes, revision kits and past-paper answers. Free preview on every paper.` },
-          { property: "og:title", content: `${loaderData.course.code} ${loaderData.level.name} — Kasneb Pastpapers` },
+          { property: "og:title", content: `${loaderData.course.code} ${loaderData.level.name} — ${SITE.name}` },
           { property: "og:description", content: `Papers, notes and answers for ${loaderData.course.name} ${loaderData.level.name}.` },
         ]
       : [{ title: "Not found" }, { name: "robots", content: "noindex" }],
   }),
+  errorComponent: ({ error }) => (
+    <div className="grid min-h-screen place-items-center p-8 text-sm text-muted-foreground">{error.message}</div>
+  ),
+  notFoundComponent: () => (
+    <div className="grid min-h-screen place-items-center p-8 text-sm">Level not found.</div>
+  ),
   component: LevelPapers,
 });
 
 function LevelPapers() {
   const { course, level } = Route.useLoaderData();
-  const papers = getPapersForLevel(course.slug, level.slug);
+  const { data: all } = useSuspenseQuery(allPapersQueryOptions);
+  const papers = papersByLevel(all, course.slug, level.slug);
 
   return (
     <div className="min-h-screen bg-background">
@@ -69,17 +80,11 @@ function LevelPapers() {
                 <LayoutGrid className="h-4 w-4" />
                 <b className="text-foreground">{papers.length}</b> product{papers.length === 1 ? "" : "s"}
               </div>
-              <select className="rounded-md border border-border bg-background px-2 py-1.5 text-xs">
-                <option>Sort: Popularity</option>
-                <option>Price: low to high</option>
-                <option>Price: high to low</option>
-                <option>Newest</option>
-              </select>
             </div>
 
             {papers.length === 0 ? (
               <div className="rounded-xl border border-dashed border-border p-10 text-center text-sm text-muted-foreground">
-                No papers uploaded for this level yet — check back soon.
+                No papers published for this level yet — check back soon.
               </div>
             ) : (
               <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">

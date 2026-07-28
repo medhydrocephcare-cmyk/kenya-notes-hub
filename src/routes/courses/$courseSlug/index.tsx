@@ -1,38 +1,48 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { CategorySidebar } from "@/components/category-sidebar";
-import { getCourse, getLevelsForCourse, getPapersForLevel } from "@/lib/data";
+import { getCourse, getLevelsForCourse } from "@/lib/data";
+import { allPapersQueryOptions, papersByLevel } from "@/lib/papers.functions";
+import { SITE } from "@/lib/site-config";
 import { ChevronRight, FileText, ArrowRight } from "lucide-react";
 
 export const Route = createFileRoute("/courses/$courseSlug/")({
-  loader: ({ params }) => {
+  loader: ({ params, context }) => {
     const course = getCourse(params.courseSlug);
     if (!course) throw notFound();
+    context.queryClient.ensureQueryData(allPapersQueryOptions);
     return { course };
   },
   head: ({ loaderData }) => ({
     meta: loaderData
       ? [
-          { title: `${loaderData.course.name} — Notes & past papers | Kasneb Pastpapers` },
+          { title: `${loaderData.course.name} — Notes & past papers | ${SITE.name}` },
           { name: "description", content: `${loaderData.course.name} (${loaderData.course.code}) notes, revision kits and past-paper answers organised by level. Free preview on every product.` },
-          { property: "og:title", content: `${loaderData.course.name} — Kasneb Pastpapers` },
+          { property: "og:title", content: `${loaderData.course.name} — ${SITE.name}` },
           { property: "og:description", content: loaderData.course.description },
         ]
       : [{ title: "Course not found" }, { name: "robots", content: "noindex" }],
   }),
+  errorComponent: ({ error }) => (
+    <div className="grid min-h-screen place-items-center p-8 text-sm text-muted-foreground">{error.message}</div>
+  ),
+  notFoundComponent: () => (
+    <div className="grid min-h-screen place-items-center p-8 text-sm">Course not found.</div>
+  ),
   component: CourseLevels,
 });
 
 function CourseLevels() {
   const { course } = Route.useLoaderData();
+  const { data: papers } = useSuspenseQuery(allPapersQueryOptions);
   const levels = getLevelsForCourse(course.slug);
 
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
 
-      {/* Hero */}
       <div className="bg-brand-gradient text-primary-foreground">
         <div className="mx-auto max-w-7xl px-4 py-10">
           <nav className="flex items-center gap-2 text-xs text-white/70">
@@ -64,7 +74,7 @@ function CourseLevels() {
 
             <div className="mt-6 grid gap-4 sm:grid-cols-2">
               {levels.map((lv, i) => {
-                const count = getPapersForLevel(course.slug, lv.slug).length;
+                const count = papersByLevel(papers, course.slug, lv.slug).length;
                 return (
                   <Link
                     key={lv.slug}
