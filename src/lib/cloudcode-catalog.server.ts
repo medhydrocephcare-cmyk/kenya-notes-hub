@@ -35,6 +35,8 @@ const TITLE_OVERRIDES: Record<string, string> = {
   "advanced-taxation-business-income": "Advanced Taxation — Business Income",
   "business-environment": "Business Environment",
   "business-law": "Business Law",
+  "company-law": "Company Law",
+  "corporate-governance-and-ethics": "Corporate Governance and Ethics",
   "credit-management": "Credit Management",
   economics: "Economics",
   "financial-accounting": "Financial Accounting",
@@ -43,7 +45,10 @@ const TITLE_OVERRIDES: Record<string, string> = {
   "fundamentals-of-credit-management": "Fundamentals of Credit Management",
   "introduction-to-accounting": "Introduction to Accounting",
   "introduction-to-computing": "Introduction to Computing",
+  "law-governing-credit-practice": "Law Governing Credit Practice",
   "management-accounting": "Management Accounting",
+  "portfolio-management": "Portfolio Management",
+  "principles-of-management": "Principles of Management",
 };
 
 function requiredEnv(name: string) {
