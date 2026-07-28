@@ -24,6 +24,8 @@ export const Route = createFileRoute("/courses/$courseSlug/$levelSlug/")({
           { name: "description", content: `${loaderData.course.name} ${loaderData.level.name} notes, revision kits and past-paper answers. Free preview on every paper.` },
           { property: "og:title", content: `${loaderData.course.code} ${loaderData.level.name} — ${SITE.name}` },
           { property: "og:description", content: `Papers, notes and answers for ${loaderData.course.name} ${loaderData.level.name}.` },
+          { property: "og:type", content: "website" },
+          { name: "twitter:card", content: "summary_large_image" },
         ]
       : [{ title: "Not found" }, { name: "robots", content: "noindex" }],
   }),

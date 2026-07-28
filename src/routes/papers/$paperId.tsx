@@ -32,7 +32,15 @@ export const Route = createFileRoute("/papers/$paperId")({
     const course = getCourse(paper.courseSlug);
     const level = getLevel(paper.courseSlug, paper.levelSlug);
     if (!course || !level) throw notFound();
-    return { paperId: paper.id, course, level, seoTitle: paper.title, seoDesc: paper.description };
+    return {
+      paperId: paper.id,
+      course,
+      level,
+      seoTitle: paper.title,
+      seoDesc: paper.description,
+      price: paper.price,
+      thumbnailUrl: paper.thumbnailUrl,
+    };
   },
   head: ({ loaderData }) => ({
     meta: loaderData
@@ -43,8 +51,37 @@ export const Route = createFileRoute("/papers/$paperId")({
           { property: "og:description", content: loaderData.seoDesc },
           { property: "og:type", content: "product" },
           { name: "twitter:card", content: "summary_large_image" },
+          ...(loaderData.thumbnailUrl?.startsWith("https://")
+            ? [
+                { property: "og:image", content: loaderData.thumbnailUrl },
+                { name: "twitter:image", content: loaderData.thumbnailUrl },
+              ]
+            : []),
         ]
       : [{ title: "Paper not found" }, { name: "robots", content: "noindex" }],
+    scripts: loaderData
+      ? [
+          {
+            type: "application/ld+json",
+            children: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Product",
+              name: loaderData.seoTitle,
+              description: loaderData.seoDesc,
+              category: `${loaderData.course.code} ${loaderData.level.name} study material`,
+              image: loaderData.thumbnailUrl?.startsWith("https://") ? loaderData.thumbnailUrl : undefined,
+              brand: { "@type": "Brand", name: SITE.name },
+              offers: {
+                "@type": "Offer",
+                priceCurrency: "KES",
+                price: loaderData.price,
+                availability: "https://schema.org/InStock",
+                url: `https://www.kasnebpapers.com/papers/${loaderData.paperId}`,
+              },
+            }),
+          },
+        ]
+      : undefined,
   }),
   errorComponent: ({ error }) => (
     <div className="grid min-h-screen place-items-center p-8 text-sm text-muted-foreground">{error.message}</div>
@@ -77,6 +114,7 @@ function PaperDetail() {
     : 0;
   const sitting = sittingLabel(paper);
   const size = formatBytes(paper.fileSize);
+  const canBuy = paper.downloadAvailable !== false;
 
   return (
     <div className="min-h-screen bg-background">
@@ -306,26 +344,30 @@ function PaperDetail() {
                 <Button
                   className="w-full bg-brand text-primary-foreground hover:brightness-110"
                   size="lg"
+                  disabled={!canBuy}
                   onClick={() => {
+                    if (!canBuy) return toast.info("This file is still being prepared for download");
                     addToCart(paper, { openDrawer: false });
                     navigate({ to: "/checkout" });
                   }}
                 >
-                  Buy now — pay with M-Pesa
+                  {canBuy ? "Buy now — pay with M-Pesa" : "File processing"}
                 </Button>
                 <Button
                   variant="outline"
                   className="mt-2 w-full border-brand/30"
+                  disabled={!canBuy}
                   onClick={() => {
+                    if (!canBuy) return toast.info("This file is still being prepared for download");
                     addToCart(paper);
                     toast.success("Added to cart");
                   }}
                 >
-                  Add to cart
+                  {canBuy ? "Add to cart" : "Not ready yet"}
                 </Button>
 
                 <div className="mt-5 space-y-2 rounded-lg bg-surface/60 p-3 text-xs">
-                  <div className="flex items-center gap-2"><Download className="h-3.5 w-3.5 text-brand" /> Instant PDF download</div>
+                  <div className="flex items-center gap-2"><Download className="h-3.5 w-3.5 text-brand" /> {canBuy ? "Instant PDF download" : "Download file still processing"}</div>
                   <div className="flex items-center gap-2"><ShieldCheck className="h-3.5 w-3.5 text-brand" /> 256-bit SSL secure checkout</div>
                   <div className="flex items-center gap-2"><RefreshCw className="h-3.5 w-3.5 text-brand" /> Free updates this sitting</div>
                   {paper.pages ? (

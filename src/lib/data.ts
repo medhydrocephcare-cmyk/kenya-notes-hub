@@ -44,6 +44,7 @@ export type Paper = {
   tags?: string[];
   downloadCount?: number;
   previewAvailable?: boolean;
+  downloadAvailable?: boolean;
   featured?: boolean;
   year?: number;
 };

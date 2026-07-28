@@ -17,6 +17,8 @@ export const Route = createFileRoute("/courses/")({
       { name: "description", content: "Browse every KASNEB and KNEC paper, note and revision kit. CPA, ATD, CS, CIFA, CCP, CICT and more. Free preview on every product." },
       { property: "og:title", content: `All KASNEB & KNEC papers — ${SITE.name}` },
       { property: "og:description", content: "Notes, revision kits and past-paper answers organised by course and level." },
+          { property: "og:type", content: "website" },
+          { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   errorComponent: ({ error }) => (

@@ -30,8 +30,8 @@ export const Route = createFileRoute("/")({
   },
   head: () => ({
     meta: [
-      { title: `${SITE.name} — KASNEB & KNEC notes, revision kits and past papers with answers` },
-      { name: "description", content: `Buy updated KASNEB & KNEC study notes, revision kits and past papers with model answers. CPA, ATD, CS, CIFA, CCP, CICT. Pay with M-Pesa. Instant download.` },
+      { title: `KASNEB Past Papers & Notes Kenya | ${SITE.name}` },
+      { name: "description", content: `Updated KASNEB & KNEC notes, revision kits and past papers with answers. CPA, ATD, CS, CIFA and more. Pay with M-Pesa, download instantly.` },
       { property: "og:title", content: `${SITE.name} — KASNEB & KNEC study notes` },
       { property: "og:description", content: "Kenya's fastest-growing shop for updated KASNEB notes and past-paper answers. Free preview on every product." },
       { property: "og:type", content: "website" },
