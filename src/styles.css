@@ -185,4 +185,5 @@
 .page-transition {
   animation: page-fade-in 220ms ease-out both;
 }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; background-color: hsl(var(--background)); color-scheme: light; }
+body { background-color: hsl(var(--background)); }

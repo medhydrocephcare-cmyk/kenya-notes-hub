@@ -106,13 +106,15 @@ export const getCatalogStats = createServerFn({ method: "GET" }).handler(async (
 export const allPapersQueryOptions = queryOptions({
   queryKey: ["papers", "all"],
   queryFn: () => listPapers(),
-  staleTime: 60_000,
+  staleTime: 0,
+  refetchOnMount: "always",
 });
 
 export const catalogStatsQueryOptions = queryOptions({
   queryKey: ["papers", "stats"],
   queryFn: () => getCatalogStats(),
-  staleTime: 60_000,
+  staleTime: 0,
+  refetchOnMount: "always",
 });
 
 /** Public: presigned URL for a paper's free preview PDF — no payment required. */
