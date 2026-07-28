@@ -252,7 +252,45 @@ function PaperDetail() {
                     A sample question from the full paper is shown here. Buy to unlock the entire booklet
                     together with tutor-written model answers and workings.
                   </p>
+            </div>
+
+            {paper.previewText && (
+              <section
+                id="full-content-paywall"
+                aria-label="Indexed content preview"
+                className="mt-6 overflow-hidden rounded-xl border border-border bg-card shadow-card"
+              >
+                <header className="flex items-center justify-between gap-2 border-b border-border bg-surface px-4 py-2.5 text-xs">
+                  <div className="flex min-w-0 items-center gap-1.5 font-medium text-muted-foreground">
+                    <BookOpen className="h-3.5 w-3.5 shrink-0 text-brand" />
+                    <span className="truncate">Content from this document</span>
+                  </div>
+                  <span className="shrink-0 rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-amber-800 dark:bg-amber-950 dark:text-amber-300">
+                    Read-only excerpt
+                  </span>
+                </header>
+                <div className="relative max-h-[520px] overflow-hidden px-4 py-5 sm:px-6 sm:py-6">
+                  <article
+                    className="prose prose-sm max-w-none whitespace-pre-wrap break-words text-[13px] leading-relaxed text-foreground/90 selection:bg-brand/10"
+                    // Text is plain and already sanitized (server-extracted from PDF).
+                  >
+                    {paper.previewText}
+                  </article>
+                  <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-card via-card/90 to-transparent" />
                 </div>
+                <footer className="flex flex-col items-center gap-1 border-t border-border bg-surface/80 px-4 py-4 text-center">
+                  <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground">
+                    <Lock className="h-3.5 w-3.5" />
+                    Full PDF + model answers unlock after purchase
+                  </div>
+                  <p className="max-w-md text-[11px] leading-relaxed text-muted-foreground">
+                    You can read and search this excerpt for free. Download of the complete file is
+                    reserved for buyers.
+                  </p>
+                </footer>
+              </section>
+            )}
+
 
                 <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#fdfcf7] via-[#fdfcf7]/90 to-transparent" />
               </div>
