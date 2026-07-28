@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import { addToCart } from "@/lib/cart";
 import { toast } from "sonner";
+import { PaperReviewsBlock } from "@/components/paper-reviews";
 
 export const Route = createFileRoute("/papers/$paperId")({
   loader: async ({ params, context }) => {
@@ -459,6 +460,8 @@ function PaperDetail() {
             </Card>
           </aside>
         </div>
+
+        <PaperReviewsBlock paperId={paper.id} paperTitle={paper.title} />
       </div>
 
       <SiteFooter />

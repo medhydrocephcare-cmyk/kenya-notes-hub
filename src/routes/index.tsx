@@ -1,16 +1,20 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { CategorySidebar } from "@/components/category-sidebar";
 import { ProductCard } from "@/components/product-card";
+import { TestimonialsSection } from "@/components/testimonials-section";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { courses } from "@/lib/data";
 import {
   allPapersQueryOptions,
   catalogStatsQueryOptions,
 } from "@/lib/papers.queries";
 import { countByCourse } from "@/lib/paper-catalog";
+import { listBlogPosts } from "@/lib/blog.functions";
 import { SITE, SITE_URL } from "@/lib/site-config";
 import {
   ArrowRight,
@@ -297,8 +301,63 @@ function Home() {
         </div>
       </section>
 
+      <LatestBlog />
+      <TestimonialsSection />
+
       <SiteFooter />
     </div>
+  );
+}
+
+function LatestBlog() {
+  const fetchPosts = useServerFn(listBlogPosts);
+  const q = useQuery({ queryKey: ["blog", "list"], queryFn: () => fetchPosts(), staleTime: 60_000 });
+  const posts = (q.data ?? []).slice(0, 3);
+  if (q.isLoading || posts.length === 0) return null;
+  return (
+    <section className="bg-background py-14">
+      <div className="mx-auto max-w-7xl px-4">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <div className="text-xs font-bold uppercase tracking-widest text-brand">From the blog</div>
+            <h2 className="mt-1 font-display text-3xl font-extrabold tracking-tight md:text-4xl">
+              Study tips & syllabus guides
+            </h2>
+          </div>
+          <Link to="/blog" className="inline-flex items-center gap-1 text-sm font-semibold text-brand hover:underline">
+            View all articles <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
+        <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {posts.map((p) => (
+            <Link
+              key={p.id}
+              to="/blog/$slug"
+              params={{ slug: p.slug }}
+              className="group flex flex-col overflow-hidden rounded-2xl border border-border/60 bg-surface/40 transition hover:-translate-y-0.5 hover:shadow-lg"
+            >
+              <div className="aspect-[16/10] overflow-hidden bg-brand/10">
+                {p.coverImageUrl ? (
+                  <img src={p.coverImageUrl} alt={p.title} className="h-full w-full object-cover transition group-hover:scale-105" />
+                ) : (
+                  <div className="grid h-full place-items-center bg-brand-gradient text-primary-foreground">
+                    <BookOpen className="h-10 w-10 opacity-60" />
+                  </div>
+                )}
+              </div>
+              <div className="flex flex-1 flex-col p-5">
+                <h3 className="line-clamp-2 font-display text-lg font-extrabold leading-snug">{p.title}</h3>
+                <p className="mt-2 line-clamp-2 flex-1 text-sm text-muted-foreground">{p.excerpt}</p>
+                <div className="mt-3 flex items-center justify-between text-xs text-muted-foreground">
+                  <span>{p.author}</span>
+                  <span className="inline-flex items-center gap-1"><Clock className="h-3 w-3" /> {p.readingMinutes} min</span>
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }
 
