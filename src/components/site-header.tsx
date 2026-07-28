@@ -171,7 +171,7 @@ export function SiteHeader() {
             )}
             <div className="ml-auto flex items-center gap-2 text-xs text-muted-foreground">
               <span className="grid h-6 w-6 place-items-center rounded-full bg-gold text-[10px] font-black text-gold-foreground">M</span>
-              M-Pesa • Card • Bank
+              M-Pesa checkout only
             </div>
           </div>
         </div>

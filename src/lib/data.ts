@@ -24,9 +24,10 @@ export type Review = {
   date: string;
 };
 
-/** Front-end paper shape produced by `rowToPaper` in papers.functions.ts. */
+/** Front-end paper shape produced by `rowToPaper` in paper-catalog.ts. */
 export type Paper = {
   id: string;
+  slug?: string;
   courseSlug: string;
   levelSlug: string;
   title: string;

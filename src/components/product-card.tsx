@@ -6,8 +6,9 @@ import { toast } from "sonner";
 import { useSyncExternalStore } from "react";
 import type { Paper } from "@/lib/data";
 import { getCourse } from "@/lib/data";
-import { sittingLabel } from "@/lib/papers.functions";
+import { sittingLabel } from "@/lib/paper-catalog";
 import { subjectImageFor } from "@/lib/subject-image";
+import { paperUrlParam } from "@/lib/paper-slugs";
 
 const COURSE_TINT: Record<string, { bg: string; ring: string }> = {
   cpa:  { bg: "from-emerald-500 to-emerald-700",  ring: "ring-emerald-600/30" },
@@ -43,12 +44,13 @@ export function ProductCard({ paper }: { paper: Paper }) {
   const cover = paper.thumbnailUrl || subjectImageFor(paper.title, paper.courseSlug);
   const sitting = sittingLabel(paper);
   const canBuy = paper.downloadAvailable !== false;
+  const urlParam = paperUrlParam(paper);
 
   return (
     <div className="group relative flex flex-col overflow-hidden rounded-2xl border border-border/60 bg-card transition hover:-translate-y-0.5 hover:border-brand/40 hover:shadow-card">
       <Link
         to="/papers/$paperId"
-        params={{ paperId: paper.id }}
+        params={{ paperId: urlParam }}
         className="relative block aspect-[4/3] overflow-hidden"
       >
         <img
@@ -107,7 +109,7 @@ export function ProductCard({ paper }: { paper: Paper }) {
             Updated {paper.lastUpdated}
           </span>
         </div>
-        <Link to="/papers/$paperId" params={{ paperId: paper.id }}>
+        <Link to="/papers/$paperId" params={{ paperId: urlParam }}>
           <h3 className="line-clamp-2 min-h-[2.6rem] text-sm font-semibold leading-snug transition group-hover:text-brand">
             {paper.title}
           </h3>
@@ -121,7 +123,7 @@ export function ProductCard({ paper }: { paper: Paper }) {
           )}
         </div>
         <div className="mt-4 flex gap-2">
-          <Link to="/papers/$paperId" params={{ paperId: paper.id }} className="flex-1">
+          <Link to="/papers/$paperId" params={{ paperId: urlParam }} className="flex-1">
             <Button variant="outline" size="sm" className="w-full gap-1.5 border-brand/20">
               <Eye className="h-3.5 w-3.5" /> Preview
             </Button>

@@ -9,9 +9,9 @@ import { courses } from "@/lib/data";
 import {
   allPapersQueryOptions,
   catalogStatsQueryOptions,
-  countByCourse,
-} from "@/lib/papers.functions";
-import { SITE } from "@/lib/site-config";
+} from "@/lib/papers.queries";
+import { countByCourse } from "@/lib/paper-catalog";
+import { SITE, SITE_URL } from "@/lib/site-config";
 import {
   ArrowRight,
   Sparkles,
@@ -24,9 +24,11 @@ import {
 } from "lucide-react";
 
 export const Route = createFileRoute("/")({
-  loader: ({ context }) => {
-    context.queryClient.ensureQueryData(allPapersQueryOptions);
-    context.queryClient.ensureQueryData(catalogStatsQueryOptions);
+  loader: async ({ context }) => {
+    await Promise.all([
+      context.queryClient.ensureQueryData(allPapersQueryOptions),
+      context.queryClient.ensureQueryData(catalogStatsQueryOptions),
+    ]);
   },
   head: () => ({
     meta: [
@@ -35,8 +37,10 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: `${SITE.name} — KASNEB & KNEC study notes` },
       { property: "og:description", content: "Kenya's fastest-growing shop for updated KASNEB notes and past-paper answers. Free preview on every product." },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: SITE_URL },
       { name: "twitter:card", content: "summary_large_image" },
     ],
+    links: [{ rel: "canonical", href: SITE_URL }],
   }),
   errorComponent: ({ error }) => (
     <div className="grid min-h-screen place-items-center p-8 text-center text-sm text-muted-foreground">

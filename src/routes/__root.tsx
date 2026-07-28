@@ -83,22 +83,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { name: "theme-color", content: "#0f5132" },
-      { title: "Kasneb Pastpapers — KASNEB & KNEC notes, revision kits & past papers with answers" },
-      { name: "description", content: "Download updated KASNEB & KNEC study notes, revision kits and past papers with model answers. CPA, ATD, CS, CIFA, CCP, CICT, DCM, DICT, FAB. Free preview on every product. Pay with M-Pesa." },
-      { name: "keywords", content: "KASNEB past papers, KNEC past papers, CPA notes Kenya, ATD notes, CIFA revision kit, CS notes Kenya, KASNEB revision kit, KASNEB model answers, KASNEB study materials, kasnebpapers" },
       { name: "author", content: "Kasneb Pastpapers" },
       { name: "robots", content: "index, follow, max-image-preview:large, max-snippet:-1" },
       { property: "og:site_name", content: "Kasneb Pastpapers" },
-      { property: "og:title", content: "Kasneb Pastpapers — KASNEB & KNEC study notes, revision kits & answers" },
-      { property: "og:description", content: "Notes, revision kits and past-paper answers for CPA, ATD, CS, CIFA, CCP, CICT and KNEC. Free preview on every product. Pay with M-Pesa." },
-      { property: "og:url", content: "https://www.kasnebpapers.com" },
       { property: "og:type", content: "website" },
       { property: "og:locale", content: "en_KE" },
-      { property: "og:image", content: "https://www.kasnebpapers.com/favicon.png" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "Kasneb Pastpapers — KASNEB & KNEC study materials" },
-      { name: "twitter:description", content: "Updated notes, revision kits & past papers with model answers. Pay with M-Pesa." },
-      { name: "twitter:image", content: "https://www.kasnebpapers.com/favicon.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
@@ -170,7 +160,7 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <div key={pathname} className="page-transition">
+        <div className="page-transition" data-pathname={pathname}>
           <Outlet />
         </div>
         <CartDrawer />

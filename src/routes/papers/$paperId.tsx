@@ -1,4 +1,4 @@
-import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound, redirect, useNavigate } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
@@ -7,8 +7,11 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { getCourse, getLevel } from "@/lib/data";
-import { allPapersQueryOptions, findPaper, sittingLabel } from "@/lib/papers.functions";
-import { SITE } from "@/lib/site-config";
+import { getPaperIndexContent } from "@/lib/papers.functions";
+import { allPapersQueryOptions } from "@/lib/papers.queries";
+import { findPaper, sittingLabel } from "@/lib/paper-catalog";
+import { SITE, SITE_URL } from "@/lib/site-config";
+import { paperPath, paperUrlParam } from "@/lib/paper-slugs";
 import {
   Download,
   ShieldCheck,
@@ -29,18 +32,25 @@ export const Route = createFileRoute("/papers/$paperId")({
     const papers = await context.queryClient.ensureQueryData(allPapersQueryOptions);
     const paper = findPaper(papers, params.paperId);
     if (!paper) throw notFound();
+    const canonicalParam = paperUrlParam(paper);
+    if (params.paperId !== canonicalParam) {
+      throw redirect({ to: "/papers/$paperId", params: { paperId: canonicalParam }, replace: true });
+    }
     const course = getCourse(paper.courseSlug);
     const level = getLevel(paper.courseSlug, paper.levelSlug);
     if (!course || !level) throw notFound();
+    const previewText = await getPaperIndexContent({ data: { paperId: paper.id } });
+    const canonicalPath = paperPath(paper);
     return {
       paperId: paper.id,
+      canonicalPath,
       course,
       level,
       seoTitle: paper.title,
       seoDesc: paper.description,
       price: paper.price,
       thumbnailUrl: paper.thumbnailUrl,
-      previewText: paper.previewText ?? "",
+      previewText,
     };
   },
   head: ({ loaderData }) => ({
@@ -51,6 +61,7 @@ export const Route = createFileRoute("/papers/$paperId")({
           { property: "og:title", content: `${loaderData.seoTitle} — ${SITE.name}` },
           { property: "og:description", content: loaderData.seoDesc },
           { property: "og:type", content: "product" },
+          { property: "og:url", content: `${SITE_URL}${loaderData.canonicalPath}` },
           { name: "twitter:card", content: "summary_large_image" },
           ...(loaderData.thumbnailUrl?.startsWith("https://")
             ? [
@@ -77,7 +88,7 @@ export const Route = createFileRoute("/papers/$paperId")({
                 priceCurrency: "KES",
                 price: loaderData.price,
                 availability: "https://schema.org/InStock",
-                url: `https://www.kasnebpapers.com/papers/${loaderData.paperId}`,
+                url: `${SITE_URL}${loaderData.canonicalPath}`,
               },
             }),
           },
@@ -99,13 +110,14 @@ export const Route = createFileRoute("/papers/$paperId")({
                       cssSelector: "#full-content-paywall",
                     },
                     about: `${loaderData.course.code} ${loaderData.level.name}`,
-                    url: `https://www.kasnebpapers.com/papers/${loaderData.paperId}`,
+                    url: `${SITE_URL}${loaderData.canonicalPath}`,
                   }),
                 },
               ]
             : []),
         ]
       : undefined,
+    links: loaderData ? [{ rel: "canonical", href: `${SITE_URL}${loaderData.canonicalPath}` }] : undefined,
   }),
   errorComponent: ({ error }) => (
     <div className="grid min-h-screen place-items-center p-8 text-sm text-muted-foreground">{error.message}</div>
@@ -124,7 +136,7 @@ function formatBytes(bytes?: number) {
 }
 
 function PaperDetail() {
-  const { paperId, course, level } = Route.useLoaderData();
+  const { paperId, course, level, previewText } = Route.useLoaderData();
   const { data: papers } = useSuspenseQuery(allPapersQueryOptions);
   const paper = findPaper(papers, paperId);
   const navigate = useNavigate();
@@ -139,6 +151,7 @@ function PaperDetail() {
   const sitting = sittingLabel(paper);
   const size = formatBytes(paper.fileSize);
   const canBuy = paper.downloadAvailable !== false;
+  const indexedPreviewText = previewText || paper.previewText;
 
   return (
     <div className="min-h-screen bg-background">
@@ -272,7 +285,7 @@ function PaperDetail() {
               </div>
             </div>
 
-            {paper.previewText && (
+            {indexedPreviewText && (
               <section
                 id="full-content-paywall"
                 aria-label="Indexed content preview"
@@ -289,7 +302,7 @@ function PaperDetail() {
                 </header>
                 <div className="relative max-h-[520px] overflow-hidden px-4 py-5 sm:px-6 sm:py-6">
                   <article className="prose prose-sm max-w-none whitespace-pre-wrap break-words text-[13px] leading-relaxed text-foreground/90 selection:bg-brand/10">
-                    {paper.previewText}
+                    {indexedPreviewText}
                   </article>
                   <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-card via-card/90 to-transparent" />
                 </div>

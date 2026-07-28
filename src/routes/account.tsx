@@ -13,6 +13,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { getMyOrders, getDownloadUrl } from "@/lib/checkout.functions";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { SITE_URL } from "@/lib/site-config";
 
 export const Route = createFileRoute("/account")({
   head: () => ({
@@ -20,7 +21,13 @@ export const Route = createFileRoute("/account")({
       { title: "My account — Kasneb Pastpapers" },
       { name: "description", content: "Your orders, downloads and account settings." },
       { name: "robots", content: "noindex" },
+      { property: "og:title", content: "My account — Kasneb Pastpapers" },
+      { property: "og:description", content: "Access your saved KASNEB downloads, receipts and account settings." },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: `${SITE_URL}/account` },
+      { name: "twitter:card", content: "summary" },
     ],
+    links: [{ rel: "canonical", href: `${SITE_URL}/account` }],
   }),
   component: AccountPage,
 });

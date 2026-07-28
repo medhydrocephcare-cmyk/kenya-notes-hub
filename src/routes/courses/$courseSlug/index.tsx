@@ -4,8 +4,9 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { CategorySidebar } from "@/components/category-sidebar";
 import { getCourse, getLevelsForCourse } from "@/lib/data";
-import { allPapersQueryOptions, papersByLevel } from "@/lib/papers.functions";
-import { SITE } from "@/lib/site-config";
+import { allPapersQueryOptions } from "@/lib/papers.queries";
+import { papersByLevel } from "@/lib/paper-catalog";
+import { SITE, SITE_URL } from "@/lib/site-config";
 import { ChevronRight, FileText, ArrowRight } from "lucide-react";
 
 export const Route = createFileRoute("/courses/$courseSlug/")({
@@ -23,9 +24,11 @@ export const Route = createFileRoute("/courses/$courseSlug/")({
           { property: "og:title", content: `${loaderData.course.name} — ${SITE.name}` },
           { property: "og:description", content: loaderData.course.description },
           { property: "og:type", content: "website" },
+          { property: "og:url", content: `${SITE_URL}/courses/${loaderData.course.slug}` },
           { name: "twitter:card", content: "summary_large_image" },
         ]
       : [{ title: "Course not found" }, { name: "robots", content: "noindex" }],
+    links: loaderData ? [{ rel: "canonical", href: `${SITE_URL}/courses/${loaderData.course.slug}` }] : undefined,
   }),
   errorComponent: ({ error }) => (
     <div className="grid min-h-screen place-items-center p-8 text-sm text-muted-foreground">{error.message}</div>

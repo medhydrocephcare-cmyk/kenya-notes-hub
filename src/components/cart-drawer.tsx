@@ -45,7 +45,7 @@ export function CartDrawer() {
                   <div className="min-w-0 flex-1">
                     <Link
                       to="/papers/$paperId"
-                      params={{ paperId: paper.id }}
+                      params={{ paperId: paper.slug ?? paper.id }}
                       onClick={() => closeCart()}
                       className="line-clamp-2 text-sm font-medium leading-snug hover:text-brand"
                     >
@@ -88,7 +88,7 @@ export function CartDrawer() {
             </Link>
             <div className="mt-3 flex items-center justify-center gap-1.5 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
               <ShieldCheck className="h-3.5 w-3.5 text-brand" />
-              256-bit SSL · M-Pesa · Visa · Mastercard
+              256-bit SSL · M-Pesa checkout
             </div>
           </div>
         )}

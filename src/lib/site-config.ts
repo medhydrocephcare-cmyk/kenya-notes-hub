@@ -16,10 +16,10 @@ function envValue(key: string, fallback: string): string {
 
 export const SITE = {
   name: envValue("VITE_SITE_NAME", "Kasneb Pastpapers"),
-  domain: envValue("VITE_SITE_DOMAIN", "kasnebpapers.com"),
+  domain: "www.kasnebpapers.com",
   supportPhone: envValue("VITE_SUPPORT_PHONE", "0712 345 678"),
   supportEmail: envValue("VITE_SUPPORT_EMAIL", "hello@kasnebpapers.com"),
   tagline: "KASNEB & KNEC notes, revision kits and past papers with model answers.",
 } as const;
 
-export const SITE_URL = `https://${SITE.domain}`;
+export const SITE_URL = SITE.domain.startsWith("http") ? SITE.domain : `https://${SITE.domain}`;

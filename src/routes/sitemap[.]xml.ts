@@ -3,6 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import type { Database } from "@/integrations/supabase/types";
 import { courses, levels } from "@/lib/data";
 import { SITE_URL } from "@/lib/site-config";
+import { paperSlugFromFields } from "@/lib/paper-slugs";
 
 export const Route = createFileRoute("/sitemap.xml")({
   server: {
@@ -38,27 +39,30 @@ export const Route = createFileRoute("/sitemap.xml")({
               },
             },
           });
-          const { data } = await supabase.from("papers").select("id").eq("published", true);
+          const { data } = await supabase
+            .from("papers")
+            .select("course, level, title, full_pdf_key, preview_pdf_key")
+            .eq("published", true);
           for (const p of data ?? []) {
-            entries.push({ path: `/papers/${p.id}`, changefreq: "monthly", priority: "0.6" });
+            entries.push({ path: `/papers/${paperSlugFromFields({ course: p.course, level: p.level, title: p.title, fullPdfKey: p.full_pdf_key, previewPdfKey: p.preview_pdf_key })}`, changefreq: "monthly", priority: "0.6" });
           }
         } catch {
           // If DB is unreachable, still emit the static portion of the sitemap.
         }
 
-        const urls = entries.map((e) =>
-          [
-            `  <url>`,
-            `    <loc>${SITE_URL}${e.path}</loc>`,
-            e.changefreq ? `    <changefreq>${e.changefreq}</changefreq>` : null,
-            e.priority ? `    <priority>${e.priority}</priority>` : null,
-            `  </url>`,
-          ].filter(Boolean).join("\n"),
-        );
+        const uniqueEntries = Array.from(new Map(entries.map((entry) => [entry.path, entry])).values());
         const xml = [
           `<?xml version="1.0" encoding="UTF-8"?>`,
           `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`,
-          ...urls,
+          ...uniqueEntries.map((e) =>
+            [
+              `  <url>`,
+              `    <loc>${SITE_URL}${e.path}</loc>`,
+              e.changefreq ? `    <changefreq>${e.changefreq}</changefreq>` : null,
+              e.priority ? `    <priority>${e.priority}</priority>` : null,
+              `  </url>`,
+            ].filter(Boolean).join("\n"),
+          ),
           `</urlset>`,
         ].join("\n");
         return new Response(xml, {

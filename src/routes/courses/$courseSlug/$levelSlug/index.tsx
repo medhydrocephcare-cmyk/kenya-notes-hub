@@ -5,8 +5,9 @@ import { SiteFooter } from "@/components/site-footer";
 import { CategorySidebar } from "@/components/category-sidebar";
 import { ProductCard } from "@/components/product-card";
 import { getCourse, getLevel } from "@/lib/data";
-import { allPapersQueryOptions, papersByLevel } from "@/lib/papers.functions";
-import { SITE } from "@/lib/site-config";
+import { allPapersQueryOptions } from "@/lib/papers.queries";
+import { papersByLevel } from "@/lib/paper-catalog";
+import { SITE, SITE_URL } from "@/lib/site-config";
 import { ChevronRight, LayoutGrid } from "lucide-react";
 
 export const Route = createFileRoute("/courses/$courseSlug/$levelSlug/")({
@@ -25,9 +26,11 @@ export const Route = createFileRoute("/courses/$courseSlug/$levelSlug/")({
           { property: "og:title", content: `${loaderData.course.code} ${loaderData.level.name} — ${SITE.name}` },
           { property: "og:description", content: `Papers, notes and answers for ${loaderData.course.name} ${loaderData.level.name}.` },
           { property: "og:type", content: "website" },
+          { property: "og:url", content: `${SITE_URL}/courses/${loaderData.course.slug}/${loaderData.level.slug}` },
           { name: "twitter:card", content: "summary_large_image" },
         ]
       : [{ title: "Not found" }, { name: "robots", content: "noindex" }],
+    links: loaderData ? [{ rel: "canonical", href: `${SITE_URL}/courses/${loaderData.course.slug}/${loaderData.level.slug}` }] : undefined,
   }),
   errorComponent: ({ error }) => (
     <div className="grid min-h-screen place-items-center p-8 text-sm text-muted-foreground">{error.message}</div>

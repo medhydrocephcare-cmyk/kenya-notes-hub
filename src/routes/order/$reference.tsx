@@ -8,13 +8,21 @@ import { useServerFn } from "@tanstack/react-start";
 import { getOrderStatus, getDownloadUrl } from "@/lib/checkout.functions";
 import { Loader2, CheckCircle2, XCircle, Clock, Download } from "lucide-react";
 import { toast } from "sonner";
+import { SITE_URL } from "@/lib/site-config";
 
 export const Route = createFileRoute("/order/$reference")({
   head: ({ params }) => ({
     meta: [
       { title: `Order ${params.reference} — Kasneb Pastpapers` },
+      { name: "description", content: "Track your secure M-Pesa order and download purchased KASNEB study files." },
       { name: "robots", content: "noindex" },
+      { property: "og:title", content: `Order ${params.reference} — Kasneb Pastpapers` },
+      { property: "og:description", content: "Track payment confirmation and download purchased study files." },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: `${SITE_URL}/order/${params.reference}` },
+      { name: "twitter:card", content: "summary" },
     ],
+    links: [{ rel: "canonical", href: `${SITE_URL}/order/${params.reference}` }],
   }),
   component: OrderPage,
 });

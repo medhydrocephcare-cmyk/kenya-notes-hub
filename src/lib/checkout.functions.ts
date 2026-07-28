@@ -1,38 +1,30 @@
 import { createServerFn } from "@tanstack/react-start";
-import { getRequestHost, getRequestHeader } from "@tanstack/react-start/server";
+import { getRequestHost } from "@tanstack/react-start/server";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { z } from "zod";
 
-const initiateSchema = z.object({
-  buyerName: z.string().min(2).max(120),
-  email: z.string().email(),
-  phone: z.string().min(9).max(20),
-  items: z
-    .array(
-      z.object({
-        paperId: z.string().min(1),
-        title: z.string().min(1),
-        price: z.number().int().positive(),
-      }),
-    )
-    .min(1)
-    .max(50),
-});
-
-async function resolveUserIdFromBearer(): Promise<string | null> {
-  const auth = getRequestHeader("authorization");
-  const token = auth?.replace(/^Bearer\s+/i, "");
-  if (!token) return null;
-  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-  const { data } = await supabaseAdmin.auth.getUser(token);
-  return data.user?.id ?? null;
-}
-
 export const initiateCheckout = createServerFn({ method: "POST" })
-  .inputValidator((data: unknown) => initiateSchema.parse(data))
+  .inputValidator((data: unknown) =>
+    z.object({
+      buyerName: z.string().min(2).max(120),
+      email: z.string().email(),
+      phone: z.string().min(9).max(20),
+      items: z
+        .array(
+          z.object({
+            paperId: z.string().min(1),
+            title: z.string().min(1),
+            price: z.number().int().positive(),
+          }),
+        )
+        .min(1)
+        .max(50),
+    }).parse(data),
+  )
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { initiateStk } = await import("./palpluss.server");
+    const { resolveUserIdFromBearer } = await import("./checkout.server");
 
     const userId = await resolveUserIdFromBearer();
 

@@ -8,6 +8,7 @@ import type { Paper } from "./data";
  */
 export type CartPaper = {
   id: string;
+  slug?: string;
   title: string;
   price: number;
   courseSlug: string;
@@ -57,6 +58,7 @@ export function useCartOpen() {
 function toSnapshot(p: Paper | CartPaper): CartPaper {
   return {
     id: p.id,
+    slug: p.slug,
     title: p.title,
     price: p.price,
     courseSlug: p.courseSlug,

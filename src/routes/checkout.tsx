@@ -14,6 +14,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { initiateCheckout } from "@/lib/checkout.functions";
 import { useAuth } from "@/lib/auth-context";
 import { supabase } from "@/integrations/supabase/client";
+import { SITE_URL } from "@/lib/site-config";
 
 export const Route = createFileRoute("/checkout")({
   head: () => ({
@@ -21,7 +22,13 @@ export const Route = createFileRoute("/checkout")({
       { title: "Secure checkout — Kasneb Pastpapers" },
       { name: "description", content: "Pay securely with M-Pesa and receive instant PDF download access after payment confirmation." },
       { name: "robots", content: "noindex" },
+      { property: "og:title", content: "Secure checkout — Kasneb Pastpapers" },
+      { property: "og:description", content: "Complete your KASNEB study file order through secure M-Pesa checkout." },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: `${SITE_URL}/checkout` },
+      { name: "twitter:card", content: "summary" },
     ],
+    links: [{ rel: "canonical", href: `${SITE_URL}/checkout` }],
   }),
   component: CheckoutPage,
 });

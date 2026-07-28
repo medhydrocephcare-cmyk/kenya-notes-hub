@@ -10,12 +10,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { courses, levels } from "@/lib/data";
-import { allPapersQueryOptions } from "@/lib/papers.functions";
+import { allPapersQueryOptions } from "@/lib/papers.queries";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useAuth } from "@/lib/auth-context";
 import { Loader2, ShieldAlert } from "lucide-react";
-import { SITE } from "@/lib/site-config";
+import { SITE, SITE_URL } from "@/lib/site-config";
 
 export const Route = createFileRoute("/admin")({
   loader: ({ context }) => context.queryClient.ensureQueryData(allPapersQueryOptions),
@@ -24,7 +24,13 @@ export const Route = createFileRoute("/admin")({
       { title: `Admin — ${SITE.name}` },
       { name: "description", content: "Manage courses, levels, papers and orders." },
       { name: "robots", content: "noindex" },
+      { property: "og:title", content: `Admin — ${SITE.name}` },
+      { property: "og:description", content: "Private catalog and order management for Kasneb Pastpapers." },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: `${SITE_URL}/admin` },
+      { name: "twitter:card", content: "summary" },
     ],
+    links: [{ rel: "canonical", href: `${SITE_URL}/admin` }],
   }),
   errorComponent: ({ error }) => (
     <div className="grid min-h-screen place-items-center p-8 text-sm text-muted-foreground">{error.message}</div>

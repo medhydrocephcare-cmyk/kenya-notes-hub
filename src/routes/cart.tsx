@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useCart, removeFromCart } from "@/lib/cart";
 import { Trash2, ShoppingBag } from "lucide-react";
+import { SITE_URL } from "@/lib/site-config";
 
 export const Route = createFileRoute("/cart")({
   head: () => ({
@@ -12,7 +13,13 @@ export const Route = createFileRoute("/cart")({
       { title: "Your cart — Kasneb Pastpapers" },
       { name: "description", content: "Review the notes and past papers in your cart." },
       { name: "robots", content: "noindex" },
+      { property: "og:title", content: "Your cart — Kasneb Pastpapers" },
+      { property: "og:description", content: "Review your selected KASNEB study files before secure M-Pesa checkout." },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: `${SITE_URL}/cart` },
+      { name: "twitter:card", content: "summary" },
     ],
+    links: [{ rel: "canonical", href: `${SITE_URL}/cart` }],
   }),
   component: CartPage,
 });
@@ -40,7 +47,7 @@ function CartPage() {
               {items.map(({ paper }) => (
                 <Card key={paper.id} className="flex items-center gap-4 p-4">
                   <div className="flex-1">
-                    <Link to="/papers/$paperId" params={{ paperId: paper.id }} className="font-medium hover:text-primary">
+                    <Link to="/papers/$paperId" params={{ paperId: paper.slug ?? paper.id }} className="font-medium hover:text-primary">
                       {paper.title}
                     </Link>
                     <div className="mt-1 text-xs text-muted-foreground">{paper.examSitting}</div>
@@ -70,10 +77,10 @@ function CartPage() {
                 <span>KSh {subtotal}</span>
               </div>
               <Link to="/checkout">
-                <Button size="lg" className="mt-6 w-full">Checkout with Palpluss</Button>
+                <Button size="lg" className="mt-6 w-full">Checkout with M-Pesa</Button>
               </Link>
               <p className="mt-3 text-center text-xs text-muted-foreground">
-                Secure M-Pesa, card and bank transfer
+                Secure M-Pesa checkout
               </p>
             </Card>
           </div>

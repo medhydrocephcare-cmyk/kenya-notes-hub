@@ -1,7 +1,8 @@
 import { Link } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { courses, getLevelsForCourse } from "@/lib/data";
-import { allPapersQueryOptions, countByCourse, papersByLevel } from "@/lib/papers.functions";
+import { allPapersQueryOptions } from "@/lib/papers.queries";
+import { countByCourse, papersByLevel } from "@/lib/paper-catalog";
 import { ChevronRight } from "lucide-react";
 
 export function CategorySidebar({ activeCourse }: { activeCourse?: string }) {

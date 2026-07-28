@@ -5,9 +5,9 @@ import { SiteFooter } from "@/components/site-footer";
 import { CategorySidebar } from "@/components/category-sidebar";
 import { ProductCard } from "@/components/product-card";
 import { courses } from "@/lib/data";
-import { allPapersQueryOptions } from "@/lib/papers.functions";
+import { allPapersQueryOptions } from "@/lib/papers.queries";
 import { LayoutGrid } from "lucide-react";
-import { SITE } from "@/lib/site-config";
+import { SITE, SITE_URL } from "@/lib/site-config";
 
 export const Route = createFileRoute("/courses/")({
   loader: ({ context }) => context.queryClient.ensureQueryData(allPapersQueryOptions),
@@ -17,9 +17,11 @@ export const Route = createFileRoute("/courses/")({
       { name: "description", content: "Browse every KASNEB and KNEC paper, note and revision kit. CPA, ATD, CS, CIFA, CCP, CICT and more. Free preview on every product." },
       { property: "og:title", content: `All KASNEB & KNEC papers — ${SITE.name}` },
       { property: "og:description", content: "Notes, revision kits and past-paper answers organised by course and level." },
-          { property: "og:type", content: "website" },
-          { name: "twitter:card", content: "summary_large_image" },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: `${SITE_URL}/courses` },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
+    links: [{ rel: "canonical", href: `${SITE_URL}/courses` }],
   }),
   errorComponent: ({ error }) => (
     <div className="grid min-h-screen place-items-center p-8 text-sm text-muted-foreground">{error.message}</div>
