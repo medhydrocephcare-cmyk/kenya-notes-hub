@@ -1,29 +1,36 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { CategorySidebar } from "@/components/category-sidebar";
 import { ProductCard } from "@/components/product-card";
-import { papers, courses } from "@/lib/data";
+import { courses } from "@/lib/data";
+import { allPapersQueryOptions } from "@/lib/papers.functions";
 import { LayoutGrid } from "lucide-react";
+import { SITE } from "@/lib/site-config";
 
 export const Route = createFileRoute("/courses/")({
+  loader: ({ context }) => context.queryClient.ensureQueryData(allPapersQueryOptions),
   head: () => ({
     meta: [
-      { title: "Shop all KASNEB & KNEC papers — Kasneb Pastpapers" },
+      { title: `Shop all KASNEB & KNEC papers — ${SITE.name}` },
       { name: "description", content: "Browse every KASNEB and KNEC paper, note and revision kit. CPA, ATD, CS, CIFA, CCP, CICT and more. Free preview on every product." },
-      { property: "og:title", content: "All KASNEB & KNEC papers — Kasneb Pastpapers" },
+      { property: "og:title", content: `All KASNEB & KNEC papers — ${SITE.name}` },
       { property: "og:description", content: "Notes, revision kits and past-paper answers organised by course and level." },
     ],
   }),
+  errorComponent: ({ error }) => (
+    <div className="grid min-h-screen place-items-center p-8 text-sm text-muted-foreground">{error.message}</div>
+  ),
   component: CoursesPage,
 });
 
 function CoursesPage() {
+  const { data: papers } = useSuspenseQuery(allPapersQueryOptions);
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
 
-      {/* Page header */}
       <div className="bg-brand-gradient text-primary-foreground">
         <div className="mx-auto max-w-7xl px-4 py-10">
           <div className="text-xs font-bold uppercase tracking-widest text-gold">Shop</div>
@@ -46,19 +53,19 @@ function CoursesPage() {
                 <LayoutGrid className="h-4 w-4" />
                 Showing <b className="text-foreground">{papers.length}</b> results
               </div>
-              <select className="rounded-md border border-border bg-background px-2 py-1.5 text-xs">
-                <option>Sort: Popularity</option>
-                <option>Price: low to high</option>
-                <option>Price: high to low</option>
-                <option>Newest</option>
-              </select>
             </div>
 
-            <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-              {papers.map((p) => (
-                <ProductCard key={p.id} paper={p} />
-              ))}
-            </div>
+            {papers.length === 0 ? (
+              <div className="rounded-xl border border-dashed border-border p-16 text-center text-sm text-muted-foreground">
+                No papers published yet. New content added by our team appears here automatically.
+              </div>
+            ) : (
+              <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+                {papers.map((p) => (
+                  <ProductCard key={p.id} paper={p} />
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>

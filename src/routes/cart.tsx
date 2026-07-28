@@ -9,7 +9,7 @@ import { Trash2, ShoppingBag } from "lucide-react";
 export const Route = createFileRoute("/cart")({
   head: () => ({
     meta: [
-      { title: "Your cart — Chapa Notes" },
+      { title: "Your cart — Kasneb Pastpapers" },
       { name: "description", content: "Review the notes and past papers in your cart." },
       { name: "robots", content: "noindex" },
     ],
