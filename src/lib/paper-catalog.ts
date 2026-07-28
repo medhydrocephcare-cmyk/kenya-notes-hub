@@ -1,5 +1,5 @@
 import type { Paper } from "./data";
-import { paperSlugFromFields } from "./paper-slugs";
+import { paperSlugFromFields, paperUrlParam } from "./paper-slugs";
 import type { Database } from "@/integrations/supabase/types";
 
 type PaperRow = Database["public"]["Tables"]["papers"]["Row"];
@@ -58,7 +58,7 @@ export function countByCourse(all: Paper[], courseSlug: string): number {
 }
 
 export function findPaper(all: Paper[], id: string): Paper | undefined {
-  return all.find((paper) => paper.id === id || paper.slug === id);
+  return all.find((paper) => paper.id === id || paper.slug === id || paperUrlParam(paper) === id);
 }
 
 export function sittingLabel(paper: Paper): string {

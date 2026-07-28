@@ -33,7 +33,15 @@ export function paperSlugFromFields(input: {
 }
 
 export function paperUrlParam(paper: Paper) {
-  return paper.slug && !UUID_RE.test(paper.slug) ? paper.slug : paper.id;
+  const fallbackSlug = paperSlugFromFields({
+    course: paper.courseSlug,
+    level: paper.levelSlug,
+    title: paper.title,
+    fullPdfKey: paper.thumbnailUrl,
+    previewPdfKey: paper.thumbnailUrl,
+  });
+  const slug = paper.slug && !UUID_RE.test(paper.slug) ? paper.slug : fallbackSlug;
+  return slug && !UUID_RE.test(slug) ? slug : paper.id;
 }
 
 export function paperPath(paper: Paper) {
