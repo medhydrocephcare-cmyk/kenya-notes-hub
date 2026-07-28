@@ -17,8 +17,10 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AccountRouteImport } from './routes/account'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CoursesIndexRouteImport } from './routes/courses/index'
+import { Route as BlogIndexRouteImport } from './routes/blog/index'
 import { Route as PapersPaperIdRouteImport } from './routes/papers/$paperId'
 import { Route as OrderReferenceRouteImport } from './routes/order/$reference'
+import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
 import { Route as CoursesCourseSlugIndexRouteImport } from './routes/courses/$courseSlug/index'
 import { Route as ApiAdminPapersRouteImport } from './routes/api/admin/papers'
 import { Route as CoursesCourseSlugLevelSlugIndexRouteImport } from './routes/courses/$courseSlug/$levelSlug/index'
@@ -65,6 +67,11 @@ const CoursesIndexRoute = CoursesIndexRouteImport.update({
   path: '/courses/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PapersPaperIdRoute = PapersPaperIdRouteImport.update({
   id: '/papers/$paperId',
   path: '/papers/$paperId',
@@ -73,6 +80,11 @@ const PapersPaperIdRoute = PapersPaperIdRouteImport.update({
 const OrderReferenceRoute = OrderReferenceRouteImport.update({
   id: '/order/$reference',
   path: '/order/$reference',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/blog/$slug',
+  path: '/blog/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CoursesCourseSlugIndexRoute = CoursesCourseSlugIndexRouteImport.update({
@@ -112,8 +124,10 @@ export interface FileRoutesByFullPath {
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/order/$reference': typeof OrderReferenceRoute
   '/papers/$paperId': typeof PapersPaperIdRoute
+  '/blog/': typeof BlogIndexRoute
   '/courses/': typeof CoursesIndexRoute
   '/api/admin/papers': typeof ApiAdminPapersRoute
   '/courses/$courseSlug/': typeof CoursesCourseSlugIndexRoute
@@ -129,8 +143,10 @@ export interface FileRoutesByTo {
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/order/$reference': typeof OrderReferenceRoute
   '/papers/$paperId': typeof PapersPaperIdRoute
+  '/blog': typeof BlogIndexRoute
   '/courses': typeof CoursesIndexRoute
   '/api/admin/papers': typeof ApiAdminPapersRoute
   '/courses/$courseSlug': typeof CoursesCourseSlugIndexRoute
@@ -147,8 +163,10 @@ export interface FileRoutesById {
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/order/$reference': typeof OrderReferenceRoute
   '/papers/$paperId': typeof PapersPaperIdRoute
+  '/blog/': typeof BlogIndexRoute
   '/courses/': typeof CoursesIndexRoute
   '/api/admin/papers': typeof ApiAdminPapersRoute
   '/courses/$courseSlug/': typeof CoursesCourseSlugIndexRoute
@@ -166,8 +184,10 @@ export interface FileRouteTypes {
     | '/cart'
     | '/checkout'
     | '/sitemap.xml'
+    | '/blog/$slug'
     | '/order/$reference'
     | '/papers/$paperId'
+    | '/blog/'
     | '/courses/'
     | '/api/admin/papers'
     | '/courses/$courseSlug/'
@@ -183,8 +203,10 @@ export interface FileRouteTypes {
     | '/cart'
     | '/checkout'
     | '/sitemap.xml'
+    | '/blog/$slug'
     | '/order/$reference'
     | '/papers/$paperId'
+    | '/blog'
     | '/courses'
     | '/api/admin/papers'
     | '/courses/$courseSlug'
@@ -200,8 +222,10 @@ export interface FileRouteTypes {
     | '/cart'
     | '/checkout'
     | '/sitemap.xml'
+    | '/blog/$slug'
     | '/order/$reference'
     | '/papers/$paperId'
+    | '/blog/'
     | '/courses/'
     | '/api/admin/papers'
     | '/courses/$courseSlug/'
@@ -218,8 +242,10 @@ export interface RootRouteChildren {
   CartRoute: typeof CartRoute
   CheckoutRoute: typeof CheckoutRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  BlogSlugRoute: typeof BlogSlugRoute
   OrderReferenceRoute: typeof OrderReferenceRoute
   PapersPaperIdRoute: typeof PapersPaperIdRoute
+  BlogIndexRoute: typeof BlogIndexRoute
   CoursesIndexRoute: typeof CoursesIndexRoute
   ApiAdminPapersRoute: typeof ApiAdminPapersRoute
   CoursesCourseSlugIndexRoute: typeof CoursesCourseSlugIndexRoute
@@ -286,6 +312,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CoursesIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blog/': {
+      id: '/blog/'
+      path: '/blog'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/papers/$paperId': {
       id: '/papers/$paperId'
       path: '/papers/$paperId'
@@ -298,6 +331,13 @@ declare module '@tanstack/react-router' {
       path: '/order/$reference'
       fullPath: '/order/$reference'
       preLoaderRoute: typeof OrderReferenceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/blog/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/courses/$courseSlug/': {
@@ -346,8 +386,10 @@ const rootRouteChildren: RootRouteChildren = {
   CartRoute: CartRoute,
   CheckoutRoute: CheckoutRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  BlogSlugRoute: BlogSlugRoute,
   OrderReferenceRoute: OrderReferenceRoute,
   PapersPaperIdRoute: PapersPaperIdRoute,
+  BlogIndexRoute: BlogIndexRoute,
   CoursesIndexRoute: CoursesIndexRoute,
   ApiAdminPapersRoute: ApiAdminPapersRoute,
   CoursesCourseSlugIndexRoute: CoursesCourseSlugIndexRoute,
