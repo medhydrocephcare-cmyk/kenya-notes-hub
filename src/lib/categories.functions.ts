@@ -8,10 +8,10 @@ export type PaperCategory = {
   description: string;
   icon: string;
   color: string;
-  sort_order: number;
+  sortOrder: number;
 };
 
-export const listCategories = createServerFn({ method: "GET" }).handler(async () => {
+export const listCategories = createServerFn({ method: "GET" }).handler(async (): Promise<PaperCategory[]> => {
   const supabase = serverPublishableClient();
   const { data, error } = await supabase
     .from("paper_categories")
@@ -19,5 +19,8 @@ export const listCategories = createServerFn({ method: "GET" }).handler(async ()
     .order("sort_order", { ascending: true })
     .order("name", { ascending: true });
   if (error) throw new Error(error.message);
-  return (data ?? []) as PaperCategory[];
+  return (data ?? []).map((r) => ({
+    id: r.id, slug: r.slug, name: r.name, description: r.description,
+    icon: r.icon, color: r.color, sortOrder: r.sort_order,
+  }));
 });
