@@ -40,6 +40,7 @@ export const Route = createFileRoute("/papers/$paperId")({
       seoDesc: paper.description,
       price: paper.price,
       thumbnailUrl: paper.thumbnailUrl,
+      previewText: paper.previewText ?? "",
     };
   },
   head: ({ loaderData }) => ({
@@ -80,6 +81,29 @@ export const Route = createFileRoute("/papers/$paperId")({
               },
             }),
           },
+          ...(loaderData.previewText
+            ? [
+                {
+                  type: "application/ld+json",
+                  children: JSON.stringify({
+                    "@context": "https://schema.org",
+                    "@type": "Article",
+                    headline: loaderData.seoTitle,
+                    description: loaderData.seoDesc,
+                    articleBody: loaderData.previewText.slice(0, 5000),
+                    inLanguage: "en-KE",
+                    isAccessibleForFree: false,
+                    hasPart: {
+                      "@type": "WebPageElement",
+                      isAccessibleForFree: false,
+                      cssSelector: "#full-content-paywall",
+                    },
+                    about: `${loaderData.course.code} ${loaderData.level.name}`,
+                    url: `https://www.kasnebpapers.com/papers/${loaderData.paperId}`,
+                  }),
+                },
+              ]
+            : []),
         ]
       : undefined,
   }),
