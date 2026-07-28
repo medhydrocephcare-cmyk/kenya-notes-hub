@@ -47,6 +47,7 @@ export type Paper = {
   downloadAvailable?: boolean;
   featured?: boolean;
   year?: number;
+  previewText?: string;
 };
 
 export const courses: Course[] = [

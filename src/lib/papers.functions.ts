@@ -65,6 +65,7 @@ export function rowToPaper(row: PaperRow): Paper {
     downloadAvailable: !!row.full_pdf_key,
     featured: row.featured,
     year: row.year ?? undefined,
+    previewText: (row as unknown as { preview_text?: string | null }).preview_text ?? undefined,
   };
 }
 

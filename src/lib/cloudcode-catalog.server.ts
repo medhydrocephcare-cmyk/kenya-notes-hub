@@ -173,37 +173,63 @@ export async function syncR2Catalog(options: { force?: boolean } = {}) {
   return inFlightSync;
 }
 
+async function safeExtract(key: string) {
+  if (!key) return "";
+  try {
+    const { extractPdfText } = await import("./pdf-text.server");
+    return await extractPdfText(key);
+  } catch (err) {
+    console.warn("PDF text extraction failed for", key, err);
+    return "";
+  }
+}
+
 async function syncR2CatalogNow() {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const objects = await listR2ContentObjects();
   const candidates = inferPapersFromR2Objects(objects);
   if (candidates.length === 0) {
-    return { ok: true, objectCount: objects.length, candidates: 0, inserted: 0, updated: 0 };
+    return { ok: true, objectCount: objects.length, candidates: 0, inserted: 0, updated: 0, indexed: 0 };
   }
 
   const { data: existingRows, error: existingError } = await supabaseAdmin
     .from("papers")
-    .select("id, course, level, title, preview_pdf_key, full_pdf_key, file_size_bytes, thumbnail_url, published");
+    .select("id, course, level, title, preview_pdf_key, full_pdf_key, file_size_bytes, thumbnail_url, published, preview_text");
   if (existingError) throw new Error(existingError.message);
 
-  const existingByFullKey = new Map((existingRows ?? []).map((row) => [row.full_pdf_key, row]));
-  const existingByIdentity = new Map((existingRows ?? []).map((row) => [`${row.course}|${row.level}|${row.title.toLowerCase()}`, row]));
-  const toInsert: CandidatePaper[] = [];
+  type ExistingRow = (typeof existingRows extends (infer T)[] | null ? T : never) & { preview_text?: string | null };
+  const rows = (existingRows ?? []) as unknown as ExistingRow[];
+  const existingByFullKey = new Map(rows.map((row) => [row.full_pdf_key, row]));
+  const existingByIdentity = new Map(rows.map((row) => [`${row.course}|${row.level}|${row.title.toLowerCase()}`, row]));
+  const toInsert: (CandidatePaper & { preview_text?: string })[] = [];
   let updated = 0;
+  let indexed = 0;
 
   for (const candidate of candidates) {
     const existing = existingByFullKey.get(candidate.full_pdf_key) ?? existingByIdentity.get(`${candidate.course}|${candidate.level}|${candidate.title.toLowerCase()}`);
     if (!existing) {
-      toInsert.push(candidate);
+      // Extract text from the preview (fallback: full) so the very first sync ships SEO content.
+      const text = await safeExtract(candidate.preview_pdf_key || candidate.full_pdf_key);
+      if (text) indexed += 1;
+      toInsert.push({ ...candidate, preview_text: text || undefined });
       continue;
     }
 
-    const patch: Partial<CandidatePaper> = {};
+    const patch: Record<string, unknown> = {};
     if (!existing.full_pdf_key) patch.full_pdf_key = candidate.full_pdf_key;
     if (!existing.preview_pdf_key && candidate.preview_pdf_key) patch.preview_pdf_key = candidate.preview_pdf_key;
     if (!existing.thumbnail_url && candidate.thumbnail_url) patch.thumbnail_url = candidate.thumbnail_url;
     if (!existing.file_size_bytes && candidate.file_size_bytes) patch.file_size_bytes = candidate.file_size_bytes;
     if (!existing.published) patch.published = true;
+
+    // Backfill preview_text for rows missing indexed content.
+    if (!existing.preview_text) {
+      const text = await safeExtract(existing.preview_pdf_key || candidate.preview_pdf_key || candidate.full_pdf_key);
+      if (text) {
+        patch.preview_text = text;
+        indexed += 1;
+      }
+    }
 
     if (Object.keys(patch).length > 0) {
       const { error } = await supabaseAdmin.from("papers").update(patch).eq("id", existing.id);
@@ -213,7 +239,7 @@ async function syncR2CatalogNow() {
   }
 
   if (toInsert.length > 0) {
-    const { error } = await supabaseAdmin.from("papers").insert(toInsert);
+    const { error } = await supabaseAdmin.from("papers").insert(toInsert as never);
     if (error) throw new Error(error.message);
   }
 
@@ -223,5 +249,6 @@ async function syncR2CatalogNow() {
     candidates: candidates.length,
     inserted: toInsert.length,
     updated,
+    indexed,
   };
 }
