@@ -15,8 +15,8 @@ export function slugifySegment(value: string) {
 
 export function fileSlugFromKey(key?: string | null) {
   if (!key) return "";
-  const filename = key.split("/").pop() ?? "";
-  return slugifySegment(filename.replace(/\.pdf$/i, "").replace(/-(preview|thumbnail)$/i, ""));
+  const filename = key.split("?")[0].split("/").pop() ?? "";
+  return slugifySegment(filename.replace(/\.[a-z0-9]+$/i, "").replace(/-(preview|thumbnail)$/i, ""));
 }
 
 export function paperSlugFromFields(input: {
