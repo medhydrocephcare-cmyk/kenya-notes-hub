@@ -62,6 +62,7 @@ export function rowToPaper(row: PaperRow): Paper {
     tags,
     downloadCount: row.download_count ?? 0,
     previewAvailable: !!row.preview_pdf_key,
+    downloadAvailable: !!row.full_pdf_key,
     featured: row.featured,
     year: row.year ?? undefined,
   };
@@ -69,6 +70,12 @@ export function rowToPaper(row: PaperRow): Paper {
 
 /** Public: list every published paper. */
 export const listPapers = createServerFn({ method: "GET" }).handler(async () => {
+  try {
+    const { syncR2Catalog } = await import("./cloudcode-catalog.server");
+    await syncR2Catalog();
+  } catch (error) {
+    console.warn("R2 catalog auto-sync skipped", error);
+  }
   const supabase = serverPublishableClient();
   const { data, error } = await supabase
     .from("papers")
@@ -82,6 +89,12 @@ export const listPapers = createServerFn({ method: "GET" }).handler(async () => 
 
 /** Public: catalog-wide stats calculated from real DB rows. */
 export const getCatalogStats = createServerFn({ method: "GET" }).handler(async () => {
+  try {
+    const { syncR2Catalog } = await import("./cloudcode-catalog.server");
+    await syncR2Catalog();
+  } catch (error) {
+    console.warn("R2 catalog auto-sync skipped", error);
+  }
   const supabase = serverPublishableClient();
   const { data, error } = await supabase
     .from("papers")

@@ -21,6 +21,7 @@ import { Route as OrderReferenceRouteImport } from './routes/order/$reference'
 import { Route as PapersPaperIdRouteImport } from './routes/papers/$paperId'
 import { Route as ApiAdminPapersRouteImport } from './routes/api/admin/papers'
 import { Route as CoursesCourseSlugIndexRouteImport } from './routes/courses/$courseSlug/index'
+import { Route as ApiPublicCloudcodePapersRouteImport } from './routes/api/public/cloudcode/papers'
 import { Route as CoursesCourseSlugLevelSlugIndexRouteImport } from './routes/courses/$courseSlug/$levelSlug/index'
 import { Route as ApiPublicPalplussWebhookSecretRouteImport } from './routes/api/public/palpluss/webhook/$secret'
 
@@ -84,6 +85,12 @@ const CoursesCourseSlugIndexRoute = CoursesCourseSlugIndexRouteImport.update({
   path: '/courses/$courseSlug/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicCloudcodePapersRoute =
+  ApiPublicCloudcodePapersRouteImport.update({
+    id: '/api/public/cloudcode/papers',
+    path: '/api/public/cloudcode/papers',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const CoursesCourseSlugLevelSlugIndexRoute =
   CoursesCourseSlugLevelSlugIndexRouteImport.update({
     id: '/courses/$courseSlug/$levelSlug/',
@@ -110,6 +117,7 @@ export interface FileRoutesByFullPath {
   '/courses/': typeof CoursesIndexRoute
   '/api/admin/papers': typeof ApiAdminPapersRoute
   '/courses/$courseSlug/': typeof CoursesCourseSlugIndexRoute
+  '/api/public/cloudcode/papers': typeof ApiPublicCloudcodePapersRoute
   '/courses/$courseSlug/$levelSlug/': typeof CoursesCourseSlugLevelSlugIndexRoute
   '/api/public/palpluss/webhook/$secret': typeof ApiPublicPalplussWebhookSecretRoute
 }
@@ -126,6 +134,7 @@ export interface FileRoutesByTo {
   '/courses': typeof CoursesIndexRoute
   '/api/admin/papers': typeof ApiAdminPapersRoute
   '/courses/$courseSlug': typeof CoursesCourseSlugIndexRoute
+  '/api/public/cloudcode/papers': typeof ApiPublicCloudcodePapersRoute
   '/courses/$courseSlug/$levelSlug': typeof CoursesCourseSlugLevelSlugIndexRoute
   '/api/public/palpluss/webhook/$secret': typeof ApiPublicPalplussWebhookSecretRoute
 }
@@ -143,6 +152,7 @@ export interface FileRoutesById {
   '/courses/': typeof CoursesIndexRoute
   '/api/admin/papers': typeof ApiAdminPapersRoute
   '/courses/$courseSlug/': typeof CoursesCourseSlugIndexRoute
+  '/api/public/cloudcode/papers': typeof ApiPublicCloudcodePapersRoute
   '/courses/$courseSlug/$levelSlug/': typeof CoursesCourseSlugLevelSlugIndexRoute
   '/api/public/palpluss/webhook/$secret': typeof ApiPublicPalplussWebhookSecretRoute
 }
@@ -161,6 +171,7 @@ export interface FileRouteTypes {
     | '/courses/'
     | '/api/admin/papers'
     | '/courses/$courseSlug/'
+    | '/api/public/cloudcode/papers'
     | '/courses/$courseSlug/$levelSlug/'
     | '/api/public/palpluss/webhook/$secret'
   fileRoutesByTo: FileRoutesByTo
@@ -177,6 +188,7 @@ export interface FileRouteTypes {
     | '/courses'
     | '/api/admin/papers'
     | '/courses/$courseSlug'
+    | '/api/public/cloudcode/papers'
     | '/courses/$courseSlug/$levelSlug'
     | '/api/public/palpluss/webhook/$secret'
   id:
@@ -193,6 +205,7 @@ export interface FileRouteTypes {
     | '/courses/'
     | '/api/admin/papers'
     | '/courses/$courseSlug/'
+    | '/api/public/cloudcode/papers'
     | '/courses/$courseSlug/$levelSlug/'
     | '/api/public/palpluss/webhook/$secret'
   fileRoutesById: FileRoutesById
@@ -210,6 +223,7 @@ export interface RootRouteChildren {
   CoursesIndexRoute: typeof CoursesIndexRoute
   ApiAdminPapersRoute: typeof ApiAdminPapersRoute
   CoursesCourseSlugIndexRoute: typeof CoursesCourseSlugIndexRoute
+  ApiPublicCloudcodePapersRoute: typeof ApiPublicCloudcodePapersRoute
   CoursesCourseSlugLevelSlugIndexRoute: typeof CoursesCourseSlugLevelSlugIndexRoute
   ApiPublicPalplussWebhookSecretRoute: typeof ApiPublicPalplussWebhookSecretRoute
 }
@@ -300,6 +314,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CoursesCourseSlugIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/cloudcode/papers': {
+      id: '/api/public/cloudcode/papers'
+      path: '/api/public/cloudcode/papers'
+      fullPath: '/api/public/cloudcode/papers'
+      preLoaderRoute: typeof ApiPublicCloudcodePapersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/courses/$courseSlug/$levelSlug/': {
       id: '/courses/$courseSlug/$levelSlug/'
       path: '/courses/$courseSlug/$levelSlug'
@@ -330,6 +351,7 @@ const rootRouteChildren: RootRouteChildren = {
   CoursesIndexRoute: CoursesIndexRoute,
   ApiAdminPapersRoute: ApiAdminPapersRoute,
   CoursesCourseSlugIndexRoute: CoursesCourseSlugIndexRoute,
+  ApiPublicCloudcodePapersRoute: ApiPublicCloudcodePapersRoute,
   CoursesCourseSlugLevelSlugIndexRoute: CoursesCourseSlugLevelSlugIndexRoute,
   ApiPublicPalplussWebhookSecretRoute: ApiPublicPalplussWebhookSecretRoute,
 }

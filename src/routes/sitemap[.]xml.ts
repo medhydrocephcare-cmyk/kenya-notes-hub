@@ -12,6 +12,12 @@ export const Route = createFileRoute("/sitemap.xml")({
           { path: "/", changefreq: "weekly", priority: "1.0" },
           { path: "/courses", changefreq: "weekly", priority: "0.9" },
         ];
+        try {
+          const { syncR2Catalog } = await import("@/lib/cloudcode-catalog.server");
+          await syncR2Catalog();
+        } catch {
+          // Keep sitemap available even if the file catalog sync is temporarily unavailable.
+        }
         for (const c of courses) {
           entries.push({ path: `/courses/${c.slug}`, changefreq: "weekly", priority: "0.8" });
           for (const l of levels.filter((x) => x.courseSlug === c.slug)) {

@@ -19,7 +19,7 @@ export const Route = createFileRoute("/checkout")({
   head: () => ({
     meta: [
       { title: "Secure checkout — Kasneb Pastpapers" },
-      { name: "description", content: "Pay securely with M-Pesa, card or bank. 256-bit SSL encryption." },
+      { name: "description", content: "Pay securely with M-Pesa and receive instant PDF download access after payment confirmation." },
       { name: "robots", content: "noindex" },
     ],
   }),

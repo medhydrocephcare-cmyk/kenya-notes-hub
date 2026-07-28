@@ -36,7 +36,35 @@ export const initiateCheckout = createServerFn({ method: "POST" })
 
     const userId = await resolveUserIdFromBearer();
 
-    const subtotal = data.items.reduce((s, i) => s + i.price, 0);
+    const requestedIds = [...new Set(data.items.map((item) => item.paperId))];
+    const { data: dbPapers, error: papersError } = await supabaseAdmin
+      .from("papers")
+      .select("id, title, price_kes, discount_price_kes, full_pdf_key, published")
+      .in("id", requestedIds)
+      .eq("published", true);
+    if (papersError) throw new Error(papersError.message);
+    if (!dbPapers || dbPapers.length !== requestedIds.length) {
+      throw new Error("One or more papers in your cart are no longer available");
+    }
+
+    const unavailable = dbPapers.find((paper) => !paper.full_pdf_key);
+    if (unavailable) {
+      throw new Error(`${unavailable.title} is still processing and cannot be purchased yet`);
+    }
+
+    const paperById = new Map(dbPapers.map((paper) => [paper.id, paper]));
+    const verifiedItems = requestedIds.map((paperId) => {
+      const paper = paperById.get(paperId);
+      if (!paper) throw new Error("Paper not found");
+      return {
+        paperId: paper.id,
+        title: paper.title,
+        price: paper.discount_price_kes ?? paper.price_kes,
+        fileKey: paper.full_pdf_key ?? "",
+      };
+    });
+
+    const subtotal = verifiedItems.reduce((sum, item) => sum + item.price, 0);
     const shortRef = "KP" + Math.random().toString(36).slice(2, 10).toUpperCase();
 
     const { data: order, error } = await supabaseAdmin
@@ -54,11 +82,12 @@ export const initiateCheckout = createServerFn({ method: "POST" })
       .single();
     if (error || !order) throw new Error(error?.message ?? "Failed to create order");
 
-    const itemsInsert = data.items.map((i) => ({
+    const itemsInsert = verifiedItems.map((i) => ({
       order_id: order.id,
       paper_id: i.paperId,
       title: i.title,
       price_kes: i.price,
+      file_key: i.fileKey,
     }));
     await supabaseAdmin.from("order_items").insert(itemsInsert);
 

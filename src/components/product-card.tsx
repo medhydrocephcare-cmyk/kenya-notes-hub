@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Eye, ShoppingCart, Check, Layers, Download, FileText } from "lucide-react";
+import { Eye, ShoppingCart, Check, Layers, Download, FileText, Clock3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { addToCart, isInCart } from "@/lib/cart";
 import { toast } from "sonner";
@@ -42,6 +42,7 @@ export function ProductCard({ paper }: { paper: Paper }) {
   const shortTitle = paper.title.split("—")[0].trim();
   const cover = paper.thumbnailUrl || subjectImageFor(paper.title, paper.courseSlug);
   const sitting = sittingLabel(paper);
+  const canBuy = paper.downloadAvailable !== false;
 
   return (
     <div className="group relative flex flex-col overflow-hidden rounded-2xl border border-border/60 bg-card transition hover:-translate-y-0.5 hover:border-brand/40 hover:shadow-card">
@@ -88,6 +89,10 @@ export function ProductCard({ paper }: { paper: Paper }) {
             <Layers className="h-3 w-3" /> {paper.bundleType} bundle
           </div>
         )}
+        <div className={`absolute left-3 bottom-3 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider shadow ${canBuy ? "bg-emerald-600 text-white" : "bg-amber-500 text-amber-950"}`}>
+          {canBuy ? <Download className="h-3 w-3" /> : <Clock3 className="h-3 w-3" />}
+          {canBuy ? "Ready" : "Processing"}
+        </div>
       </Link>
 
       <div className="flex flex-1 flex-col p-4">
@@ -124,13 +129,15 @@ export function ProductCard({ paper }: { paper: Paper }) {
           <Button
             size="sm"
             className={`flex-1 gap-1.5 ${inCart ? "bg-emerald-600 hover:bg-emerald-700" : "bg-brand hover:brightness-110"}`}
+            disabled={!canBuy}
             onClick={() => {
+              if (!canBuy) return toast.info("This paper is still being prepared for download");
               if (inCart) return toast.info("Already in your cart");
               addToCart(paper);
               toast.success("Added to cart");
             }}
           >
-            {inCart ? (<><Check className="h-3.5 w-3.5" /> In cart</>) : (<><ShoppingCart className="h-3.5 w-3.5" /> Add</>)}
+            {!canBuy ? (<><Clock3 className="h-3.5 w-3.5" /> Soon</>) : inCart ? (<><Check className="h-3.5 w-3.5" /> In cart</>) : (<><ShoppingCart className="h-3.5 w-3.5" /> Add</>)}
           </Button>
         </div>
       </div>
