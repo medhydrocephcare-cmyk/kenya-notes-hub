@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { createClient } from "@supabase/supabase-js";
+import type { Database } from "@/integrations/supabase/types";
 import { courses, levels } from "@/lib/data";
-import { listPapers } from "@/lib/papers.functions";
 import { SITE_URL } from "@/lib/site-config";
 
 export const Route = createFileRoute("/sitemap.xml")({
@@ -18,8 +19,21 @@ export const Route = createFileRoute("/sitemap.xml")({
           }
         }
         try {
-          const papers = await listPapers();
-          for (const p of papers) {
+          const url = process.env.SUPABASE_URL!;
+          const key = process.env.SUPABASE_PUBLISHABLE_KEY!;
+          const supabase = createClient<Database>(url, key, {
+            auth: { persistSession: false, autoRefreshToken: false, storage: undefined },
+            global: {
+              fetch: (input, init) => {
+                const h = new Headers(init?.headers);
+                if (key.startsWith("sb_") && h.get("Authorization") === `Bearer ${key}`) h.delete("Authorization");
+                h.set("apikey", key);
+                return fetch(input, { ...init, headers: h });
+              },
+            },
+          });
+          const { data } = await supabase.from("papers").select("id").eq("published", true);
+          for (const p of data ?? []) {
             entries.push({ path: `/papers/${p.id}`, changefreq: "monthly", priority: "0.6" });
           }
         } catch {
