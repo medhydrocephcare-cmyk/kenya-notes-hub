@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { ShoppingCart, User, Menu, Search, Phone, Mail, ChevronDown, X, LogOut, LayoutDashboard } from "lucide-react";
 import { useCart, openCart } from "@/lib/cart";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { courses } from "@/lib/data";
 import { SITE } from "@/lib/site-config";
 import logo from "@/assets/logo.png";
@@ -16,8 +16,20 @@ export function SiteHeader() {
   const { count } = useCart();
   const [open, setOpen] = useState(false);
   const [browseOpen, setBrowseOpen] = useState(false);
+  const browseRef = useRef<HTMLDivElement>(null);
   const { user, isAdmin, signOut } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!browseOpen) return;
+    function onDoc(e: MouseEvent) {
+      if (browseRef.current && !browseRef.current.contains(e.target as Node)) setBrowseOpen(false);
+    }
+    document.addEventListener("mousedown", onDoc);
+    return () => document.removeEventListener("mousedown", onDoc);
+  }, [browseOpen]);
+
+
 
   return (
     <header className="sticky top-0 z-40 w-full">
@@ -133,10 +145,9 @@ export function SiteHeader() {
 
         <div className="hidden border-t border-border/60 bg-surface/60 lg:block">
           <div className="mx-auto flex h-11 max-w-7xl items-center gap-1 px-4 text-sm">
-            <div className="relative">
+            <div className="relative" ref={browseRef}>
               <button
                 onClick={() => setBrowseOpen((v) => !v)}
-                onBlur={() => setTimeout(() => setBrowseOpen(false), 150)}
                 className="flex h-11 items-center gap-2 rounded-t-md bg-brand px-4 font-semibold text-primary-foreground"
               >
                 <Menu className="h-4 w-4" /> Browse courses
@@ -149,6 +160,7 @@ export function SiteHeader() {
                       key={c.slug}
                       to="/courses/$courseSlug"
                       params={{ courseSlug: c.slug }}
+                      onClick={() => setBrowseOpen(false)}
                       className="flex items-center justify-between border-b border-border/40 px-4 py-3 last:border-0 hover:bg-muted"
                     >
                       <span>
