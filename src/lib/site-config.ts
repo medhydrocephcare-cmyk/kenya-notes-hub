@@ -17,7 +17,7 @@ function envValue(key: string, fallback: string): string {
 export const SITE = {
   name: envValue("VITE_SITE_NAME", "Kasneb Pastpapers"),
   domain: "www.kasnebpapers.com",
-  supportPhone: envValue("VITE_SUPPORT_PHONE", "0712 345 678"),
+  supportPhone: envValue("VITE_SUPPORT_PHONE", "0115 475 543"),
   supportEmail: envValue("VITE_SUPPORT_EMAIL", "hello@kasnebpapers.com"),
   tagline: "KASNEB & KNEC notes, revision kits and past papers with model answers.",
 } as const;
