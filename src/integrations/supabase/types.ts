@@ -100,6 +100,81 @@ export type Database = {
         }
         Relationships: []
       }
+      papers: {
+        Row: {
+          category: string
+          course: string
+          created_at: string
+          description: string
+          discount_price_kes: number | null
+          download_count: number
+          featured: boolean
+          file_size_bytes: number | null
+          full_pdf_key: string | null
+          id: string
+          level: string
+          pages: number | null
+          preview_pdf_key: string | null
+          price_kes: number
+          published: boolean
+          sitting: string | null
+          syllabus_version: string | null
+          tags: string[]
+          thumbnail_url: string | null
+          title: string
+          updated_at: string
+          year: number | null
+        }
+        Insert: {
+          category?: string
+          course: string
+          created_at?: string
+          description?: string
+          discount_price_kes?: number | null
+          download_count?: number
+          featured?: boolean
+          file_size_bytes?: number | null
+          full_pdf_key?: string | null
+          id?: string
+          level: string
+          pages?: number | null
+          preview_pdf_key?: string | null
+          price_kes: number
+          published?: boolean
+          sitting?: string | null
+          syllabus_version?: string | null
+          tags?: string[]
+          thumbnail_url?: string | null
+          title: string
+          updated_at?: string
+          year?: number | null
+        }
+        Update: {
+          category?: string
+          course?: string
+          created_at?: string
+          description?: string
+          discount_price_kes?: number | null
+          download_count?: number
+          featured?: boolean
+          file_size_bytes?: number | null
+          full_pdf_key?: string | null
+          id?: string
+          level?: string
+          pages?: number | null
+          preview_pdf_key?: string | null
+          price_kes?: number
+          published?: boolean
+          sitting?: string | null
+          syllabus_version?: string | null
+          tags?: string[]
+          thumbnail_url?: string | null
+          title?: string
+          updated_at?: string
+          year?: number | null
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
