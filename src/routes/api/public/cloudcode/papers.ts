@@ -38,8 +38,13 @@ export const Route = createFileRoute("/api/public/cloudcode/papers")({
           return Response.json({ ok: false, error: message }, { status: 500, headers: corsHeaders });
         }
       },
-      POST: async () => {
+      POST: async ({ request }) => {
         try {
+          const configuredToken = process.env.CLOUDCODE_PUBLISH_TOKEN;
+          const requestToken = request.headers.get("authorization")?.replace(/^Bearer\s+/i, "");
+          if (!configuredToken || !requestToken || requestToken !== configuredToken) {
+            return Response.json({ ok: false, error: "Unauthorized" }, { status: 401, headers: corsHeaders });
+          }
           const { syncR2Catalog } = await import("@/lib/cloudcode-catalog.server");
           const result = await syncR2Catalog({ force: true });
           return Response.json(result, { headers: corsHeaders });

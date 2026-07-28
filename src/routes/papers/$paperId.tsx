@@ -335,7 +335,7 @@ function PaperDetail() {
                 </div>
                 {discount > 0 && (
                   <div className="mt-1 text-xs font-semibold text-sale">
-                    You save KSh {(paper.originalPrice! - paper.price).toLocaleString()} ({discount}% off)
+                    You save KSh {((paper.originalPrice ?? paper.price) - paper.price).toLocaleString()} ({discount}% off)
                   </div>
                 )}
               </div>
