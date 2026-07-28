@@ -509,7 +509,7 @@ function AdminCategoriesPanel() {
     if (error) toast.error(error.message);
     else { toast.success("Deleted"); q.refetch(); }
   }
-  async function updateField(id: string, patch: Record<string, unknown>) {
+  async function updateField(id: string, patch: any) {
     const { error } = await supabase.from("paper_categories").update(patch).eq("id", id);
     if (error) toast.error(error.message);
     else { toast.success("Saved"); q.refetch(); }
@@ -598,7 +598,7 @@ function AdminBlogPanel() {
     if (error) toast.error(error.message);
     else { toast.success(current ? "Unpublished" : "Published"); q.refetch(); }
   }
-  async function updatePost(id: string, patch: Record<string, unknown>) {
+  async function updatePost(id: string, patch: any) {
     const { error } = await supabase.from("blog_posts").update(patch).eq("id", id);
     if (error) toast.error(error.message);
     else { toast.success("Saved"); q.refetch(); }
