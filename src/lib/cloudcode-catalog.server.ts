@@ -32,6 +32,7 @@ const PRICE_KES = 150;
 const CONTENT_PREFIX = "content/";
 
 const TITLE_OVERRIDES: Record<string, string> = {
+  "advanced-taxation-business-income": "Advanced Taxation — Business Income",
   "business-environment": "Business Environment",
   "business-law": "Business Law",
   economics: "Economics",
