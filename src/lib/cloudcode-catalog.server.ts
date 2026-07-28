@@ -197,7 +197,18 @@ async function syncR2CatalogNow() {
     .select("id, course, level, title, preview_pdf_key, full_pdf_key, file_size_bytes, thumbnail_url, published, preview_text");
   if (existingError) throw new Error(existingError.message);
 
-  type ExistingRow = (typeof existingRows extends (infer T)[] | null ? T : never) & { preview_text?: string | null };
+  type ExistingRow = {
+    id: string;
+    course: string;
+    level: string;
+    title: string;
+    preview_pdf_key: string | null;
+    full_pdf_key: string | null;
+    file_size_bytes: number | null;
+    thumbnail_url: string | null;
+    published: boolean;
+    preview_text: string | null;
+  };
   const rows = (existingRows ?? []) as unknown as ExistingRow[];
   const existingByFullKey = new Map(rows.map((row) => [row.full_pdf_key, row]));
   const existingByIdentity = new Map(rows.map((row) => [`${row.course}|${row.level}|${row.title.toLowerCase()}`, row]));
