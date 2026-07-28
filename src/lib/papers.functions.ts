@@ -115,6 +115,25 @@ export const catalogStatsQueryOptions = queryOptions({
   staleTime: 60_000,
 });
 
+/** Public: presigned URL for a paper's free preview PDF — no payment required. */
+export const getPreviewUrl = createServerFn({ method: "POST" })
+  .inputValidator((data: unknown) => z.object({ paperId: z.string().min(1) }).parse(data))
+  .handler(async ({ data }) => {
+    const supabase = serverPublishableClient();
+    const { data: paper, error } = await supabase
+      .from("papers")
+      .select("preview_pdf_key, published")
+      .eq("id", data.paperId)
+      .maybeSingle();
+    if (error) throw new Error(error.message);
+    if (!paper || !paper.published) throw new Error("Paper not found");
+    if (!paper.preview_pdf_key) throw new Error("No preview available for this paper");
+
+    const { presignGet } = await import("./r2.server");
+    const url = await presignGet(paper.preview_pdf_key, 60 * 30);
+    return { url, expiresIn: 1800 };
+  });
+
 // ----- Small helpers used by pages -----
 
 export function papersByCourse(all: Paper[], courseSlug: string): Paper[] {

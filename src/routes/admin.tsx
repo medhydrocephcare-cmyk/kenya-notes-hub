@@ -153,6 +153,7 @@ function Stat({ label, value }: { label: string; value: number | string }) {
 }
 
 function AddPaperForm() {
+  const { session } = useAuth();
   const [course, setCourse] = useState(courses[0].slug);
   const [level, setLevel] = useState(levels.filter((l) => l.courseSlug === courses[0].slug)[0]?.slug ?? "");
   const [loading, setLoading] = useState(false);
@@ -164,16 +165,20 @@ function AddPaperForm() {
     setLoading(true);
     const res = await fetch("/api/admin/papers", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        ...(session?.access_token ? { Authorization: `Bearer ${session.access_token}` } : {}),
+      },
       body: JSON.stringify({
         course, level,
         title: form.get("title"),
         description: form.get("description"),
-        price: Number(form.get("price")),
-        fileUrl: form.get("fileUrl"),
-        previewUrl: form.get("previewUrl"),
-        examSitting: form.get("examSitting"),
-        lastUpdated: form.get("lastUpdated"),
+        price_kes: Number(form.get("price")),
+        sitting: form.get("examSitting") || "Updated to latest available sitting",
+        full_pdf_key: form.get("fullPdfKey"),
+        preview_pdf_key: form.get("previewPdfKey"),
+        thumbnail_url: form.get("thumbnailUrl") || undefined,
+        published: form.get("published") === "on",
       }),
     });
     setLoading(false);
@@ -181,7 +186,8 @@ function AddPaperForm() {
       toast.success("Paper created");
       (e.target as HTMLFormElement).reset();
     } else {
-      toast.error("Failed to create paper");
+      const body = await res.json().catch(() => ({}));
+      toast.error(body?.error ?? "Failed to create paper");
     }
   }
 
@@ -219,16 +225,20 @@ function AddPaperForm() {
           <Input id="examSitting" name="examSitting" placeholder="August 2026" className="mt-1.5" />
         </div>
         <div>
-          <Label htmlFor="fileUrl">File URL (R2)</Label>
-          <Input id="fileUrl" name="fileUrl" placeholder="https://…pdf" className="mt-1.5" />
+          <Label htmlFor="fullPdfKey">Full PDF — R2 object key</Label>
+          <Input id="fullPdfKey" name="fullPdfKey" placeholder="content/cpa/foundation-1/paper.pdf" className="mt-1.5" />
         </div>
         <div>
-          <Label htmlFor="previewUrl">Preview URL</Label>
-          <Input id="previewUrl" name="previewUrl" placeholder="https://…preview.pdf" className="mt-1.5" />
+          <Label htmlFor="previewPdfKey">Preview PDF — R2 object key</Label>
+          <Input id="previewPdfKey" name="previewPdfKey" placeholder="content/cpa/foundation-1/paper-preview.pdf" className="mt-1.5" />
         </div>
-        <div>
-          <Label htmlFor="lastUpdated">Last updated</Label>
-          <Input id="lastUpdated" name="lastUpdated" type="date" className="mt-1.5" />
+        <div className="md:col-span-2">
+          <Label htmlFor="thumbnailUrl">Thumbnail — public R2 URL</Label>
+          <Input id="thumbnailUrl" name="thumbnailUrl" placeholder="https://files.kasnebpapers.com/…thumbnail.png" className="mt-1.5" />
+        </div>
+        <div className="md:col-span-2 flex items-center gap-2">
+          <input id="published" name="published" type="checkbox" className="h-4 w-4" />
+          <Label htmlFor="published" className="!mt-0">Publish immediately (visible on the live site)</Label>
         </div>
         <div className="md:col-span-2">
           <Button type="submit" disabled={loading} className="bg-brand hover:brightness-110">
