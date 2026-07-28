@@ -90,7 +90,7 @@ function BlogPostPage() {
         </Link>
 
         <div className="mt-6 flex flex-wrap gap-2">
-          {post.tags?.slice(0, 3).map((t) => (
+          {post.tags?.slice(0, 3).map((t: string) => (
             <Badge key={t} variant="outline" className="border-brand/30 text-brand">{t}</Badge>
           ))}
         </div>

@@ -98,14 +98,13 @@ function SubmitForm({ onDone }: { onDone: () => void }) {
     if (!authorName || quote.length < 12) return toast.error("Add your name and a longer review");
     setSaving(true);
     const { data: sess } = await supabase.auth.getUser();
-    const payload: Record<string, unknown> = {
+    const { error } = await supabase.from("testimonials").insert({
       author_name: authorName,
       role: role || "KASNEB student",
       rating,
       quote,
       approved: false,
-    };
-    const { error } = await supabase.from("testimonials").insert(payload);
+    });
     setSaving(false);
     if (error) return toast.error(error.message);
     toast.success(sess?.user ? "Thanks! Your review is pending approval." : "Thanks! Pending admin approval.");
