@@ -1,7 +1,7 @@
 # Management Accounting — Nature, Purpose and Classification of Costs — PREVIEW
 
 **Course:** CPA — Certified Public Accountant | **Level:** Foundation Level 2
-**This is a free preview covering the introduction and Section 1 only.**
+**This is a free preview. It shows the exam-paper layout used throughout the full document, plus the introduction section.**
 
 ---
 
@@ -22,8 +22,9 @@
 13. Cost classification by behaviour — full version only
 14. Other classifications used in decision-making and control — full version only
 15. Full worked question — prime cost, conversion cost and unit cost — full version only
-16. Self-assessment question bank, 10 original questions with model answers — full version only
-17. Exam technique and revision checklist — full version only
+16. Practice examination — KASNEB-style paper — *Question One shown below; Questions Two–Five full version only*
+17. Marking guide — model answers to the practice examination — full version only
+18. Exam technique and revision checklist — full version only
 
 ---
 
@@ -42,8 +43,31 @@ Four activities sit at the core of cost accounting, in any organisation — manu
 
 ---
 
+## Sample of the practice examination (Question One of Five)
+
+> **Note on format.** The full paper includes a complete practice examination laid out the way a real KASNEB CPA paper is laid out — timed, five compulsory 20-mark questions — so you can rehearse the exact exam format before sitting the real thing. This is an original practice paper, **not a reproduction of any actual KASNEB past paper.**
+
+**CPA FOUNDATION LEVEL 2 — MANAGEMENT ACCOUNTING (PRACTICE PAPER)**
+**TIME ALLOWED: 3 HOURS**
+
+*Instructions to candidates: Answer ALL FIVE questions. Each question carries 20 marks. Show all workings clearly.*
+
+**QUESTION ONE**
+
+(a) Distinguish between "cost accounting" and "management accounting." *(4 marks)*
+
+(b) Explain FOUR objectives of cost accounting. *(8 marks)*
+
+(c) Outline FOUR factors that an organisation should consider before installing a cost accounting system. *(8 marks)*
+
+*(Total: 20 marks)*
+
+**Questions Two, Three, Four and Five — plus the full marking guide with model answers to all five questions — are in the full version.**
+
+---
+
 ## Unlock the full paper
 
-The complete version covers the meaning and limitations of management accounting, the functions of a cost accountant, the scope of cost accounting, the differences between financial, cost and management accounting, all major cost classifications (by element, function, behaviour and controllability), a fully worked prime-cost/conversion-cost question, and a 10-question original self-assessment kit with model answers.
+The complete version includes the meaning and limitations of management accounting, the functions of a cost accountant, the scope of cost accounting, the differences between financial, cost and management accounting, all major cost classifications (by element, function, behaviour and controllability), a fully worked prime-cost/conversion-cost question, the complete five-question KASNEB-style practice examination with a full marking guide, and an exam technique and revision checklist.
 
 **Purchase the full paper to continue.**

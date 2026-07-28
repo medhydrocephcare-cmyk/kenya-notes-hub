@@ -26,8 +26,9 @@
 13. Cost classification by behaviour
 14. Other classifications used in decision-making and control
 15. Full worked question — prime cost, conversion cost and unit cost
-16. Self-assessment question bank (with model answers)
-17. Exam technique and revision checklist
+16. Practice examination — KASNEB-style paper (original, not a past paper)
+17. Marking guide — model answers to the practice examination
+18. Exam technique and revision checklist
 
 ---
 
@@ -259,76 +260,191 @@ This classification is what makes marginal costing, break-even analysis, and sho
 
 ---
 
-## 16. Self-assessment question bank (with model answers)
+## 16. Practice examination — KASNEB-style paper (original, not a past paper)
 
-**Q1.** Distinguish cost accounting from management accounting. *(4 marks)*
+> **Note on format.** This section is laid out the way a KASNEB CPA examination paper is laid out — a timed paper with five compulsory 20-mark questions — purely so you can practise under realistic exam conditions. Every question below is an original scenario written for this document. **It is not a reproduction of any actual KASNEB past examination paper.**
 
-*Model answer:*
-- Cost accounting focuses narrowly on ascertaining and controlling cost; management accounting is broader and uses cost, financial, and statistical data to support decisions.
-- Cost accounting mainly reports historical and current cost; management accounting is largely forward-looking.
-- Cost accounting follows fairly standard formats; management accounting reports are shaped entirely around what a specific decision needs.
+**CPA FOUNDATION LEVEL 2 — MANAGEMENT ACCOUNTING (PRACTICE PAPER)**
+**TIME ALLOWED: 3 HOURS**
 
-**Q2.** State three objectives of cost accounting. *(3 marks)*
-
-*Model answer:* (any three)
-- Ascertaining the cost of a product, job, or service.
-- Controlling cost through standards/budgets and variance analysis.
-- Providing a basis for setting selling prices.
-- Enabling frequent (not just annual) reporting and stock valuation.
-
-**Q3.** Define "prime cost" and "conversion cost." *(4 marks)*
-
-*Model answer:*
-- Prime cost = direct materials + direct labour.
-- Conversion cost = direct labour + manufacturing overhead — the cost of "converting" raw material into a finished unit.
-
-**Q4.** A factory incurs KES 800,000 direct material, KES 500,000 direct labour, and KES 300,000 manufacturing overhead to produce 1,000 units. Compute the production cost per unit. *(4 marks)*
-
-*Model answer:*
-- Total production cost = 800,000 + 500,000 + 300,000 = KES 1,600,000
-- Cost per unit = 1,600,000 ÷ 1,000 = **KES 1,600**
-
-**Q5.** Explain the difference between a fixed cost and a variable cost, using one example of each. *(4 marks)*
-
-*Model answer:*
-- Fixed cost: total remains unchanged within a relevant range of activity, e.g. factory rent — it does not rise just because more units are made.
-- Variable cost: total moves in direct proportion to activity, e.g. direct material cost per unit produced.
-
-**Q6.** What is a semi-variable (mixed) cost? Give one example. *(3 marks)*
-
-*Model answer:*
-- A cost with both a fixed and a variable component, e.g. a telephone bill with a fixed monthly rental plus a variable charge per call/unit of data used.
-
-**Q7.** Explain "opportunity cost" and why it matters in decision-making even though it never appears in the financial statements. *(3 marks)*
-
-*Model answer:*
-- Opportunity cost is the value of the best alternative given up when one option is chosen over another.
-- It matters because a decision that looks profitable in isolation may still be the wrong choice if a better alternative use of the same resources was available; ignoring it can lead to sub-optimal decisions.
-
-**Q8.** State two limitations of management accounting. *(2 marks)*
-
-*Model answer:* (any two)
-- It is only as good as the underlying financial/cost data.
-- It provides information, not the final decision — judgement still rests with management.
-- Interpretation can be subjective and vary between analysts.
-
-**Q9.** List three factors to consider before installing a cost accounting system in a business. *(3 marks)*
-
-*Model answer:* (any three)
-- Nature of the business/industry.
-- Range and complexity of products.
-- Organisational structure and levels of delegation.
-- Technical factors such as factory layout and degree of mechanisation.
-
-**Q10.** Distinguish a controllable cost from a non-controllable cost, from the point of view of a departmental supervisor. *(3 marks)*
-
-*Model answer:*
-- Controllable cost: one the supervisor can influence within their period of responsibility, e.g. overtime hours authorised in their department.
-- Non-controllable cost: one outside their influence, e.g. a share of head-office rent apportioned to their department.
+*Instructions to candidates: Answer ALL FIVE questions. Each question carries 20 marks. Show all workings clearly.*
 
 ---
 
-## 17. Exam technique and revision checklist
+**QUESTION ONE**
+
+(a) Distinguish between "cost accounting" and "management accounting." *(4 marks)*
+
+(b) Explain FOUR objectives of cost accounting. *(8 marks)*
+
+(c) Outline FOUR factors that an organisation should consider before installing a cost accounting system. *(8 marks)*
+
+*(Total: 20 marks)*
+
+---
+
+**QUESTION TWO**
+
+(a) Outline SIX functions of a cost accountant in a manufacturing organisation. *(6 marks)*
+
+(b) Explain FIVE essentials of an ideal cost accounting system. *(10 marks)*
+
+(c) State TWO practical difficulties commonly encountered when a costing system is first installed in a business. *(4 marks)*
+
+*(Total: 20 marks)*
+
+---
+
+**QUESTION THREE**
+
+Bidii Bakeries Ltd. produced 2,000 loaves of a specialty bread line during a given week, incurring the following costs:
+
+| Item | Amount (KES) |
+|---|---|
+| Flour and specialty grains (direct material) | 240,000 |
+| Packaging material specific to the product line (direct material) | 60,000 |
+| Bakers' wages (direct labour) | 180,000 |
+| Yeast, cleaning agents and minor consumables (indirect material) | 15,000 |
+| Bakery supervisor's salary (indirect labour) | 45,000 |
+| Factory rent, power and depreciation of ovens (overhead) | 60,000 |
+
+Required:
+
+(a) Compute the prime cost. *(4 marks)*
+
+(b) Compute the conversion cost. *(4 marks)*
+
+(c) Compute the total production cost and the production cost per loaf. *(6 marks)*
+
+(d) Distinguish a "direct cost" from an "indirect cost," using one example from the scenario for each. *(6 marks)*
+
+*(Total: 20 marks)*
+
+---
+
+**QUESTION FOUR**
+
+(a) Distinguish between a fixed cost, a variable cost, and a semi-variable cost, giving one example of each. *(9 marks)*
+
+(b) Explain the term "opportunity cost" and its relevance to management decision-making. *(6 marks)*
+
+(c) Distinguish a controllable cost from a non-controllable cost, from the point of view of a departmental supervisor. *(5 marks)*
+
+*(Total: 20 marks)*
+
+---
+
+**QUESTION FIVE**
+
+(a) Explain the scope of management accounting. *(8 marks)*
+
+(b) State FOUR limitations of management accounting. *(8 marks)*
+
+(c) Distinguish cost accounting from financial accounting on the basis of (i) purpose and (ii) reporting frequency. *(4 marks)*
+
+*(Total: 20 marks)*
+
+---
+
+## 17. Marking guide — model answers to the practice examination
+
+**QUESTION ONE**
+
+(a) *(4 marks)*
+- Cost accounting focuses narrowly on ascertaining and controlling cost; management accounting is broader and uses cost, financial and statistical data together to support decisions.
+- Cost accounting mainly reports historical/current cost; management accounting is largely forward-looking.
+- Cost accounting follows fairly standard formats; management accounting reports are shaped entirely around what a specific decision needs.
+
+(b) *(8 marks — 2 marks each, any four)*
+- Cost ascertainment — computing the cost of a product, job, process or service.
+- Cost control — comparing actual cost against a standard/budget and correcting adverse variances.
+- Price determination — cost forms the floor under a selling price, with margin added on top.
+- Timely internal reporting — valuing stock and reporting performance at short, regular intervals rather than only at year end.
+- Supporting operating decisions — e.g. make-or-buy, dropping a loss-making line, automating a process.
+
+(c) *(8 marks — 2 marks each, any four)*
+- Nature of the business/industry (manufacturing, trading, service) — determines the costing method that fits.
+- Product range — a few standard products vs bespoke, made-to-order items need different systems.
+- Technical factors — factory layout, degree of mechanisation, how production flows between stages.
+- Organisational factors — number of management levels, extent of delegation of responsibility.
+- Reporting needs — how often, and to whom, cost information must be reported.
+
+**QUESTION TWO**
+
+(a) *(6 marks — 1 mark each)*
+- Setting up cost centres/cost codes appropriate to the organisation.
+- Ascertaining the cost of every product, job or process, in total and per unit.
+- Designing a system that assigns clear responsibility for cost control.
+- Supplying cost data to support pricing and tendering decisions.
+- Reporting on waste, idle time and under-used capacity.
+- Valuing closing stock of raw materials and work-in-progress; reconciling cost profit with financial profit.
+
+(b) *(10 marks — 2 marks each, any five)*
+- Accurate — misleading cost data is worse than none.
+- Simple — avoids unnecessary detail that adds cost without adding insight.
+- Flexible — can expand or contract as the business changes.
+- Economical — running it must cost less than the benefit/savings it generates.
+- Comparable — consistent enough over time to support trend analysis.
+- Prompt — reaches management while still actionable.
+- Reconcilable — cost profit and financial profit can be reconciled.
+
+(c) *(4 marks — 2 marks each, any two)*
+- Resistance from operating managers, who see it as extra work or as a check on their performance.
+- Resistance from existing accounting staff, worried about job security or workload.
+- The system's running cost exceeding the savings/benefit it generates.
+
+**QUESTION THREE**
+
+(a) Prime cost *(4 marks)*
+- Direct material = 240,000 + 60,000 = KES 300,000
+- Direct labour = KES 180,000
+- **Prime cost = 300,000 + 180,000 = KES 480,000**
+
+(b) Conversion cost *(4 marks)*
+- Manufacturing overhead = 15,000 + 45,000 + 60,000 = KES 120,000
+- **Conversion cost = Direct labour + Overhead = 180,000 + 120,000 = KES 300,000**
+
+(c) Total production cost and unit cost *(6 marks)*
+- **Total production cost = Prime cost + Overhead = 480,000 + 120,000 = KES 600,000**
+- **Cost per loaf = 600,000 ÷ 2,000 = KES 300**
+
+(d) Direct vs indirect cost *(6 marks)*
+- Direct cost: traceable to the product without unreasonable effort/cost, e.g. flour and specialty grains.
+- Indirect cost: benefits production generally but cannot be economically traced to one loaf, e.g. the bakery supervisor's salary.
+
+**QUESTION FOUR**
+
+(a) *(9 marks — 3 marks each)*
+- Fixed cost: total unchanged within a relevant activity range, e.g. factory rent.
+- Variable cost: total moves in direct proportion to activity, e.g. direct material cost.
+- Semi-variable cost: has both a fixed and variable element, e.g. a maintenance contract with a fixed retainer plus a per-hour charge.
+
+(b) *(6 marks)*
+- Opportunity cost is the value of the best alternative given up when one option is chosen over another.
+- It matters because a decision that looks profitable in isolation may still be the wrong choice if a better alternative use of the same resources existed; ignoring it can lead to sub-optimal decisions, even though it never appears in the ledgers.
+
+(c) *(5 marks)*
+- Controllable cost: one the supervisor can influence within their period of responsibility, e.g. overtime hours they authorise.
+- Non-controllable cost: one outside their influence, e.g. a share of head-office rent apportioned to their department.
+
+**QUESTION FIVE**
+
+(a) *(8 marks)*
+- Management accounting draws on financial accounting, cost accounting, budgeting and forecasting, inventory control, statistical analysis and internal audit, then packages the output as reports management can act on — covering recording, planning and control, and decision support (pricing, product mix, investment appraisal).
+
+(b) *(8 marks — 2 marks each, any four)*
+- Reliability is limited by the quality of the underlying financial/cost data.
+- Provides information, not the decision itself — judgement still rests with management.
+- Interpretation of the same data can be subjective and vary between analysts.
+- Installing/upgrading it usually requires reorganising staff roles and reporting lines, which people may resist.
+
+(c) *(4 marks — 2 marks each)*
+- Purpose: financial accounting is for external reporting (shareholders, tax authorities); cost accounting is for internal management use.
+- Reporting frequency: financial accounting reports are usually annual; cost accounting reports are frequent — weekly or monthly.
+
+---
+
+## 18. Exam technique and revision checklist
 
 - Prime cost and conversion cost questions: always separate direct material, direct labour, and overhead **before** combining them — combining too early is the most common source of error.
 - When a question asks for "production cost per unit," divide **total production cost**, not prime cost alone, by the number of units.
