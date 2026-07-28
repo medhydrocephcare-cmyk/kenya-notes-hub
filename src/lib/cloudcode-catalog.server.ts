@@ -243,7 +243,7 @@ async function syncR2CatalogNow() {
     }
 
     if (Object.keys(patch).length > 0) {
-      const { error } = await supabaseAdmin.from("papers").update(patch).eq("id", existing.id);
+      const { error } = await supabaseAdmin.from("papers").update(patch as never).eq("id", existing.id);
       if (error) throw new Error(error.message);
       updated += 1;
     }
