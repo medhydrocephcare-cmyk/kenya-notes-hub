@@ -26,7 +26,7 @@ export const initiateCheckout = createServerFn({ method: "POST" })
     const { initiateStk } = await import("./palpluss.server");
     const { resolveUserIdFromBearer } = await import("./checkout.server");
 
-    const userId = await resolveUserIdFromBearer();
+    const userId = await resolveUserIdFromBearer({ rejectInvalid: true });
 
     const requestedIds = [...new Set(data.items.map((item) => item.paperId))];
     const { data: dbPapers, error: papersError } = await supabaseAdmin
@@ -135,20 +135,39 @@ export const getDownloadUrl = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { presignGet } = await import("./r2.server");
+    const { resolveUserIdFromBearer } = await import("./checkout.server");
 
-    const { data: order } = await supabaseAdmin
+    const requestUserId = await resolveUserIdFromBearer({ rejectInvalid: true });
+
+    const { data: order, error: orderError } = await supabaseAdmin
       .from("orders")
-      .select("id, status, order_items(paper_id, file_key)")
+      .select("id, status, user_id, order_items(paper_id, file_key)")
       .eq("reference", data.reference)
       .maybeSingle();
-    if (!order || order.status !== "paid") throw new Error("Order not paid");
+    if (orderError) throw new Error(orderError.message);
+    if (!order) throw new Error("Order not found");
+    if (order.status !== "paid") throw new Error("Payment required before download");
+
+    if (order.user_id && order.user_id !== requestUserId) {
+      throw new Error("Sign in to the account that purchased this paper");
+    }
 
     const item = order.order_items?.find((i: { paper_id: string }) => i.paper_id === data.paperId);
     if (!item) throw new Error("Paper not part of order");
 
-    const key = (item as { file_key: string | null }).file_key ?? `papers/${data.paperId}.pdf`;
-    const url = await presignGet(key, 60 * 30);
-    return { url, expiresIn: 1800 };
+    const { data: paper, error: paperError } = await supabaseAdmin
+      .from("papers")
+      .select("full_pdf_key")
+      .eq("id", data.paperId)
+      .maybeSingle();
+    if (paperError) throw new Error(paperError.message);
+
+    const itemKey = (item as { file_key: string | null }).file_key;
+    const key = paper?.full_pdf_key || itemKey;
+    if (!key) throw new Error("File not available yet");
+
+    const url = await presignGet(key, 60 * 15);
+    return { url, expiresIn: 900 };
   });
 
 export const getMyOrders = createServerFn({ method: "GET" })
