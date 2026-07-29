@@ -117,14 +117,49 @@ export const getOrderStatus = createServerFn({ method: "GET" })
   )
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data: order } = await supabaseAdmin
+    const { getTransaction } = await import("./palpluss.server");
+    const { data: order, error } = await supabaseAdmin
       .from("orders")
       .select(
-        "reference, status, subtotal_kes, mpesa_receipt, result_desc, order_items(paper_id, title, price_kes)",
+        "id, reference, status, subtotal_kes, mpesa_receipt, result_desc, palpluss_transaction_id, order_items(paper_id, title, price_kes)",
       )
       .eq("reference", data.reference)
       .maybeSingle();
+    if (error) throw new Error(error.message);
     if (!order) return null;
+
+    if (order.status === "pending" && order.palpluss_transaction_id) {
+      try {
+        const tx = await getTransaction(order.palpluss_transaction_id);
+        const rawStatus = String(tx?.status ?? "").toUpperCase();
+        const status =
+          rawStatus === "SUCCESS"
+            ? "paid"
+            : rawStatus === "FAILED" || rawStatus === "CANCELLED" || rawStatus === "EXPIRED" || rawStatus === "REVERSED"
+              ? "failed"
+              : "pending";
+
+        if (status !== "pending") {
+          const patch = {
+            status,
+            mpesa_receipt: tx?.mpesaReceipt ?? tx?.mpesa_receipt ?? order.mpesa_receipt,
+            result_desc: tx?.resultDesc ?? tx?.result_desc ?? order.result_desc,
+          };
+          const { data: updated } = await supabaseAdmin
+            .from("orders")
+            .update(patch)
+            .eq("id", order.id)
+            .select(
+              "id, reference, status, subtotal_kes, mpesa_receipt, result_desc, palpluss_transaction_id, order_items(paper_id, title, price_kes)",
+            )
+            .maybeSingle();
+          return updated ?? { ...order, ...patch };
+        }
+      } catch (err) {
+        console.warn("[palpluss] transaction status poll failed", err);
+      }
+    }
+
     return order;
   });
 
