@@ -25,6 +25,10 @@ import { Route as CoursesCourseSlugIndexRouteImport } from './routes/courses/$co
 import { Route as ApiAdminPapersRouteImport } from './routes/api/admin/papers'
 import { Route as CoursesCourseSlugLevelSlugIndexRouteImport } from './routes/courses/$courseSlug/$levelSlug/index'
 import { Route as ApiPublicCloudcodePapersRouteImport } from './routes/api/public/cloudcode/papers'
+import { Route as ApiPublicCheckoutStatusRouteImport } from './routes/api/public/checkout/status'
+import { Route as ApiPublicCheckoutMyOrdersRouteImport } from './routes/api/public/checkout/my-orders'
+import { Route as ApiPublicCheckoutInitiateRouteImport } from './routes/api/public/checkout/initiate'
+import { Route as ApiPublicCheckoutDownloadUrlRouteImport } from './routes/api/public/checkout/download-url'
 import { Route as ApiPublicPalplussWebhookSecretRouteImport } from './routes/api/public/palpluss/webhook/$secret'
 import { Route as ApiPublicDownloadReferencePaperIdRouteImport } from './routes/api/public/download/$reference/$paperId'
 
@@ -110,6 +114,29 @@ const ApiPublicCloudcodePapersRoute =
     path: '/api/public/cloudcode/papers',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicCheckoutStatusRoute = ApiPublicCheckoutStatusRouteImport.update({
+  id: '/api/public/checkout/status',
+  path: '/api/public/checkout/status',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicCheckoutMyOrdersRoute =
+  ApiPublicCheckoutMyOrdersRouteImport.update({
+    id: '/api/public/checkout/my-orders',
+    path: '/api/public/checkout/my-orders',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicCheckoutInitiateRoute =
+  ApiPublicCheckoutInitiateRouteImport.update({
+    id: '/api/public/checkout/initiate',
+    path: '/api/public/checkout/initiate',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicCheckoutDownloadUrlRoute =
+  ApiPublicCheckoutDownloadUrlRouteImport.update({
+    id: '/api/public/checkout/download-url',
+    path: '/api/public/checkout/download-url',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicPalplussWebhookSecretRoute =
   ApiPublicPalplussWebhookSecretRouteImport.update({
     id: '/api/public/palpluss/webhook/$secret',
@@ -138,6 +165,10 @@ export interface FileRoutesByFullPath {
   '/courses/': typeof CoursesIndexRoute
   '/api/admin/papers': typeof ApiAdminPapersRoute
   '/courses/$courseSlug/': typeof CoursesCourseSlugIndexRoute
+  '/api/public/checkout/download-url': typeof ApiPublicCheckoutDownloadUrlRoute
+  '/api/public/checkout/initiate': typeof ApiPublicCheckoutInitiateRoute
+  '/api/public/checkout/my-orders': typeof ApiPublicCheckoutMyOrdersRoute
+  '/api/public/checkout/status': typeof ApiPublicCheckoutStatusRoute
   '/api/public/cloudcode/papers': typeof ApiPublicCloudcodePapersRoute
   '/courses/$courseSlug/$levelSlug/': typeof CoursesCourseSlugLevelSlugIndexRoute
   '/api/public/download/$reference/$paperId': typeof ApiPublicDownloadReferencePaperIdRoute
@@ -158,6 +189,10 @@ export interface FileRoutesByTo {
   '/courses': typeof CoursesIndexRoute
   '/api/admin/papers': typeof ApiAdminPapersRoute
   '/courses/$courseSlug': typeof CoursesCourseSlugIndexRoute
+  '/api/public/checkout/download-url': typeof ApiPublicCheckoutDownloadUrlRoute
+  '/api/public/checkout/initiate': typeof ApiPublicCheckoutInitiateRoute
+  '/api/public/checkout/my-orders': typeof ApiPublicCheckoutMyOrdersRoute
+  '/api/public/checkout/status': typeof ApiPublicCheckoutStatusRoute
   '/api/public/cloudcode/papers': typeof ApiPublicCloudcodePapersRoute
   '/courses/$courseSlug/$levelSlug': typeof CoursesCourseSlugLevelSlugIndexRoute
   '/api/public/download/$reference/$paperId': typeof ApiPublicDownloadReferencePaperIdRoute
@@ -179,6 +214,10 @@ export interface FileRoutesById {
   '/courses/': typeof CoursesIndexRoute
   '/api/admin/papers': typeof ApiAdminPapersRoute
   '/courses/$courseSlug/': typeof CoursesCourseSlugIndexRoute
+  '/api/public/checkout/download-url': typeof ApiPublicCheckoutDownloadUrlRoute
+  '/api/public/checkout/initiate': typeof ApiPublicCheckoutInitiateRoute
+  '/api/public/checkout/my-orders': typeof ApiPublicCheckoutMyOrdersRoute
+  '/api/public/checkout/status': typeof ApiPublicCheckoutStatusRoute
   '/api/public/cloudcode/papers': typeof ApiPublicCloudcodePapersRoute
   '/courses/$courseSlug/$levelSlug/': typeof CoursesCourseSlugLevelSlugIndexRoute
   '/api/public/download/$reference/$paperId': typeof ApiPublicDownloadReferencePaperIdRoute
@@ -201,6 +240,10 @@ export interface FileRouteTypes {
     | '/courses/'
     | '/api/admin/papers'
     | '/courses/$courseSlug/'
+    | '/api/public/checkout/download-url'
+    | '/api/public/checkout/initiate'
+    | '/api/public/checkout/my-orders'
+    | '/api/public/checkout/status'
     | '/api/public/cloudcode/papers'
     | '/courses/$courseSlug/$levelSlug/'
     | '/api/public/download/$reference/$paperId'
@@ -221,6 +264,10 @@ export interface FileRouteTypes {
     | '/courses'
     | '/api/admin/papers'
     | '/courses/$courseSlug'
+    | '/api/public/checkout/download-url'
+    | '/api/public/checkout/initiate'
+    | '/api/public/checkout/my-orders'
+    | '/api/public/checkout/status'
     | '/api/public/cloudcode/papers'
     | '/courses/$courseSlug/$levelSlug'
     | '/api/public/download/$reference/$paperId'
@@ -241,6 +288,10 @@ export interface FileRouteTypes {
     | '/courses/'
     | '/api/admin/papers'
     | '/courses/$courseSlug/'
+    | '/api/public/checkout/download-url'
+    | '/api/public/checkout/initiate'
+    | '/api/public/checkout/my-orders'
+    | '/api/public/checkout/status'
     | '/api/public/cloudcode/papers'
     | '/courses/$courseSlug/$levelSlug/'
     | '/api/public/download/$reference/$paperId'
@@ -262,6 +313,10 @@ export interface RootRouteChildren {
   CoursesIndexRoute: typeof CoursesIndexRoute
   ApiAdminPapersRoute: typeof ApiAdminPapersRoute
   CoursesCourseSlugIndexRoute: typeof CoursesCourseSlugIndexRoute
+  ApiPublicCheckoutDownloadUrlRoute: typeof ApiPublicCheckoutDownloadUrlRoute
+  ApiPublicCheckoutInitiateRoute: typeof ApiPublicCheckoutInitiateRoute
+  ApiPublicCheckoutMyOrdersRoute: typeof ApiPublicCheckoutMyOrdersRoute
+  ApiPublicCheckoutStatusRoute: typeof ApiPublicCheckoutStatusRoute
   ApiPublicCloudcodePapersRoute: typeof ApiPublicCloudcodePapersRoute
   CoursesCourseSlugLevelSlugIndexRoute: typeof CoursesCourseSlugLevelSlugIndexRoute
   ApiPublicDownloadReferencePaperIdRoute: typeof ApiPublicDownloadReferencePaperIdRoute
@@ -382,6 +437,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicCloudcodePapersRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/checkout/status': {
+      id: '/api/public/checkout/status'
+      path: '/api/public/checkout/status'
+      fullPath: '/api/public/checkout/status'
+      preLoaderRoute: typeof ApiPublicCheckoutStatusRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/checkout/my-orders': {
+      id: '/api/public/checkout/my-orders'
+      path: '/api/public/checkout/my-orders'
+      fullPath: '/api/public/checkout/my-orders'
+      preLoaderRoute: typeof ApiPublicCheckoutMyOrdersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/checkout/initiate': {
+      id: '/api/public/checkout/initiate'
+      path: '/api/public/checkout/initiate'
+      fullPath: '/api/public/checkout/initiate'
+      preLoaderRoute: typeof ApiPublicCheckoutInitiateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/checkout/download-url': {
+      id: '/api/public/checkout/download-url'
+      path: '/api/public/checkout/download-url'
+      fullPath: '/api/public/checkout/download-url'
+      preLoaderRoute: typeof ApiPublicCheckoutDownloadUrlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/palpluss/webhook/$secret': {
       id: '/api/public/palpluss/webhook/$secret'
       path: '/api/public/palpluss/webhook/$secret'
@@ -414,6 +497,10 @@ const rootRouteChildren: RootRouteChildren = {
   CoursesIndexRoute: CoursesIndexRoute,
   ApiAdminPapersRoute: ApiAdminPapersRoute,
   CoursesCourseSlugIndexRoute: CoursesCourseSlugIndexRoute,
+  ApiPublicCheckoutDownloadUrlRoute: ApiPublicCheckoutDownloadUrlRoute,
+  ApiPublicCheckoutInitiateRoute: ApiPublicCheckoutInitiateRoute,
+  ApiPublicCheckoutMyOrdersRoute: ApiPublicCheckoutMyOrdersRoute,
+  ApiPublicCheckoutStatusRoute: ApiPublicCheckoutStatusRoute,
   ApiPublicCloudcodePapersRoute: ApiPublicCloudcodePapersRoute,
   CoursesCourseSlugLevelSlugIndexRoute: CoursesCourseSlugLevelSlugIndexRoute,
   ApiPublicDownloadReferencePaperIdRoute:
