@@ -68,11 +68,16 @@ function CheckoutPage() {
         if (error && !/already registered/i.test(error.message)) throw error;
       }
 
+      const trimmedName = name.trim();
+      const fallbackName = trimmedName.length >= 2
+        ? trimmedName
+        : (email.split("@")[0] || "Customer").padEnd(2, ".");
+
       const res = await initiate({
         data: {
-          buyerName: name,
-          email,
-          phone,
+          buyerName: fallbackName,
+          email: email.trim(),
+          phone: phone.trim(),
           items: items.map(({ paper }) => ({
             paperId: paper.id,
             title: paper.title,
