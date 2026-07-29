@@ -1,9 +1,30 @@
 import { Link } from "@tanstack/react-router";
-import { Phone, Mail, MapPin, Facebook, Twitter, Instagram, ShieldCheck } from "lucide-react";
+import { useState } from "react";
+import { Phone, Mail, MapPin, Facebook, Twitter, Instagram, ShieldCheck, Loader2 } from "lucide-react";
+import { useServerFn } from "@tanstack/react-start";
+import { toast } from "sonner";
 import { courses } from "@/lib/data";
 import { SITE } from "@/lib/site-config";
+import { subscribeNewsletter } from "@/lib/newsletter.functions";
 
 export function SiteFooter() {
+  const subscribe = useServerFn(subscribeNewsletter);
+  const [email, setEmail] = useState("");
+  const [subLoading, setSubLoading] = useState(false);
+  async function handleSubscribe(e: React.FormEvent) {
+    e.preventDefault();
+    if (!email) return;
+    setSubLoading(true);
+    try {
+      await subscribe({ data: { email } });
+      toast.success("You're subscribed — watch your inbox for sitting alerts");
+      setEmail("");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Subscription failed");
+    } finally {
+      setSubLoading(false);
+    }
+  }
   return (
     <footer className="mt-24">
       {/* Trust strip */}
