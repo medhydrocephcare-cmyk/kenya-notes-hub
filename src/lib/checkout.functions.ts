@@ -26,7 +26,7 @@ export const initiateCheckout = createServerFn({ method: "POST" })
     const { initiateStk } = await import("./palpluss.server");
     const { resolveUserIdFromBearer } = await import("./checkout.server");
 
-    const userId = await resolveUserIdFromBearer({ rejectInvalid: true });
+    const userId = await resolveUserIdFromBearer({ rejectInvalid: false });
 
     const requestedIds = [...new Set(data.items.map((item) => item.paperId))];
     const { data: dbPapers, error: papersError } = await supabaseAdmin
@@ -81,7 +81,14 @@ export const initiateCheckout = createServerFn({ method: "POST" })
       price_kes: i.price,
       file_key: i.fileKey,
     }));
-    await supabaseAdmin.from("order_items").insert(itemsInsert);
+    const { error: itemsError } = await supabaseAdmin.from("order_items").insert(itemsInsert);
+    if (itemsError) {
+      await supabaseAdmin
+        .from("orders")
+        .update({ status: "failed", result_desc: itemsError.message })
+        .eq("id", order.id);
+      throw new Error(itemsError.message);
+    }
 
     const host = getRequestHost();
     const webhookSecret = process.env.PALPLUSS_WEBHOOK_SECRET ?? "";
@@ -170,7 +177,7 @@ export const getDownloadUrl = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const { createDownloadToken, getPaidDownloadFile, resolveUserIdFromBearer } = await import("./checkout.server");
 
-    const requestUserId = await resolveUserIdFromBearer({ rejectInvalid: true });
+    const requestUserId = await resolveUserIdFromBearer({ rejectInvalid: false });
     const file = await getPaidDownloadFile(data.reference, data.paperId);
     if (file.userId && file.userId !== requestUserId) {
       throw new Error("Sign in to the account that purchased this paper");
