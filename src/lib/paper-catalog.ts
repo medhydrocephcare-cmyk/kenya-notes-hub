@@ -18,8 +18,6 @@ export function rowToPaper(row: PaperRow): Paper {
       course: row.course,
       level: row.level,
       title: row.title,
-      fullPdfKey: row.full_pdf_key ?? row.thumbnail_url,
-      previewPdfKey: row.preview_pdf_key ?? row.thumbnail_url,
     }),
     courseSlug: row.course,
     levelSlug: row.level,

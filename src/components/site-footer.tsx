@@ -1,9 +1,30 @@
 import { Link } from "@tanstack/react-router";
-import { Phone, Mail, MapPin, Facebook, Twitter, Instagram, ShieldCheck } from "lucide-react";
+import { useState } from "react";
+import { Phone, Mail, MapPin, Facebook, Twitter, Instagram, ShieldCheck, Loader2 } from "lucide-react";
+import { useServerFn } from "@tanstack/react-start";
+import { toast } from "sonner";
 import { courses } from "@/lib/data";
 import { SITE } from "@/lib/site-config";
+import { subscribeNewsletter } from "@/lib/newsletter.functions";
 
 export function SiteFooter() {
+  const subscribe = useServerFn(subscribeNewsletter);
+  const [email, setEmail] = useState("");
+  const [subLoading, setSubLoading] = useState(false);
+  async function handleSubscribe(e: React.FormEvent) {
+    e.preventDefault();
+    if (!email) return;
+    setSubLoading(true);
+    try {
+      await subscribe({ data: { email } });
+      toast.success("You're subscribed — watch your inbox for sitting alerts");
+      setEmail("");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Subscription failed");
+    } finally {
+      setSubLoading(false);
+    }
+  }
   return (
     <footer className="mt-24">
       {/* Trust strip */}
@@ -65,7 +86,8 @@ export function SiteFooter() {
               {courses.map((c) => (
                 <li key={c.slug}>
                   <Link to="/courses/$courseSlug" params={{ courseSlug: c.slug }} className="transition hover:text-gold">
-                    {c.code} — {c.name.split(" ").slice(0, 2).join(" ")}
+                    <span className="font-semibold text-gold/90">{c.code}</span>
+                    <span className="text-sidebar-foreground/70"> · {c.name}</span>
                   </Link>
                 </li>
               ))}
@@ -89,14 +111,21 @@ export function SiteFooter() {
             <p className="mt-4 text-sm text-sidebar-foreground/80">
               Sitting alerts and free past-paper drops. No spam.
             </p>
-            <form onSubmit={(e) => e.preventDefault()} className="mt-3 flex overflow-hidden rounded-full bg-sidebar-accent">
+            <form onSubmit={handleSubscribe} className="mt-3 flex overflow-hidden rounded-full bg-sidebar-accent">
               <input
                 type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@email.com"
                 className="flex-1 bg-transparent px-4 py-2.5 text-sm text-sidebar-foreground placeholder:text-sidebar-foreground/50 outline-none"
               />
-              <button type="submit" className="bg-gold px-4 text-xs font-bold uppercase text-gold-foreground">
-                Join
+              <button
+                type="submit"
+                disabled={subLoading}
+                className="inline-flex items-center gap-1 bg-gold px-4 text-xs font-bold uppercase text-gold-foreground disabled:opacity-70"
+              >
+                {subLoading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : "Join"}
               </button>
             </form>
           </div>
