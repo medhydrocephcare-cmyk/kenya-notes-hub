@@ -26,7 +26,7 @@ export const initiateCheckout = createServerFn({ method: "POST" })
     const { initiateStk } = await import("./palpluss.server");
     const { resolveUserIdFromBearer } = await import("./checkout.server");
 
-    const userId = await resolveUserIdFromBearer();
+    const userId = await resolveUserIdFromBearer({ rejectInvalid: true });
 
     const requestedIds = [...new Set(data.items.map((item) => item.paperId))];
     const { data: dbPapers, error: papersError } = await supabaseAdmin
@@ -117,14 +117,49 @@ export const getOrderStatus = createServerFn({ method: "GET" })
   )
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data: order } = await supabaseAdmin
+    const { getTransaction } = await import("./palpluss.server");
+    const { data: order, error } = await supabaseAdmin
       .from("orders")
       .select(
-        "reference, status, subtotal_kes, mpesa_receipt, result_desc, order_items(paper_id, title, price_kes)",
+        "id, reference, status, subtotal_kes, mpesa_receipt, result_desc, palpluss_transaction_id, order_items(paper_id, title, price_kes)",
       )
       .eq("reference", data.reference)
       .maybeSingle();
+    if (error) throw new Error(error.message);
     if (!order) return null;
+
+    if (order.status === "pending" && order.palpluss_transaction_id) {
+      try {
+        const tx = await getTransaction(order.palpluss_transaction_id);
+        const rawStatus = String(tx?.status ?? "").toUpperCase();
+        const status =
+          rawStatus === "SUCCESS"
+            ? "paid"
+            : rawStatus === "FAILED" || rawStatus === "CANCELLED" || rawStatus === "EXPIRED" || rawStatus === "REVERSED"
+              ? "failed"
+              : "pending";
+
+        if (status !== "pending") {
+          const patch = {
+            status,
+            mpesa_receipt: tx?.mpesaReceipt ?? tx?.mpesa_receipt ?? order.mpesa_receipt,
+            result_desc: tx?.resultDesc ?? tx?.result_desc ?? order.result_desc,
+          };
+          const { data: updated } = await supabaseAdmin
+            .from("orders")
+            .update(patch)
+            .eq("id", order.id)
+            .select(
+              "id, reference, status, subtotal_kes, mpesa_receipt, result_desc, palpluss_transaction_id, order_items(paper_id, title, price_kes)",
+            )
+            .maybeSingle();
+          return updated ?? { ...order, ...patch };
+        }
+      } catch (err) {
+        console.warn("[palpluss] transaction status poll failed", err);
+      }
+    }
+
     return order;
   });
 
@@ -133,22 +168,17 @@ export const getDownloadUrl = createServerFn({ method: "POST" })
     z.object({ reference: z.string().min(4), paperId: z.string().min(1) }).parse(data),
   )
   .handler(async ({ data }) => {
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { presignGet } = await import("./r2.server");
+    const { createDownloadToken, getPaidDownloadFile, resolveUserIdFromBearer } = await import("./checkout.server");
 
-    const { data: order } = await supabaseAdmin
-      .from("orders")
-      .select("id, status, order_items(paper_id, file_key)")
-      .eq("reference", data.reference)
-      .maybeSingle();
-    if (!order || order.status !== "paid") throw new Error("Order not paid");
+    const requestUserId = await resolveUserIdFromBearer({ rejectInvalid: true });
+    const file = await getPaidDownloadFile(data.reference, data.paperId);
+    if (file.userId && file.userId !== requestUserId) {
+      throw new Error("Sign in to the account that purchased this paper");
+    }
 
-    const item = order.order_items?.find((i: { paper_id: string }) => i.paper_id === data.paperId);
-    if (!item) throw new Error("Paper not part of order");
-
-    const key = (item as { file_key: string | null }).file_key ?? `papers/${data.paperId}.pdf`;
-    const url = await presignGet(key, 60 * 30);
-    return { url, expiresIn: 1800 };
+    const token = createDownloadToken({ reference: data.reference, paperId: data.paperId, ttlSeconds: 120 });
+    const url = `/api/public/download/${encodeURIComponent(data.reference)}/${encodeURIComponent(data.paperId)}?token=${encodeURIComponent(token)}`;
+    return { url, expiresIn: 120 };
   });
 
 export const getMyOrders = createServerFn({ method: "GET" })
