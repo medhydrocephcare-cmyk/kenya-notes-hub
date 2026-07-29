@@ -111,13 +111,12 @@ function BlogIndex() {
                     className="group flex flex-col overflow-hidden rounded-2xl border border-border/60 bg-background transition hover:-translate-y-0.5 hover:shadow-lg"
                   >
                     <div className="aspect-[16/10] overflow-hidden bg-brand/10">
-                      {p.coverImageUrl ? (
-                        <img src={p.coverImageUrl} alt={p.title} className="h-full w-full object-cover transition group-hover:scale-105" />
-                      ) : (
-                        <div className="grid h-full place-items-center bg-brand-gradient text-primary-foreground">
-                          <BookOpen className="h-10 w-10 opacity-60" />
-                        </div>
-                      )}
+                      <img
+                        src={p.coverImageUrl || `https://source.unsplash.com/800x500/?${encodeURIComponent(p.tags?.[0] ?? "study,books")},kenya`}
+                        alt={p.title}
+                        onError={(e) => { (e.currentTarget as HTMLImageElement).src = `https://source.unsplash.com/800x500/?study,books,kenya,${encodeURIComponent(p.slug)}`; }}
+                        className="h-full w-full object-cover transition group-hover:scale-105"
+                      />
                     </div>
                     <div className="flex flex-1 flex-col p-5">
                       {p.tags?.[0] && (
