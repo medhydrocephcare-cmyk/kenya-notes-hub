@@ -7,9 +7,11 @@ type DownloadTokenPayload = {
   expiresAt: number;
 };
 
-export async function resolveUserIdFromBearer(options: { rejectInvalid?: boolean } = {}): Promise<string | null> {
-  const auth = getRequestHeader("authorization");
-  const token = auth?.replace(/^Bearer\s+/i, "");
+export async function resolveUserIdFromToken(
+  rawToken: string | null | undefined,
+  options: { rejectInvalid?: boolean } = {},
+): Promise<string | null> {
+  const token = rawToken?.replace(/^Bearer\s+/i, "").trim();
   if (!token) return null;
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const { data, error } = await supabaseAdmin.auth.getUser(token);
@@ -18,6 +20,11 @@ export async function resolveUserIdFromBearer(options: { rejectInvalid?: boolean
     return null;
   }
   return data.user?.id ?? null;
+}
+
+export async function resolveUserIdFromBearer(options: { rejectInvalid?: boolean } = {}): Promise<string | null> {
+  const auth = getRequestHeader("authorization");
+  return resolveUserIdFromToken(auth, options);
 }
 
 function downloadSecret() {
