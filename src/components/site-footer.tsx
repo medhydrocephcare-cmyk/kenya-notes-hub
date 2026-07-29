@@ -111,14 +111,21 @@ export function SiteFooter() {
             <p className="mt-4 text-sm text-sidebar-foreground/80">
               Sitting alerts and free past-paper drops. No spam.
             </p>
-            <form onSubmit={(e) => e.preventDefault()} className="mt-3 flex overflow-hidden rounded-full bg-sidebar-accent">
+            <form onSubmit={handleSubscribe} className="mt-3 flex overflow-hidden rounded-full bg-sidebar-accent">
               <input
                 type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@email.com"
                 className="flex-1 bg-transparent px-4 py-2.5 text-sm text-sidebar-foreground placeholder:text-sidebar-foreground/50 outline-none"
               />
-              <button type="submit" className="bg-gold px-4 text-xs font-bold uppercase text-gold-foreground">
-                Join
+              <button
+                type="submit"
+                disabled={subLoading}
+                className="inline-flex items-center gap-1 bg-gold px-4 text-xs font-bold uppercase text-gold-foreground disabled:opacity-70"
+              >
+                {subLoading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : "Join"}
               </button>
             </form>
           </div>
