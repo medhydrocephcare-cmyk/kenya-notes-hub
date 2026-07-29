@@ -20,7 +20,7 @@ export async function initiateCheckout(payload: {
     headers: { "Content-Type": "application/json", ...authHeader },
     body: JSON.stringify(payload),
   });
-  if (!res.ok) throw new Error(`Checkout failed: ${res.status}`);
+  if (!res.ok) throw new Error(await getErrorMessage(res, "Checkout failed"));
   return res.json();
 }
 
@@ -28,7 +28,7 @@ export async function getOrderStatus(reference: string) {
   const res = await fetch(
     `${LOVABLE_BASE}/api/public/checkout/status?reference=${encodeURIComponent(reference)}`
   );
-  if (!res.ok) throw new Error(`Status check failed: ${res.status}`);
+  if (!res.ok) throw new Error(await getErrorMessage(res, "Status check failed"));
   return res.json();
 }
 
@@ -39,7 +39,7 @@ export async function getDownloadUrl(payload: { reference: string; paperId: stri
     headers: { "Content-Type": "application/json", ...authHeader },
     body: JSON.stringify(payload),
   });
-  if (!res.ok) throw new Error(`Download URL failed: ${res.status}`);
+  if (!res.ok) throw new Error(await getErrorMessage(res, "Download URL failed"));
   const data = await res.json();
   return { ...data, url: `${LOVABLE_BASE}${data.url}` }; // prepend base since url is relative
 }
@@ -49,6 +49,16 @@ export async function getMyOrders() {
   const res = await fetch(`${LOVABLE_BASE}/api/public/checkout/my-orders`, {
     headers: authHeader,
   });
-  if (!res.ok) throw new Error(`My orders failed: ${res.status}`);
+  if (!res.ok) throw new Error(await getErrorMessage(res, "My orders failed"));
   return res.json();
+}
+
+async function getErrorMessage(res: Response, fallback: string) {
+  try {
+    const data = await res.json();
+    if (typeof data?.error === "string" && data.error.trim()) return data.error;
+  } catch {
+    // ignore non-JSON error bodies
+  }
+  return `${fallback}: ${res.status}`;
 }

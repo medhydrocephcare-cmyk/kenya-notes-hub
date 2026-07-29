@@ -9,8 +9,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Download, Loader2, ShieldCheck, User as UserIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth-context";
-import { useServerFn } from "@tanstack/react-start";
-import { getMyOrders, getDownloadUrl } from "@/lib/checkout.functions";
+import { getMyOrders, getDownloadUrl } from "@/lib/checkout-client";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { SITE_URL } from "@/lib/site-config";
@@ -45,7 +44,6 @@ type Order = {
 function AccountPage() {
   const { user, loading, signOut } = useAuth();
   const navigate = useNavigate();
-  const fetchOrders = useServerFn(getMyOrders);
   const [orders, setOrders] = useState<Order[] | null>(null);
   const [loadingOrders, setLoadingOrders] = useState(true);
 
@@ -56,13 +54,13 @@ function AccountPage() {
   useEffect(() => {
     if (!user) return;
     setLoadingOrders(true);
-    (fetchOrders as unknown as () => Promise<Order[]>)()
+    getMyOrders()
       .then((data) => { setOrders(data); setLoadingOrders(false); })
       .catch((e) => {
         toast.error(e instanceof Error ? e.message : "Failed to load orders");
         setLoadingOrders(false);
       });
-  }, [user, fetchOrders]);
+  }, [user]);
 
   if (loading || !user) {
     return (
@@ -168,7 +166,6 @@ function AccountPage() {
 }
 
 function DownloadRow({ item }: { item: { paper_id: string; title: string; price_kes: number; reference: string; date: string } }) {
-  const download = useServerFn(getDownloadUrl);
   const [busy, setBusy] = useState(false);
   return (
     <Card className="flex flex-wrap items-center gap-4 p-5">
@@ -185,7 +182,7 @@ function DownloadRow({ item }: { item: { paper_id: string; title: string; price_
         onClick={async () => {
           setBusy(true);
           try {
-            const { url } = await download({ data: { reference: item.reference, paperId: item.paper_id } });
+            const { url } = await getDownloadUrl({ reference: item.reference, paperId: item.paper_id });
             window.open(url, "_blank", "noopener");
           } catch (e) {
             toast.error(e instanceof Error ? e.message : "Download unavailable");
