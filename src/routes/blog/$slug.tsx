@@ -113,7 +113,6 @@ function BlogPostPage() {
           alt={post.title}
           className="mt-8 aspect-[16/9] w-full rounded-2xl object-cover"
         />
-        )}
 
         <div
           className="blog-content mt-8 text-[15px] leading-relaxed"
