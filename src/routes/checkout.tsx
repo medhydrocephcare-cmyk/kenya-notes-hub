@@ -68,11 +68,16 @@ function CheckoutPage() {
         if (error && !/already registered/i.test(error.message)) throw error;
       }
 
+      const trimmedName = name.trim();
+      const fallbackName = trimmedName.length >= 2
+        ? trimmedName
+        : (email.split("@")[0] || "Customer").padEnd(2, ".");
+
       const res = await initiate({
         data: {
-          buyerName: name,
-          email,
-          phone,
+          buyerName: fallbackName,
+          email: email.trim(),
+          phone: phone.trim(),
           items: items.map(({ paper }) => ({
             paperId: paper.id,
             title: paper.title,
@@ -125,7 +130,7 @@ function CheckoutPage() {
                 <div className="mt-4 grid gap-4 sm:grid-cols-2">
                   <div className="sm:col-span-2">
                     <Label htmlFor="name">Full name</Label>
-                    <Input id="name" required value={name} onChange={(e) => setName(e.target.value)} className="mt-1.5" />
+                    <Input id="name" required minLength={2} value={name} onChange={(e) => setName(e.target.value)} className="mt-1.5" />
                   </div>
                   <div>
                     <Label htmlFor="email">Email address</Label>
