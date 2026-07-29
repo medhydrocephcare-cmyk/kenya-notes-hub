@@ -2,7 +2,7 @@ const LOVABLE_BASE = "https://project--6cb65918-caa8-4800-8ded-864211f7ab29.lova
 
 async function getAuthHeader(): Promise<Record<string, string>> {
   // Adjust this import to match how you get the current Supabase session elsewhere in your app
-  const { supabase } = await import("@/lib/supabase"); // <-- confirm this path is correct
+  const { supabase } = await import("@/integrations/supabase/client");
   const { data } = await supabase.auth.getSession();
   const token = data.session?.access_token;
   return token ? { Authorization: `Bearer ${token}` } : {};
