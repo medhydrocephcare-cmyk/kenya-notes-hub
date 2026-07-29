@@ -65,7 +65,8 @@ export function SiteFooter() {
               {courses.map((c) => (
                 <li key={c.slug}>
                   <Link to="/courses/$courseSlug" params={{ courseSlug: c.slug }} className="transition hover:text-gold">
-                    {c.code} — {c.name.split(" ").slice(0, 2).join(" ")}
+                    <span className="font-semibold text-gold/90">{c.code}</span>
+                    <span className="text-sidebar-foreground/70"> · {c.name}</span>
                   </Link>
                 </li>
               ))}
