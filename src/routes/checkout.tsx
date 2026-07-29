@@ -39,7 +39,7 @@ function CheckoutPage() {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [name, setName] = useState("");
-  const [createAccount, setCreateAccount] = useState(true);
+  const [createAccount, setCreateAccount] = useState(false);
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -154,7 +154,7 @@ function CheckoutPage() {
                     <div className="flex-1">
                       <div className="text-sm font-semibold">Create an account so I can re-download later</div>
                       <p className="text-xs text-muted-foreground">
-                        Recommended. We'll save your purchases to your account so you can access them anytime.
+                        Optional. If selected, we'll save your purchases to your account so you can access them anytime.
                       </p>
                     </div>
                   </label>

@@ -81,7 +81,14 @@ export const initiateCheckout = createServerFn({ method: "POST" })
       price_kes: i.price,
       file_key: i.fileKey,
     }));
-    await supabaseAdmin.from("order_items").insert(itemsInsert);
+    const { error: itemsError } = await supabaseAdmin.from("order_items").insert(itemsInsert);
+    if (itemsError) {
+      await supabaseAdmin
+        .from("orders")
+        .update({ status: "failed", result_desc: itemsError.message })
+        .eq("id", order.id);
+      throw new Error(itemsError.message);
+    }
 
     const host = getRequestHost();
     const webhookSecret = process.env.PALPLUSS_WEBHOOK_SECRET ?? "";
