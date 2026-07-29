@@ -79,8 +79,6 @@ function BlogIndex() {
                     onError={(e) => { (e.currentTarget as HTMLImageElement).src = `https://source.unsplash.com/1200x750/?study,books,kenya,${encodeURIComponent(featured.slug)}`; }}
                     className="h-full w-full object-cover transition group-hover:scale-105"
                   />
-                    </div>
-                  )}
                 </div>
                 <div className="flex flex-col justify-center">
                   <Badge variant="outline" className="w-fit border-brand/30 text-brand">Featured</Badge>
