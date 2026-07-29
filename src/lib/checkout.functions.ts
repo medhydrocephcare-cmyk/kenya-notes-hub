@@ -26,7 +26,7 @@ export const initiateCheckout = createServerFn({ method: "POST" })
     const { initiateStk } = await import("./palpluss.server");
     const { resolveUserIdFromBearer } = await import("./checkout.server");
 
-    const userId = await resolveUserIdFromBearer({ rejectInvalid: true });
+    const userId = await resolveUserIdFromBearer({ rejectInvalid: false });
 
     const requestedIds = [...new Set(data.items.map((item) => item.paperId))];
     const { data: dbPapers, error: papersError } = await supabaseAdmin
@@ -170,7 +170,7 @@ export const getDownloadUrl = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const { createDownloadToken, getPaidDownloadFile, resolveUserIdFromBearer } = await import("./checkout.server");
 
-    const requestUserId = await resolveUserIdFromBearer({ rejectInvalid: true });
+    const requestUserId = await resolveUserIdFromBearer({ rejectInvalid: false });
     const file = await getPaidDownloadFile(data.reference, data.paperId);
     if (file.userId && file.userId !== requestUserId) {
       throw new Error("Sign in to the account that purchased this paper");
