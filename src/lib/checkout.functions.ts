@@ -1,6 +1,25 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
+type OrderStatusResult = {
+  reference: string;
+  status: string;
+  subtotal_kes: number;
+  mpesa_receipt: string | null;
+  result_desc: string | null;
+  order_items: { paper_id: string; title: string; price_kes: number }[];
+} | null;
+
+type MyOrderResult = {
+  id: string;
+  reference: string;
+  status: string;
+  subtotal_kes: number;
+  mpesa_receipt: string | null;
+  created_at: string;
+  order_items: { paper_id: string; title: string; price_kes: number }[];
+}[];
+
 export const initiateCheckout = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) =>
     z.object({
@@ -34,7 +53,7 @@ export const getOrderStatus = createServerFn({ method: "GET" })
   )
   .handler(async ({ data }) => {
     const { callCheckoutApi } = await import("./checkout-remote.server");
-    return callCheckoutApi(`/api/public/checkout/status?reference=${encodeURIComponent(data.reference)}`);
+    return callCheckoutApi<OrderStatusResult>(`/api/public/checkout/status?reference=${encodeURIComponent(data.reference)}`);
   });
 
 export const getDownloadUrl = createServerFn({ method: "POST" })
@@ -54,5 +73,5 @@ export const getDownloadUrl = createServerFn({ method: "POST" })
 export const getMyOrders = createServerFn({ method: "GET" })
   .handler(async () => {
     const { callCheckoutApi } = await import("./checkout-remote.server");
-    return callCheckoutApi("/api/public/checkout/my-orders", { includeAuth: true });
+    return callCheckoutApi<MyOrderResult>("/api/public/checkout/my-orders", { includeAuth: true });
   });
