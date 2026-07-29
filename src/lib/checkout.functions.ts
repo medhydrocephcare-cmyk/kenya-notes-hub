@@ -168,41 +168,17 @@ export const getDownloadUrl = createServerFn({ method: "POST" })
     z.object({ reference: z.string().min(4), paperId: z.string().min(1) }).parse(data),
   )
   .handler(async ({ data }) => {
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { presignGet } = await import("./r2.server");
-    const { resolveUserIdFromBearer } = await import("./checkout.server");
+    const { createDownloadToken, getPaidDownloadFile, resolveUserIdFromBearer } = await import("./checkout.server");
 
     const requestUserId = await resolveUserIdFromBearer({ rejectInvalid: true });
-
-    const { data: order, error: orderError } = await supabaseAdmin
-      .from("orders")
-      .select("id, status, user_id, order_items(paper_id, file_key)")
-      .eq("reference", data.reference)
-      .maybeSingle();
-    if (orderError) throw new Error(orderError.message);
-    if (!order) throw new Error("Order not found");
-    if (order.status !== "paid") throw new Error("Payment required before download");
-
-    if (order.user_id && order.user_id !== requestUserId) {
+    const file = await getPaidDownloadFile(data.reference, data.paperId);
+    if (file.userId && file.userId !== requestUserId) {
       throw new Error("Sign in to the account that purchased this paper");
     }
 
-    const item = order.order_items?.find((i: { paper_id: string }) => i.paper_id === data.paperId);
-    if (!item) throw new Error("Paper not part of order");
-
-    const { data: paper, error: paperError } = await supabaseAdmin
-      .from("papers")
-      .select("full_pdf_key")
-      .eq("id", data.paperId)
-      .maybeSingle();
-    if (paperError) throw new Error(paperError.message);
-
-    const itemKey = (item as { file_key: string | null }).file_key;
-    const key = paper?.full_pdf_key || itemKey;
-    if (!key) throw new Error("File not available yet");
-
-    const url = await presignGet(key, 60 * 15);
-    return { url, expiresIn: 900 };
+    const token = createDownloadToken({ reference: data.reference, paperId: data.paperId, ttlSeconds: 120 });
+    const url = `/api/public/download/${encodeURIComponent(data.reference)}/${encodeURIComponent(data.paperId)}?token=${encodeURIComponent(token)}`;
+    return { url, expiresIn: 120 };
   });
 
 export const getMyOrders = createServerFn({ method: "GET" })

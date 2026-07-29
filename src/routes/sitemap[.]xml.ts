@@ -41,10 +41,10 @@ export const Route = createFileRoute("/sitemap.xml")({
           });
           const { data } = await supabase
             .from("papers")
-            .select("course, level, title, full_pdf_key, preview_pdf_key")
+            .select("course, level, title")
             .eq("published", true);
           for (const p of data ?? []) {
-            entries.push({ path: `/papers/${paperSlugFromFields({ course: p.course, level: p.level, title: p.title, fullPdfKey: p.full_pdf_key, previewPdfKey: p.preview_pdf_key })}`, changefreq: "monthly", priority: "0.6" });
+            entries.push({ path: `/papers/${paperSlugFromFields({ course: p.course, level: p.level, title: p.title })}`, changefreq: "monthly", priority: "0.6" });
           }
         } catch {
           // If DB is unreachable, still emit the static portion of the sitemap.
