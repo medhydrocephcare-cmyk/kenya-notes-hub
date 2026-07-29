@@ -130,7 +130,7 @@ function CheckoutPage() {
                 <div className="mt-4 grid gap-4 sm:grid-cols-2">
                   <div className="sm:col-span-2">
                     <Label htmlFor="name">Full name</Label>
-                    <Input id="name" required value={name} onChange={(e) => setName(e.target.value)} className="mt-1.5" />
+                    <Input id="name" required minLength={2} value={name} onChange={(e) => setName(e.target.value)} className="mt-1.5" />
                   </div>
                   <div>
                     <Label htmlFor="email">Email address</Label>
