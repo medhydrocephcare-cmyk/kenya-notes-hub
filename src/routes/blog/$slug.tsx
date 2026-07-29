@@ -107,8 +107,12 @@ function BlogPostPage() {
           {post.publishedAt && (<><span>·</span><span>{new Date(post.publishedAt).toLocaleDateString()}</span></>)}
         </div>
 
-        {post.coverImageUrl && (
-          <img src={post.coverImageUrl} alt={post.title} className="mt-8 aspect-[16/9] w-full rounded-2xl object-cover" />
+        <img
+          src={post.coverImageUrl || `https://source.unsplash.com/1600x900/?${encodeURIComponent(post.tags?.[0] ?? "study,books")},kenya`}
+          onError={(e) => { (e.currentTarget as HTMLImageElement).src = `https://source.unsplash.com/1600x900/?study,books,kenya,${encodeURIComponent(post.slug)}`; }}
+          alt={post.title}
+          className="mt-8 aspect-[16/9] w-full rounded-2xl object-cover"
+        />
         )}
 
         <div
