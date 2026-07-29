@@ -73,11 +73,12 @@ function BlogIndex() {
                 className="group grid gap-6 overflow-hidden rounded-2xl border border-border/60 bg-surface/40 p-4 transition hover:shadow-lg md:grid-cols-[1.2fr_1fr] md:p-6"
               >
                 <div className="aspect-[16/10] overflow-hidden rounded-xl bg-brand/10 md:aspect-auto md:min-h-[280px]">
-                  {featured.coverImageUrl ? (
-                    <img src={featured.coverImageUrl} alt={featured.title} className="h-full w-full object-cover transition group-hover:scale-105" />
-                  ) : (
-                    <div className="grid h-full place-items-center bg-brand-gradient text-primary-foreground">
-                      <BookOpen className="h-14 w-14 opacity-60" />
+                  <img
+                    src={featured.coverImageUrl || `https://source.unsplash.com/1200x750/?${encodeURIComponent((featured.tags?.[0] ?? "study,books,kenya"))}`}
+                    alt={featured.title}
+                    onError={(e) => { (e.currentTarget as HTMLImageElement).src = `https://source.unsplash.com/1200x750/?study,books,kenya,${encodeURIComponent(featured.slug)}`; }}
+                    className="h-full w-full object-cover transition group-hover:scale-105"
+                  />
                     </div>
                   )}
                 </div>
