@@ -4,8 +4,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
-import { useServerFn } from "@tanstack/react-start";
-import { getOrderStatus, getDownloadUrl } from "@/lib/checkout.functions";
+import { getOrderStatus, getDownloadUrl } from "@/lib/checkout-client";
 import { Loader2, CheckCircle2, XCircle, Clock, Download } from "lucide-react";
 import { toast } from "sonner";
 import { SITE_URL } from "@/lib/site-config";
@@ -38,8 +37,6 @@ type OrderData = {
 
 function OrderPage() {
   const { reference } = Route.useParams();
-  const fetchStatus = useServerFn(getOrderStatus);
-  const fetchDownload = useServerFn(getDownloadUrl);
   const [order, setOrder] = useState<OrderData | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -48,7 +45,7 @@ function OrderPage() {
     let stopped = false;
     async function poll() {
       try {
-        const res = (await fetchStatus({ data: { reference } })) as OrderData | null;
+        const res = (await getOrderStatus(reference)) as OrderData | null;
         if (!alive) return;
         setOrder(res);
         setLoading(false);
@@ -64,11 +61,11 @@ function OrderPage() {
       alive = false;
       stopped = true;
     };
-  }, [reference, fetchStatus]);
+  }, [reference]);
 
   async function download(paperId: string) {
     try {
-      const res = await fetchDownload({ data: { reference, paperId } });
+      const res = await getDownloadUrl({ reference, paperId });
       window.open(res.url, "_blank");
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Download unavailable");
