@@ -38,6 +38,7 @@ const TITLE_OVERRIDES: Record<string, string> = {
   "business-mathematics-and-statistics": "Business Mathematics and Statistics",
   "company-law": "Company Law",
   "corporate-governance-and-ethics": "Corporate Governance and Ethics",
+  "communication-skills": "Communication Skills",
   "credit-management": "Credit Management",
   economics: "Economics",
   "entrepreneurship-and-communication": "Entrepreneurship and Communication",
@@ -51,6 +52,7 @@ const TITLE_OVERRIDES: Record<string, string> = {
   "introduction-to-accounting": "Introduction to Accounting",
   "introduction-to-computing": "Introduction to Computing",
   "introduction-to-law-and-ethics": "Introduction to Law and Ethics",
+  "introduction-to-law-and-governance": "Introduction to Law and Governance",
   "law-governing-credit-practice": "Law Governing Credit Practice",
   "management-accounting": "Management Accounting",
   "portfolio-management": "Portfolio Management",
@@ -58,6 +60,7 @@ const TITLE_OVERRIDES: Record<string, string> = {
   "principles-of-economics": "Principles of Economics",
   "principles-of-management": "Principles of Management",
   "principles-of-taxation": "Principles of Taxation",
+  "quantitative-analysis": "Quantitative Analysis",
 };
 
 function requiredEnv(name: string) {
