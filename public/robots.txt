@@ -1,6 +1,9 @@
-# Kasneb Pastpapers — allow all crawlers, including AI bots.
+# Kasneb Pastpapers — public pages are crawlable by all robots, including AI bots.
 User-agent: *
 Allow: /
+Allow: /papers/
+Allow: /courses/
+Allow: /blog/
 Disallow: /admin
 Disallow: /admin/
 Disallow: /cart

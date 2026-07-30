@@ -1,6 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useServerFn } from "@tanstack/react-start";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { Card } from "@/components/ui/card";
@@ -11,7 +10,17 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { courses, levels } from "@/lib/data";
-import { listAdminPapers, listAdminOrders } from "@/lib/admin.functions";
+import {
+  applyAdminDefaultPrice,
+  createAdminPaper,
+  deleteAdminPaper,
+  listAdminOrders,
+  listAdminPapers,
+  revertAdminDefaultPrice,
+  updateAdminPaper,
+  type AdminOrder,
+  type AdminPaper,
+} from "@/lib/admin-client";
 import { BlogAdmin, TestimonialsAdmin, ReviewsAdmin, CategoriesAdmin } from "@/components/admin-content-tabs";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -72,17 +81,14 @@ function AdminPage() {
 }
 
 function AdminInner({ accessToken, email }: { accessToken: string; email: string }) {
-  const fetchPapers = useServerFn(listAdminPapers);
-  const fetchOrders = useServerFn(listAdminOrders);
-
   const papersQ = useQuery({
     queryKey: ["admin", "papers"],
-    queryFn: () => fetchPapers(),
+    queryFn: () => listAdminPapers(),
     staleTime: 15_000,
   });
   const ordersQ = useQuery({
     queryKey: ["admin", "orders"],
-    queryFn: () => fetchOrders(),
+    queryFn: () => listAdminOrders(),
     staleTime: 15_000,
   });
 
@@ -129,6 +135,7 @@ function AdminInner({ accessToken, email }: { accessToken: string; email: string
               <p className="mt-6 text-sm text-destructive">{(papersQ.error as Error).message}</p>
             ) : (
               <div className="mt-4 grid gap-3">
+                <BulkPricePanel />
                 {papers.map((p) => (
                   <PaperRowEditor key={p.id} paper={p} accessToken={accessToken} />
                 ))}
@@ -193,8 +200,6 @@ function Stat({ label, value }: { label: string; value: number | string }) {
   );
 }
 
-type AdminPaper = Awaited<ReturnType<typeof listAdminPapers>>[number];
-
 function PaperRowEditor({ paper, accessToken }: { paper: AdminPaper; accessToken: string }) {
   const qc = useQueryClient();
   const [title, setTitle] = useState(paper.title);
@@ -208,46 +213,38 @@ function PaperRowEditor({ paper, accessToken }: { paper: AdminPaper; accessToken
 
   async function save() {
     setSaving(true);
-    const res = await fetch("/api/admin/papers", {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${accessToken}` },
-      body: JSON.stringify({
+    try {
+      await updateAdminPaper({
         id: paper.id,
         title,
         price_kes: Number(price),
-        discount_price_kes: discount ? Number(discount) : undefined,
+        discount_price_kes: discount ? Number(discount) : null,
         full_pdf_key: fullKey,
         preview_pdf_key: previewKey,
         published,
-      }),
-    });
-    setSaving(false);
-    if (res.ok) {
+      });
       toast.success("Paper updated");
       qc.invalidateQueries({ queryKey: ["admin", "papers"] });
       qc.invalidateQueries({ queryKey: ["papers"] });
-    } else {
-      const body = await res.json().catch(() => ({}));
-      toast.error(body?.error ?? "Update failed");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Update failed");
+    } finally {
+      setSaving(false);
     }
   }
 
   async function remove() {
     if (!confirm(`Delete "${paper.title}"? This cannot be undone.`)) return;
     setDeleting(true);
-    const res = await fetch("/api/admin/papers", {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${accessToken}` },
-      body: JSON.stringify({ id: paper.id }),
-    });
-    setDeleting(false);
-    if (res.ok) {
+    try {
+      await deleteAdminPaper(paper.id);
       toast.success("Paper deleted");
       qc.invalidateQueries({ queryKey: ["admin", "papers"] });
       qc.invalidateQueries({ queryKey: ["papers"] });
-    } else {
-      const body = await res.json().catch(() => ({}));
-      toast.error(body?.error ?? "Delete failed");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Delete failed");
+    } finally {
+      setDeleting(false);
     }
   }
 
@@ -305,7 +302,73 @@ function PaperRowEditor({ paper, accessToken }: { paper: AdminPaper; accessToken
   );
 }
 
-type Order = Awaited<ReturnType<typeof listAdminOrders>>[number];
+type Order = AdminOrder;
+
+function BulkPricePanel() {
+  const qc = useQueryClient();
+  const [price, setPrice] = useState("300");
+  const [busy, setBusy] = useState<"apply" | "revert" | null>(null);
+
+  async function refreshPapers() {
+    await qc.invalidateQueries({ queryKey: ["admin", "papers"] });
+    await qc.invalidateQueries({ queryKey: ["papers"] });
+  }
+
+  async function apply() {
+    const value = Number(price);
+    if (!Number.isFinite(value) || value <= 0) return toast.error("Enter a valid default price");
+    if (!confirm(`Set all published files to KSh ${value.toLocaleString()}? Original prices stay stored and can be restored.`)) return;
+    setBusy("apply");
+    try {
+      await applyAdminDefaultPrice(value);
+      toast.success("Default price applied to published files");
+      await refreshPapers();
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Failed to apply price");
+    } finally {
+      setBusy(null);
+    }
+  }
+
+  async function revert() {
+    if (!confirm("Revert all files back to their original prices?")) return;
+    setBusy("revert");
+    try {
+      await revertAdminDefaultPrice();
+      toast.success("Original prices restored");
+      await refreshPapers();
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Failed to revert prices");
+    } finally {
+      setBusy(null);
+    }
+  }
+
+  return (
+    <Card className="p-4">
+      <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+        <div className="max-w-xl">
+          <h3 className="font-semibold">Default price for all files</h3>
+          <p className="mt-1 text-xs text-muted-foreground">
+            Applies a live selling price using the discount field. Revert clears it and restores each file's original price.
+          </p>
+        </div>
+        <div className="flex flex-wrap items-end gap-2">
+          <div className="w-36">
+            <Label className="text-xs">KSh default</Label>
+            <Input type="number" min={1} value={price} onChange={(e) => setPrice(e.target.value)} className="mt-1" />
+          </div>
+          <Button onClick={apply} disabled={Boolean(busy)} className="bg-brand hover:brightness-110">
+            {busy === "apply" ? <Loader2 className="h-4 w-4 animate-spin" /> : "Apply to all"}
+          </Button>
+          <Button variant="outline" onClick={revert} disabled={Boolean(busy)}>
+            {busy === "revert" ? <Loader2 className="h-4 w-4 animate-spin" /> : "Revert original"}
+          </Button>
+        </div>
+      </div>
+    </Card>
+  );
+}
 
 function OrdersPanel({ orders, counts }: { orders: Order[]; counts: { paid: number; pending: number; failed: number; all: number } }) {
   const [filter, setFilter] = useState<"all" | "paid" | "pending" | "failed">("all");
@@ -379,13 +442,8 @@ function AddPaperForm({ accessToken }: { accessToken: string }) {
     e.preventDefault();
     const form = new FormData(e.currentTarget);
     setLoading(true);
-    const res = await fetch("/api/admin/papers", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
-      },
-      body: JSON.stringify({
+    try {
+      await createAdminPaper({
         course, level,
         title: form.get("title"),
         description: form.get("description"),
@@ -395,17 +453,15 @@ function AddPaperForm({ accessToken }: { accessToken: string }) {
         preview_pdf_key: form.get("previewPdfKey"),
         thumbnail_url: form.get("thumbnailUrl") || undefined,
         published: form.get("published") === "on",
-      }),
-    });
-    setLoading(false);
-    if (res.ok) {
+      });
       toast.success("Paper created");
       (e.target as HTMLFormElement).reset();
       qc.invalidateQueries({ queryKey: ["admin", "papers"] });
       qc.invalidateQueries({ queryKey: ["papers"] });
-    } else {
-      const body = await res.json().catch(() => ({}));
-      toast.error(body?.error ?? "Failed to create paper");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Failed to create paper");
+    } finally {
+      setLoading(false);
     }
   }
 

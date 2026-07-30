@@ -39,7 +39,7 @@ export const Route = createFileRoute("/api/public/download/$reference/$paperId")
             headers: corsHeaders(request, {
               "Content-Type": upstream.headers.get("content-type") || "application/pdf",
               "Content-Disposition": `attachment; filename="${filenameFromTitle(title)}"`,
-              "Cache-Control": "private, no-store",
+              "Cache-Control": "private, max-age=60",
               "X-Content-Type-Options": "nosniff",
             }),
           });
