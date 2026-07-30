@@ -10,8 +10,7 @@ import { useCart, clearCart } from "@/lib/cart";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Loader2, ShieldCheck, Lock, CreditCard, Smartphone } from "lucide-react";
-import { useServerFn } from "@tanstack/react-start";
-import { initiateCheckout } from "@/lib/checkout.functions";
+import { initiateCheckout } from "@/lib/checkout-client";
 import { useAuth } from "@/lib/auth-context";
 import { supabase } from "@/integrations/supabase/client";
 import { SITE_URL } from "@/lib/site-config";
@@ -43,7 +42,6 @@ function CheckoutPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const initiate = useServerFn(initiateCheckout);
 
   // Prefill email when signed in
   useEffect(() => {
@@ -68,17 +66,20 @@ function CheckoutPage() {
         if (error && !/already registered/i.test(error.message)) throw error;
       }
 
-      const res = await initiate({
-        data: {
-          buyerName: name,
-          email,
-          phone,
-          items: items.map(({ paper }) => ({
-            paperId: paper.id,
-            title: paper.title,
-            price: paper.price,
-          })),
-        },
+      const trimmedName = name.trim();
+      const fallbackName = trimmedName.length >= 2
+        ? trimmedName
+        : (email.split("@")[0] || "Customer").padEnd(2, ".");
+
+      const res = await initiateCheckout({
+        buyerName: fallbackName,
+        email: email.trim(),
+        phone: phone.trim(),
+        items: items.map(({ paper }) => ({
+          paperId: paper.id,
+          title: paper.title,
+          price: paper.price,
+        })),
       });
       toast.success("Check your phone — M-Pesa PIN prompt sent");
       clearCart();
@@ -125,7 +126,7 @@ function CheckoutPage() {
                 <div className="mt-4 grid gap-4 sm:grid-cols-2">
                   <div className="sm:col-span-2">
                     <Label htmlFor="name">Full name</Label>
-                    <Input id="name" required value={name} onChange={(e) => setName(e.target.value)} className="mt-1.5" />
+                    <Input id="name" required minLength={2} value={name} onChange={(e) => setName(e.target.value)} className="mt-1.5" />
                   </div>
                   <div>
                     <Label htmlFor="email">Email address</Label>

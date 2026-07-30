@@ -1,13 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { corsHeaders, preflightResponse } from "@/lib/cors";
 
 export const Route = createFileRoute("/api/public/palpluss/webhook/$secret")({
   server: {
     handlers: {
+      OPTIONS: async ({ request }) => preflightResponse(request),
       POST: async ({ request, params }) => {
         const expected = process.env.PALPLUSS_WEBHOOK_SECRET;
         if (!expected || params.secret !== expected) {
           console.warn("[palpluss webhook] rejected: bad secret");
-          return new Response("Unauthorized", { status: 401 });
+          return new Response("Unauthorized", { status: 401, headers: corsHeaders(request) });
         }
 
         const raw = await request.text();
@@ -17,7 +19,7 @@ export const Route = createFileRoute("/api/public/palpluss/webhook/$secret")({
         try {
           payload = raw ? (JSON.parse(raw) as Record<string, unknown>) : {};
         } catch {
-          return new Response("Bad JSON", { status: 400 });
+          return new Response("Bad JSON", { status: 400, headers: corsHeaders(request) });
         }
 
         // Palpluss sends either { transaction: {...} } or a flat payload.
@@ -34,7 +36,7 @@ export const Route = createFileRoute("/api/public/palpluss/webhook/$secret")({
 
         if (!reference) {
           console.warn("[palpluss webhook] no reference in payload");
-          return new Response("ok");
+          return new Response("ok", { headers: corsHeaders(request) });
         }
 
         const status =
@@ -59,11 +61,11 @@ export const Route = createFileRoute("/api/public/palpluss/webhook/$secret")({
         const { error } = await supabaseAdmin.from("orders").update(patch).eq("reference", reference);
         if (error) {
           console.error("[palpluss webhook] db error:", error.message);
-          return new Response("db error", { status: 500 });
+          return new Response("db error", { status: 500, headers: corsHeaders(request) });
         }
 
         console.log(`[palpluss webhook] ref=${reference} status=${status}`);
-        return new Response("ok", { status: 200 });
+        return new Response("ok", { status: 200, headers: corsHeaders(request) });
       },
     },
   },
