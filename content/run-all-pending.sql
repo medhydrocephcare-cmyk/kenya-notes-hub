@@ -4,6 +4,9 @@
 -- All statements below are idempotent (safe to re-run):
 -- paper INSERTs are guarded by NOT EXISTS checks, and blog post
 -- INSERTs use ON CONFLICT (slug) DO UPDATE.
+-- thumbnail_url is left NULL for all these papers on purpose: the
+-- site's ProductCard falls back to a polished, category-matched
+-- stock illustration (src/lib/subject-image.ts) whenever it's empty.
 -- ============================================================
 
 -- ============================================================
@@ -13,6 +16,9 @@
 -- Register 9 already-uploaded papers into public.papers, and fix 2 mislabeled rows.
 -- Run this in the Supabase SQL Editor for this project.
 -- Safe to re-run: each INSERT is guarded by a NOT EXISTS check on (course, level, full_pdf_key).
+-- thumbnail_url is left NULL on purpose: the site's ProductCard already falls back to a
+-- polished, category-matched stock illustration (src/lib/subject-image.ts) whenever
+-- thumbnail_url is empty, which looks better and more consistent than a generated cover.
 
 -- === Fix: rows still pointing at the old, wrong R2 path (foundation-2) ===
 -- These two papers were moved to their correct KASNEB level (Intermediate) and
@@ -22,7 +28,7 @@ UPDATE public.papers
 SET level = 'intermediate-1',
     full_pdf_key = 'content/cpa/intermediate-1/financial-management.pdf',
     preview_pdf_key = 'content/cpa/intermediate-1/financial-management-preview.pdf',
-    thumbnail_url = 'https://files.kasnebpapers.com/content/cpa/intermediate-1/financial-management-thumbnail.png',
+    thumbnail_url = NULL,
     updated_at = now()
 WHERE course = 'cpa' AND level = 'foundation-2' AND title ILIKE 'Financial Management%';
 
@@ -30,7 +36,7 @@ UPDATE public.papers
 SET level = 'intermediate-2',
     full_pdf_key = 'content/cpa/intermediate-2/management-accounting.pdf',
     preview_pdf_key = 'content/cpa/intermediate-2/management-accounting-preview.pdf',
-    thumbnail_url = 'https://files.kasnebpapers.com/content/cpa/intermediate-2/management-accounting-thumbnail.png',
+    thumbnail_url = NULL,
     updated_at = now()
 WHERE course = 'cpa' AND level = 'foundation-2' AND title ILIKE 'Management Accounting%';
 
@@ -38,7 +44,7 @@ WHERE course = 'cpa' AND level = 'foundation-2' AND title ILIKE 'Management Acco
 
 INSERT INTO public.papers (course, level, title, category, description, price_kes, preview_pdf_key, full_pdf_key, file_size_bytes, thumbnail_url, syllabus_version, tags, featured, published, sitting, year)
 SELECT 'atd', 'level-2', 'Principles of Management — Notes + Revision Kit', 'notes', 'Principles of Management — Notes + Revision Kit for ATD Level II. Includes concise notes, revision practice and tutor-written model answers for exam preparation in Kenya.', 150,
-       'content/atd/level-2/principles-of-management-preview.pdf', 'content/atd/level-2/principles-of-management.pdf', 242055, 'https://files.kasnebpapers.com/content/atd/level-2/principles-of-management-thumbnail.png', 'current',
+       'content/atd/level-2/principles-of-management-preview.pdf', 'content/atd/level-2/principles-of-management.pdf', 242055, NULL, 'current',
        ARRAY['notes', 'revision-kit', 'auto-synced']::text[], false, true, '', 2026
 WHERE NOT EXISTS (
   SELECT 1 FROM public.papers WHERE course = 'atd' AND level = 'level-2' AND full_pdf_key = 'content/atd/level-2/principles-of-management.pdf'
@@ -46,7 +52,7 @@ WHERE NOT EXISTS (
 
 INSERT INTO public.papers (course, level, title, category, description, price_kes, preview_pdf_key, full_pdf_key, file_size_bytes, thumbnail_url, syllabus_version, tags, featured, published, sitting, year)
 SELECT 'ccp', 'level-1', 'Credit Management — Notes + Revision Kit', 'notes', 'Credit Management — Notes + Revision Kit for CCP Level I. Includes concise notes, revision practice and tutor-written model answers for exam preparation in Kenya.', 150,
-       'content/ccp/level-1/credit-management-preview.pdf', 'content/ccp/level-1/credit-management.pdf', 246551, 'https://files.kasnebpapers.com/content/ccp/level-1/credit-management-thumbnail.png', 'current',
+       'content/ccp/level-1/credit-management-preview.pdf', 'content/ccp/level-1/credit-management.pdf', 246551, NULL, 'current',
        ARRAY['notes', 'revision-kit', 'auto-synced']::text[], false, true, '', 2026
 WHERE NOT EXISTS (
   SELECT 1 FROM public.papers WHERE course = 'ccp' AND level = 'level-1' AND full_pdf_key = 'content/ccp/level-1/credit-management.pdf'
@@ -54,7 +60,7 @@ WHERE NOT EXISTS (
 
 INSERT INTO public.papers (course, level, title, category, description, price_kes, preview_pdf_key, full_pdf_key, file_size_bytes, thumbnail_url, syllabus_version, tags, featured, published, sitting, year)
 SELECT 'ccp', 'level-2', 'Law Governing Credit Practice — Notes + Revision Kit', 'notes', 'Law Governing Credit Practice — Notes + Revision Kit for CCP Level II. Includes concise notes, revision practice and tutor-written model answers for exam preparation in Kenya.', 150,
-       'content/ccp/level-2/law-governing-credit-practice-preview.pdf', 'content/ccp/level-2/law-governing-credit-practice.pdf', 235364, 'https://files.kasnebpapers.com/content/ccp/level-2/law-governing-credit-practice-thumbnail.png', 'current',
+       'content/ccp/level-2/law-governing-credit-practice-preview.pdf', 'content/ccp/level-2/law-governing-credit-practice.pdf', 235364, NULL, 'current',
        ARRAY['notes', 'revision-kit', 'auto-synced']::text[], false, true, '', 2026
 WHERE NOT EXISTS (
   SELECT 1 FROM public.papers WHERE course = 'ccp' AND level = 'level-2' AND full_pdf_key = 'content/ccp/level-2/law-governing-credit-practice.pdf'
@@ -62,7 +68,7 @@ WHERE NOT EXISTS (
 
 INSERT INTO public.papers (course, level, title, category, description, price_kes, preview_pdf_key, full_pdf_key, file_size_bytes, thumbnail_url, syllabus_version, tags, featured, published, sitting, year)
 SELECT 'cict', 'foundation', 'Introduction to Computing — Notes + Revision Kit', 'notes', 'Introduction to Computing — Notes + Revision Kit for CICT Foundation Level. Includes concise notes, revision practice and tutor-written model answers for exam preparation in Kenya.', 150,
-       'content/cict/foundation/introduction-to-computing-preview.pdf', 'content/cict/foundation/introduction-to-computing.pdf', 249963, 'https://files.kasnebpapers.com/content/cict/foundation/introduction-to-computing-thumbnail.png', 'current',
+       'content/cict/foundation/introduction-to-computing-preview.pdf', 'content/cict/foundation/introduction-to-computing.pdf', 249963, NULL, 'current',
        ARRAY['notes', 'revision-kit', 'auto-synced']::text[], false, true, '', 2026
 WHERE NOT EXISTS (
   SELECT 1 FROM public.papers WHERE course = 'cict' AND level = 'foundation' AND full_pdf_key = 'content/cict/foundation/introduction-to-computing.pdf'
@@ -70,7 +76,7 @@ WHERE NOT EXISTS (
 
 INSERT INTO public.papers (course, level, title, category, description, price_kes, preview_pdf_key, full_pdf_key, file_size_bytes, thumbnail_url, syllabus_version, tags, featured, published, sitting, year)
 SELECT 'cifa', 'intermediate', 'Portfolio Management — Notes + Revision Kit', 'notes', 'Portfolio Management — Notes + Revision Kit for CIFA Intermediate Level. Includes concise notes, revision practice and tutor-written model answers for exam preparation in Kenya.', 150,
-       'content/cifa/intermediate/portfolio-management-preview.pdf', 'content/cifa/intermediate/portfolio-management.pdf', 231650, 'https://files.kasnebpapers.com/content/cifa/intermediate/portfolio-management-thumbnail.png', 'current',
+       'content/cifa/intermediate/portfolio-management-preview.pdf', 'content/cifa/intermediate/portfolio-management.pdf', 231650, NULL, 'current',
        ARRAY['notes', 'revision-kit', 'auto-synced']::text[], false, true, '', 2026
 WHERE NOT EXISTS (
   SELECT 1 FROM public.papers WHERE course = 'cifa' AND level = 'intermediate' AND full_pdf_key = 'content/cifa/intermediate/portfolio-management.pdf'
@@ -78,7 +84,7 @@ WHERE NOT EXISTS (
 
 INSERT INTO public.papers (course, level, title, category, description, price_kes, preview_pdf_key, full_pdf_key, file_size_bytes, thumbnail_url, syllabus_version, tags, featured, published, sitting, year)
 SELECT 'cpa', 'intermediate-1', 'Company Law — Notes + Revision Kit', 'notes', 'Company Law — Notes + Revision Kit for CPA Intermediate Level 1. Includes concise notes, revision practice and tutor-written model answers for exam preparation in Kenya.', 150,
-       'content/cpa/intermediate-1/company-law-preview.pdf', 'content/cpa/intermediate-1/company-law.pdf', 250358, 'https://files.kasnebpapers.com/content/cpa/intermediate-1/company-law-thumbnail.png', 'current',
+       'content/cpa/intermediate-1/company-law-preview.pdf', 'content/cpa/intermediate-1/company-law.pdf', 250358, NULL, 'current',
        ARRAY['notes', 'revision-kit', 'auto-synced']::text[], false, true, '', 2026
 WHERE NOT EXISTS (
   SELECT 1 FROM public.papers WHERE course = 'cpa' AND level = 'intermediate-1' AND full_pdf_key = 'content/cpa/intermediate-1/company-law.pdf'
@@ -86,7 +92,7 @@ WHERE NOT EXISTS (
 
 INSERT INTO public.papers (course, level, title, category, description, price_kes, preview_pdf_key, full_pdf_key, file_size_bytes, thumbnail_url, syllabus_version, tags, featured, published, sitting, year)
 SELECT 'dcm', 'level-1', 'Fundamentals of Credit Management — Notes + Revision Kit', 'notes', 'Fundamentals of Credit Management — Notes + Revision Kit for DCM Level I. Includes concise notes, revision practice and tutor-written model answers for exam preparation in Kenya.', 150,
-       'content/dcm/level-1/fundamentals-of-credit-management-preview.pdf', 'content/dcm/level-1/fundamentals-of-credit-management.pdf', 231666, 'https://files.kasnebpapers.com/content/dcm/level-1/fundamentals-of-credit-management-thumbnail.png', 'current',
+       'content/dcm/level-1/fundamentals-of-credit-management-preview.pdf', 'content/dcm/level-1/fundamentals-of-credit-management.pdf', 231666, NULL, 'current',
        ARRAY['notes', 'revision-kit', 'auto-synced']::text[], false, true, '', 2026
 WHERE NOT EXISTS (
   SELECT 1 FROM public.papers WHERE course = 'dcm' AND level = 'level-1' AND full_pdf_key = 'content/dcm/level-1/fundamentals-of-credit-management.pdf'
@@ -94,7 +100,7 @@ WHERE NOT EXISTS (
 
 INSERT INTO public.papers (course, level, title, category, description, price_kes, preview_pdf_key, full_pdf_key, file_size_bytes, thumbnail_url, syllabus_version, tags, featured, published, sitting, year)
 SELECT 'dict', 'level-1', 'Introduction to Computing — Notes + Revision Kit', 'notes', 'Introduction to Computing — Notes + Revision Kit for DICT Level I. Includes concise notes, revision practice and tutor-written model answers for exam preparation in Kenya.', 150,
-       'content/dict/level-1/introduction-to-computing-preview.pdf', 'content/dict/level-1/introduction-to-computing.pdf', 247676, 'https://files.kasnebpapers.com/content/dict/level-1/introduction-to-computing-thumbnail.png', 'current',
+       'content/dict/level-1/introduction-to-computing-preview.pdf', 'content/dict/level-1/introduction-to-computing.pdf', 247676, NULL, 'current',
        ARRAY['notes', 'revision-kit', 'auto-synced']::text[], false, true, '', 2026
 WHERE NOT EXISTS (
   SELECT 1 FROM public.papers WHERE course = 'dict' AND level = 'level-1' AND full_pdf_key = 'content/dict/level-1/introduction-to-computing.pdf'
@@ -102,7 +108,7 @@ WHERE NOT EXISTS (
 
 INSERT INTO public.papers (course, level, title, category, description, price_kes, preview_pdf_key, full_pdf_key, file_size_bytes, thumbnail_url, syllabus_version, tags, featured, published, sitting, year)
 SELECT 'cs', 'intermediate', 'Corporate Governance and Ethics — Notes + Revision Kit', 'notes', 'Corporate Governance and Ethics — Notes + Revision Kit for CS Intermediate Level. Includes concise notes, revision practice and tutor-written model answers for exam preparation in Kenya.', 150,
-       'content/cs/intermediate/corporate-governance-and-ethics-preview.pdf', 'content/cs/intermediate/corporate-governance-and-ethics.pdf', 230191, 'https://files.kasnebpapers.com/content/cs/intermediate/corporate-governance-and-ethics-thumbnail.png', 'current',
+       'content/cs/intermediate/corporate-governance-and-ethics-preview.pdf', 'content/cs/intermediate/corporate-governance-and-ethics.pdf', 230191, NULL, 'current',
        ARRAY['notes', 'revision-kit', 'auto-synced']::text[], false, true, '', 2026
 WHERE NOT EXISTS (
   SELECT 1 FROM public.papers WHERE course = 'cs' AND level = 'intermediate' AND full_pdf_key = 'content/cs/intermediate/corporate-governance-and-ethics.pdf'
@@ -116,10 +122,13 @@ WHERE NOT EXISTS (
 -- Register 10 new ATD papers into public.papers (completes the full ATD syllabus, Levels I-III).
 -- Run this in the Supabase SQL Editor for this project.
 -- Safe to re-run: each INSERT is guarded by a NOT EXISTS check on (course, level, full_pdf_key).
+-- thumbnail_url is left NULL on purpose: the site's ProductCard already falls back to a
+-- polished, category-matched stock illustration (src/lib/subject-image.ts) whenever
+-- thumbnail_url is empty, which looks better and more consistent than a generated cover.
 
 INSERT INTO public.papers (course, level, title, category, description, price_kes, preview_pdf_key, full_pdf_key, file_size_bytes, thumbnail_url, syllabus_version, tags, featured, published, sitting, year)
 SELECT 'atd', 'level-1', 'Introduction to Law and Ethics — Notes + Revision Kit', 'notes', 'Introduction to Law and Ethics — Notes + Revision Kit for ATD Level I. Includes concise notes, revision practice and tutor-written model answers for exam preparation in Kenya.', 150,
-       'content/atd/level-1/introduction-to-law-and-ethics-preview.pdf', 'content/atd/level-1/introduction-to-law-and-ethics.pdf', 242226, 'https://files.kasnebpapers.com/content/atd/level-1/introduction-to-law-and-ethics-thumbnail.png', 'current',
+       'content/atd/level-1/introduction-to-law-and-ethics-preview.pdf', 'content/atd/level-1/introduction-to-law-and-ethics.pdf', 242226, NULL, 'current',
        ARRAY['notes', 'revision-kit', 'auto-synced']::text[], false, true, '', 2026
 WHERE NOT EXISTS (
   SELECT 1 FROM public.papers WHERE course = 'atd' AND level = 'level-1' AND full_pdf_key = 'content/atd/level-1/introduction-to-law-and-ethics.pdf'
@@ -127,7 +136,7 @@ WHERE NOT EXISTS (
 
 INSERT INTO public.papers (course, level, title, category, description, price_kes, preview_pdf_key, full_pdf_key, file_size_bytes, thumbnail_url, syllabus_version, tags, featured, published, sitting, year)
 SELECT 'atd', 'level-1', 'Entrepreneurship and Communication — Notes + Revision Kit', 'notes', 'Entrepreneurship and Communication — Notes + Revision Kit for ATD Level I. Includes concise notes, revision practice and tutor-written model answers for exam preparation in Kenya.', 150,
-       'content/atd/level-1/entrepreneurship-and-communication-preview.pdf', 'content/atd/level-1/entrepreneurship-and-communication.pdf', 237198, 'https://files.kasnebpapers.com/content/atd/level-1/entrepreneurship-and-communication-thumbnail.png', 'current',
+       'content/atd/level-1/entrepreneurship-and-communication-preview.pdf', 'content/atd/level-1/entrepreneurship-and-communication.pdf', 237198, NULL, 'current',
        ARRAY['notes', 'revision-kit', 'auto-synced']::text[], false, true, '', 2026
 WHERE NOT EXISTS (
   SELECT 1 FROM public.papers WHERE course = 'atd' AND level = 'level-1' AND full_pdf_key = 'content/atd/level-1/entrepreneurship-and-communication.pdf'
@@ -135,7 +144,7 @@ WHERE NOT EXISTS (
 
 INSERT INTO public.papers (course, level, title, category, description, price_kes, preview_pdf_key, full_pdf_key, file_size_bytes, thumbnail_url, syllabus_version, tags, featured, published, sitting, year)
 SELECT 'atd', 'level-1', 'Information Communication Technology — Notes + Revision Kit', 'notes', 'Information Communication Technology — Notes + Revision Kit for ATD Level I. Includes concise notes, revision practice and tutor-written model answers for exam preparation in Kenya.', 150,
-       'content/atd/level-1/information-communication-technology-preview.pdf', 'content/atd/level-1/information-communication-technology.pdf', 241901, 'https://files.kasnebpapers.com/content/atd/level-1/information-communication-technology-thumbnail.png', 'current',
+       'content/atd/level-1/information-communication-technology-preview.pdf', 'content/atd/level-1/information-communication-technology.pdf', 241901, NULL, 'current',
        ARRAY['notes', 'revision-kit', 'auto-synced']::text[], false, true, '', 2026
 WHERE NOT EXISTS (
   SELECT 1 FROM public.papers WHERE course = 'atd' AND level = 'level-1' AND full_pdf_key = 'content/atd/level-1/information-communication-technology.pdf'
@@ -143,7 +152,7 @@ WHERE NOT EXISTS (
 
 INSERT INTO public.papers (course, level, title, category, description, price_kes, preview_pdf_key, full_pdf_key, file_size_bytes, thumbnail_url, syllabus_version, tags, featured, published, sitting, year)
 SELECT 'atd', 'level-2', 'Financial Accounting — Notes + Revision Kit', 'notes', 'Financial Accounting — Notes + Revision Kit for ATD Level II. Includes concise notes, revision practice and tutor-written model answers for exam preparation in Kenya.', 150,
-       'content/atd/level-2/financial-accounting-preview.pdf', 'content/atd/level-2/financial-accounting.pdf', 227289, 'https://files.kasnebpapers.com/content/atd/level-2/financial-accounting-thumbnail.png', 'current',
+       'content/atd/level-2/financial-accounting-preview.pdf', 'content/atd/level-2/financial-accounting.pdf', 227289, NULL, 'current',
        ARRAY['notes', 'revision-kit', 'auto-synced']::text[], false, true, '', 2026
 WHERE NOT EXISTS (
   SELECT 1 FROM public.papers WHERE course = 'atd' AND level = 'level-2' AND full_pdf_key = 'content/atd/level-2/financial-accounting.pdf'
@@ -151,7 +160,7 @@ WHERE NOT EXISTS (
 
 INSERT INTO public.papers (course, level, title, category, description, price_kes, preview_pdf_key, full_pdf_key, file_size_bytes, thumbnail_url, syllabus_version, tags, featured, published, sitting, year)
 SELECT 'atd', 'level-2', 'Business Mathematics and Statistics — Notes + Revision Kit', 'notes', 'Business Mathematics and Statistics — Notes + Revision Kit for ATD Level II. Includes concise notes, revision practice and tutor-written model answers for exam preparation in Kenya.', 150,
-       'content/atd/level-2/business-mathematics-and-statistics-preview.pdf', 'content/atd/level-2/business-mathematics-and-statistics.pdf', 222505, 'https://files.kasnebpapers.com/content/atd/level-2/business-mathematics-and-statistics-thumbnail.png', 'current',
+       'content/atd/level-2/business-mathematics-and-statistics-preview.pdf', 'content/atd/level-2/business-mathematics-and-statistics.pdf', 222505, NULL, 'current',
        ARRAY['notes', 'revision-kit', 'auto-synced']::text[], false, true, '', 2026
 WHERE NOT EXISTS (
   SELECT 1 FROM public.papers WHERE course = 'atd' AND level = 'level-2' AND full_pdf_key = 'content/atd/level-2/business-mathematics-and-statistics.pdf'
@@ -159,7 +168,7 @@ WHERE NOT EXISTS (
 
 INSERT INTO public.papers (course, level, title, category, description, price_kes, preview_pdf_key, full_pdf_key, file_size_bytes, thumbnail_url, syllabus_version, tags, featured, published, sitting, year)
 SELECT 'atd', 'level-2', 'Principles of Taxation — Notes + Revision Kit', 'notes', 'Principles of Taxation — Notes + Revision Kit for ATD Level II. Includes concise notes, revision practice and tutor-written model answers for exam preparation in Kenya.', 150,
-       'content/atd/level-2/principles-of-taxation-preview.pdf', 'content/atd/level-2/principles-of-taxation.pdf', 225562, 'https://files.kasnebpapers.com/content/atd/level-2/principles-of-taxation-thumbnail.png', 'current',
+       'content/atd/level-2/principles-of-taxation-preview.pdf', 'content/atd/level-2/principles-of-taxation.pdf', 225562, NULL, 'current',
        ARRAY['notes', 'revision-kit', 'auto-synced']::text[], false, true, '', 2026
 WHERE NOT EXISTS (
   SELECT 1 FROM public.papers WHERE course = 'atd' AND level = 'level-2' AND full_pdf_key = 'content/atd/level-2/principles-of-taxation.pdf'
@@ -167,7 +176,7 @@ WHERE NOT EXISTS (
 
 INSERT INTO public.papers (course, level, title, category, description, price_kes, preview_pdf_key, full_pdf_key, file_size_bytes, thumbnail_url, syllabus_version, tags, featured, published, sitting, year)
 SELECT 'atd', 'level-3', 'Principles of Economics — Notes + Revision Kit', 'notes', 'Principles of Economics — Notes + Revision Kit for ATD Level III. Includes concise notes, revision practice and tutor-written model answers for exam preparation in Kenya.', 150,
-       'content/atd/level-3/principles-of-economics-preview.pdf', 'content/atd/level-3/principles-of-economics.pdf', 230743, 'https://files.kasnebpapers.com/content/atd/level-3/principles-of-economics-thumbnail.png', 'current',
+       'content/atd/level-3/principles-of-economics-preview.pdf', 'content/atd/level-3/principles-of-economics.pdf', 230743, NULL, 'current',
        ARRAY['notes', 'revision-kit', 'auto-synced']::text[], false, true, '', 2026
 WHERE NOT EXISTS (
   SELECT 1 FROM public.papers WHERE course = 'atd' AND level = 'level-3' AND full_pdf_key = 'content/atd/level-3/principles-of-economics.pdf'
@@ -175,7 +184,7 @@ WHERE NOT EXISTS (
 
 INSERT INTO public.papers (course, level, title, category, description, price_kes, preview_pdf_key, full_pdf_key, file_size_bytes, thumbnail_url, syllabus_version, tags, featured, published, sitting, year)
 SELECT 'atd', 'level-3', 'Fundamentals of Management Accounting — Notes + Revision Kit', 'notes', 'Fundamentals of Management Accounting — Notes + Revision Kit for ATD Level III. Includes concise notes, revision practice and tutor-written model answers for exam preparation in Kenya.', 150,
-       'content/atd/level-3/fundamentals-of-management-accounting-preview.pdf', 'content/atd/level-3/fundamentals-of-management-accounting.pdf', 226891, 'https://files.kasnebpapers.com/content/atd/level-3/fundamentals-of-management-accounting-thumbnail.png', 'current',
+       'content/atd/level-3/fundamentals-of-management-accounting-preview.pdf', 'content/atd/level-3/fundamentals-of-management-accounting.pdf', 226891, NULL, 'current',
        ARRAY['notes', 'revision-kit', 'auto-synced']::text[], false, true, '', 2026
 WHERE NOT EXISTS (
   SELECT 1 FROM public.papers WHERE course = 'atd' AND level = 'level-3' AND full_pdf_key = 'content/atd/level-3/fundamentals-of-management-accounting.pdf'
@@ -183,7 +192,7 @@ WHERE NOT EXISTS (
 
 INSERT INTO public.papers (course, level, title, category, description, price_kes, preview_pdf_key, full_pdf_key, file_size_bytes, thumbnail_url, syllabus_version, tags, featured, published, sitting, year)
 SELECT 'atd', 'level-3', 'Fundamentals of Finance — Notes + Revision Kit', 'notes', 'Fundamentals of Finance — Notes + Revision Kit for ATD Level III. Includes concise notes, revision practice and tutor-written model answers for exam preparation in Kenya.', 150,
-       'content/atd/level-3/fundamentals-of-finance-preview.pdf', 'content/atd/level-3/fundamentals-of-finance.pdf', 233512, 'https://files.kasnebpapers.com/content/atd/level-3/fundamentals-of-finance-thumbnail.png', 'current',
+       'content/atd/level-3/fundamentals-of-finance-preview.pdf', 'content/atd/level-3/fundamentals-of-finance.pdf', 233512, NULL, 'current',
        ARRAY['notes', 'revision-kit', 'auto-synced']::text[], false, true, '', 2026
 WHERE NOT EXISTS (
   SELECT 1 FROM public.papers WHERE course = 'atd' AND level = 'level-3' AND full_pdf_key = 'content/atd/level-3/fundamentals-of-finance.pdf'
@@ -191,7 +200,7 @@ WHERE NOT EXISTS (
 
 INSERT INTO public.papers (course, level, title, category, description, price_kes, preview_pdf_key, full_pdf_key, file_size_bytes, thumbnail_url, syllabus_version, tags, featured, published, sitting, year)
 SELECT 'atd', 'level-3', 'Principles of Auditing — Notes + Revision Kit', 'notes', 'Principles of Auditing — Notes + Revision Kit for ATD Level III. Includes concise notes, revision practice and tutor-written model answers for exam preparation in Kenya.', 150,
-       'content/atd/level-3/principles-of-auditing-preview.pdf', 'content/atd/level-3/principles-of-auditing.pdf', 232963, 'https://files.kasnebpapers.com/content/atd/level-3/principles-of-auditing-thumbnail.png', 'current',
+       'content/atd/level-3/principles-of-auditing-preview.pdf', 'content/atd/level-3/principles-of-auditing.pdf', 232963, NULL, 'current',
        ARRAY['notes', 'revision-kit', 'auto-synced']::text[], false, true, '', 2026
 WHERE NOT EXISTS (
   SELECT 1 FROM public.papers WHERE course = 'atd' AND level = 'level-3' AND full_pdf_key = 'content/atd/level-3/principles-of-auditing.pdf'
@@ -209,10 +218,13 @@ WHERE NOT EXISTS (
 -- Communication Technology. Verified against the official syllabus at kasneb.or.ke/cpa.
 -- Run this in the Supabase SQL Editor for this project.
 -- Safe to re-run: each INSERT is guarded by a NOT EXISTS check on (course, level, full_pdf_key).
+-- thumbnail_url is left NULL on purpose: the site's ProductCard already falls back to a
+-- polished, category-matched stock illustration (src/lib/subject-image.ts) whenever
+-- thumbnail_url is empty, which looks better and more consistent than a generated cover.
 
 INSERT INTO public.papers (course, level, title, category, description, price_kes, preview_pdf_key, full_pdf_key, file_size_bytes, thumbnail_url, syllabus_version, tags, featured, published, sitting, year)
 SELECT 'cpa', 'foundation-1', 'Communication Skills — Notes + Revision Kit', 'notes', 'Communication Skills — Notes + Revision Kit for CPA Foundation Level (CA12). Includes concise notes, revision practice and tutor-written model answers for exam preparation in Kenya.', 150,
-       'content/cpa/foundation-1/communication-skills-preview.pdf', 'content/cpa/foundation-1/communication-skills.pdf', 225098, 'https://files.kasnebpapers.com/content/cpa/foundation-1/communication-skills-thumbnail.png', 'current',
+       'content/cpa/foundation-1/communication-skills-preview.pdf', 'content/cpa/foundation-1/communication-skills.pdf', 225098, NULL, 'current',
        ARRAY['notes', 'revision-kit', 'auto-synced']::text[], false, true, '', 2026
 WHERE NOT EXISTS (
   SELECT 1 FROM public.papers WHERE course = 'cpa' AND level = 'foundation-1' AND full_pdf_key = 'content/cpa/foundation-1/communication-skills.pdf'
@@ -220,7 +232,7 @@ WHERE NOT EXISTS (
 
 INSERT INTO public.papers (course, level, title, category, description, price_kes, preview_pdf_key, full_pdf_key, file_size_bytes, thumbnail_url, syllabus_version, tags, featured, published, sitting, year)
 SELECT 'cpa', 'foundation-1', 'Introduction to Law and Governance — Notes + Revision Kit', 'notes', 'Introduction to Law and Governance — Notes + Revision Kit for CPA Foundation Level (CA13). Includes concise notes, revision practice and tutor-written model answers for exam preparation in Kenya.', 150,
-       'content/cpa/foundation-1/introduction-to-law-and-governance-preview.pdf', 'content/cpa/foundation-1/introduction-to-law-and-governance.pdf', 223190, 'https://files.kasnebpapers.com/content/cpa/foundation-1/introduction-to-law-and-governance-thumbnail.png', 'current',
+       'content/cpa/foundation-1/introduction-to-law-and-governance-preview.pdf', 'content/cpa/foundation-1/introduction-to-law-and-governance.pdf', 223190, NULL, 'current',
        ARRAY['notes', 'revision-kit', 'auto-synced']::text[], false, true, '', 2026
 WHERE NOT EXISTS (
   SELECT 1 FROM public.papers WHERE course = 'cpa' AND level = 'foundation-1' AND full_pdf_key = 'content/cpa/foundation-1/introduction-to-law-and-governance.pdf'
@@ -228,7 +240,7 @@ WHERE NOT EXISTS (
 
 INSERT INTO public.papers (course, level, title, category, description, price_kes, preview_pdf_key, full_pdf_key, file_size_bytes, thumbnail_url, syllabus_version, tags, featured, published, sitting, year)
 SELECT 'cpa', 'foundation-1', 'Economics — Notes + Revision Kit', 'notes', 'Economics — Notes + Revision Kit for CPA Foundation Level (CA14). Includes concise notes, revision practice and tutor-written model answers for exam preparation in Kenya.', 150,
-       'content/cpa/foundation-1/economics-preview.pdf', 'content/cpa/foundation-1/economics.pdf', 221212, 'https://files.kasnebpapers.com/content/cpa/foundation-1/economics-thumbnail.png', 'current',
+       'content/cpa/foundation-1/economics-preview.pdf', 'content/cpa/foundation-1/economics.pdf', 221212, NULL, 'current',
        ARRAY['notes', 'revision-kit', 'auto-synced']::text[], false, true, '', 2026
 WHERE NOT EXISTS (
   SELECT 1 FROM public.papers WHERE course = 'cpa' AND level = 'foundation-1' AND full_pdf_key = 'content/cpa/foundation-1/economics.pdf'
@@ -236,7 +248,7 @@ WHERE NOT EXISTS (
 
 INSERT INTO public.papers (course, level, title, category, description, price_kes, preview_pdf_key, full_pdf_key, file_size_bytes, thumbnail_url, syllabus_version, tags, featured, published, sitting, year)
 SELECT 'cpa', 'foundation-1', 'Quantitative Analysis — Notes + Revision Kit', 'notes', 'Quantitative Analysis — Notes + Revision Kit for CPA Foundation Level (CA15). Includes concise notes, revision practice and tutor-written model answers for exam preparation in Kenya.', 150,
-       'content/cpa/foundation-1/quantitative-analysis-preview.pdf', 'content/cpa/foundation-1/quantitative-analysis.pdf', 224062, 'https://files.kasnebpapers.com/content/cpa/foundation-1/quantitative-analysis-thumbnail.png', 'current',
+       'content/cpa/foundation-1/quantitative-analysis-preview.pdf', 'content/cpa/foundation-1/quantitative-analysis.pdf', 224062, NULL, 'current',
        ARRAY['notes', 'revision-kit', 'auto-synced']::text[], false, true, '', 2026
 WHERE NOT EXISTS (
   SELECT 1 FROM public.papers WHERE course = 'cpa' AND level = 'foundation-1' AND full_pdf_key = 'content/cpa/foundation-1/quantitative-analysis.pdf'
@@ -244,7 +256,7 @@ WHERE NOT EXISTS (
 
 INSERT INTO public.papers (course, level, title, category, description, price_kes, preview_pdf_key, full_pdf_key, file_size_bytes, thumbnail_url, syllabus_version, tags, featured, published, sitting, year)
 SELECT 'cpa', 'foundation-1', 'Information Communication Technology — Notes + Revision Kit', 'notes', 'Information Communication Technology — Notes + Revision Kit for CPA Foundation Level (CA16). Includes concise notes, revision practice and tutor-written model answers for exam preparation in Kenya.', 150,
-       'content/cpa/foundation-1/information-communication-technology-preview.pdf', 'content/cpa/foundation-1/information-communication-technology.pdf', 232975, 'https://files.kasnebpapers.com/content/cpa/foundation-1/information-communication-technology-thumbnail.png', 'current',
+       'content/cpa/foundation-1/information-communication-technology-preview.pdf', 'content/cpa/foundation-1/information-communication-technology.pdf', 232975, NULL, 'current',
        ARRAY['notes', 'revision-kit', 'auto-synced']::text[], false, true, '', 2026
 WHERE NOT EXISTS (
   SELECT 1 FROM public.papers WHERE course = 'cpa' AND level = 'foundation-1' AND full_pdf_key = 'content/cpa/foundation-1/information-communication-technology.pdf'
@@ -262,10 +274,13 @@ WHERE NOT EXISTS (
 -- and Investments. Verified against the official syllabus at icifa.co.ke/syllabus/.
 -- Run this in the Supabase SQL Editor for this project.
 -- Safe to re-run: each INSERT is guarded by a NOT EXISTS check on (course, level, full_pdf_key).
+-- thumbnail_url is left NULL on purpose: the site's ProductCard already falls back to a
+-- polished, category-matched stock illustration (src/lib/subject-image.ts) whenever
+-- thumbnail_url is empty, which looks better and more consistent than a generated cover.
 
 INSERT INTO public.papers (course, level, title, category, description, price_kes, preview_pdf_key, full_pdf_key, file_size_bytes, thumbnail_url, syllabus_version, tags, featured, published, sitting, year)
 SELECT 'cifa', 'foundation', 'Financial Accounting — Notes + Revision Kit', 'notes', 'Financial Accounting — Notes + Revision Kit for CIFA Foundation Level. Includes concise notes, revision practice and tutor-written model answers for exam preparation in Kenya.', 150,
-       'content/cifa/foundation/financial-accounting-preview.pdf', 'content/cifa/foundation/financial-accounting.pdf', 214617, 'https://files.kasnebpapers.com/content/cifa/foundation/financial-accounting-thumbnail.png', 'current',
+       'content/cifa/foundation/financial-accounting-preview.pdf', 'content/cifa/foundation/financial-accounting.pdf', 214617, NULL, 'current',
        ARRAY['notes', 'revision-kit', 'auto-synced']::text[], false, true, '', 2026
 WHERE NOT EXISTS (
   SELECT 1 FROM public.papers WHERE course = 'cifa' AND level = 'foundation' AND full_pdf_key = 'content/cifa/foundation/financial-accounting.pdf'
@@ -273,7 +288,7 @@ WHERE NOT EXISTS (
 
 INSERT INTO public.papers (course, level, title, category, description, price_kes, preview_pdf_key, full_pdf_key, file_size_bytes, thumbnail_url, syllabus_version, tags, featured, published, sitting, year)
 SELECT 'cifa', 'foundation', 'Professional Ethics and Governance — Notes + Revision Kit', 'notes', 'Professional Ethics and Governance — Notes + Revision Kit for CIFA Foundation Level. Includes concise notes, revision practice and tutor-written model answers for exam preparation in Kenya.', 150,
-       'content/cifa/foundation/professional-ethics-and-governance-preview.pdf', 'content/cifa/foundation/professional-ethics-and-governance.pdf', 220338, 'https://files.kasnebpapers.com/content/cifa/foundation/professional-ethics-and-governance-thumbnail.png', 'current',
+       'content/cifa/foundation/professional-ethics-and-governance-preview.pdf', 'content/cifa/foundation/professional-ethics-and-governance.pdf', 220338, NULL, 'current',
        ARRAY['notes', 'revision-kit', 'auto-synced']::text[], false, true, '', 2026
 WHERE NOT EXISTS (
   SELECT 1 FROM public.papers WHERE course = 'cifa' AND level = 'foundation' AND full_pdf_key = 'content/cifa/foundation/professional-ethics-and-governance.pdf'
@@ -281,7 +296,7 @@ WHERE NOT EXISTS (
 
 INSERT INTO public.papers (course, level, title, category, description, price_kes, preview_pdf_key, full_pdf_key, file_size_bytes, thumbnail_url, syllabus_version, tags, featured, published, sitting, year)
 SELECT 'cifa', 'foundation', 'Regulation of Financial Markets — Notes + Revision Kit', 'notes', 'Regulation of Financial Markets — Notes + Revision Kit for CIFA Foundation Level. Includes concise notes, revision practice and tutor-written model answers for exam preparation in Kenya.', 150,
-       'content/cifa/foundation/regulation-of-financial-markets-preview.pdf', 'content/cifa/foundation/regulation-of-financial-markets.pdf', 202911, 'https://files.kasnebpapers.com/content/cifa/foundation/regulation-of-financial-markets-thumbnail.png', 'current',
+       'content/cifa/foundation/regulation-of-financial-markets-preview.pdf', 'content/cifa/foundation/regulation-of-financial-markets.pdf', 202911, NULL, 'current',
        ARRAY['notes', 'revision-kit', 'auto-synced']::text[], false, true, '', 2026
 WHERE NOT EXISTS (
   SELECT 1 FROM public.papers WHERE course = 'cifa' AND level = 'foundation' AND full_pdf_key = 'content/cifa/foundation/regulation-of-financial-markets.pdf'
@@ -289,7 +304,7 @@ WHERE NOT EXISTS (
 
 INSERT INTO public.papers (course, level, title, category, description, price_kes, preview_pdf_key, full_pdf_key, file_size_bytes, thumbnail_url, syllabus_version, tags, featured, published, sitting, year)
 SELECT 'cifa', 'foundation', 'Quantitative Analysis — Notes + Revision Kit', 'notes', 'Quantitative Analysis — Notes + Revision Kit for CIFA Foundation Level. Includes concise notes, revision practice and tutor-written model answers for exam preparation in Kenya.', 150,
-       'content/cifa/foundation/quantitative-analysis-preview.pdf', 'content/cifa/foundation/quantitative-analysis.pdf', 218352, 'https://files.kasnebpapers.com/content/cifa/foundation/quantitative-analysis-thumbnail.png', 'current',
+       'content/cifa/foundation/quantitative-analysis-preview.pdf', 'content/cifa/foundation/quantitative-analysis.pdf', 218352, NULL, 'current',
        ARRAY['notes', 'revision-kit', 'auto-synced']::text[], false, true, '', 2026
 WHERE NOT EXISTS (
   SELECT 1 FROM public.papers WHERE course = 'cifa' AND level = 'foundation' AND full_pdf_key = 'content/cifa/foundation/quantitative-analysis.pdf'
@@ -297,7 +312,7 @@ WHERE NOT EXISTS (
 
 INSERT INTO public.papers (course, level, title, category, description, price_kes, preview_pdf_key, full_pdf_key, file_size_bytes, thumbnail_url, syllabus_version, tags, featured, published, sitting, year)
 SELECT 'cifa', 'foundation', 'Introduction to Finance and Investments — Notes + Revision Kit', 'notes', 'Introduction to Finance and Investments — Notes + Revision Kit for CIFA Foundation Level. Includes concise notes, revision practice and tutor-written model answers for exam preparation in Kenya.', 150,
-       'content/cifa/foundation/introduction-to-finance-and-investments-preview.pdf', 'content/cifa/foundation/introduction-to-finance-and-investments.pdf', 207198, 'https://files.kasnebpapers.com/content/cifa/foundation/introduction-to-finance-and-investments-thumbnail.png', 'current',
+       'content/cifa/foundation/introduction-to-finance-and-investments-preview.pdf', 'content/cifa/foundation/introduction-to-finance-and-investments.pdf', 207198, NULL, 'current',
        ARRAY['notes', 'revision-kit', 'auto-synced']::text[], false, true, '', 2026
 WHERE NOT EXISTS (
   SELECT 1 FROM public.papers WHERE course = 'cifa' AND level = 'foundation' AND full_pdf_key = 'content/cifa/foundation/introduction-to-finance-and-investments.pdf'
@@ -317,10 +332,13 @@ WHERE NOT EXISTS (
 -- of the 6 real Foundation papers -- flagged, not changed).
 -- Run this in the Supabase SQL Editor for this project.
 -- Safe to re-run: each INSERT is guarded by a NOT EXISTS check on (course, level, full_pdf_key).
+-- thumbnail_url is left NULL on purpose: the site's ProductCard already falls back to a
+-- polished, category-matched stock illustration (src/lib/subject-image.ts) whenever
+-- thumbnail_url is empty, which looks better and more consistent than a generated cover.
 
 INSERT INTO public.papers (course, level, title, category, description, price_kes, preview_pdf_key, full_pdf_key, file_size_bytes, thumbnail_url, syllabus_version, tags, featured, published, sitting, year)
 SELECT 'cs', 'foundation', 'Management Principles and Practice — Notes + Revision Kit', 'notes', 'Management Principles and Practice — Notes + Revision Kit for CS Foundation Level. Includes concise notes, revision practice and tutor-written model answers for exam preparation in Kenya.', 150,
-       'content/cs/foundation/management-principles-and-practice-preview.pdf', 'content/cs/foundation/management-principles-and-practice.pdf', 224324, 'https://files.kasnebpapers.com/content/cs/foundation/management-principles-and-practice-thumbnail.png', 'current',
+       'content/cs/foundation/management-principles-and-practice-preview.pdf', 'content/cs/foundation/management-principles-and-practice.pdf', 224324, NULL, 'current',
        ARRAY['notes', 'revision-kit', 'auto-synced']::text[], false, true, '', 2026
 WHERE NOT EXISTS (
   SELECT 1 FROM public.papers WHERE course = 'cs' AND level = 'foundation' AND full_pdf_key = 'content/cs/foundation/management-principles-and-practice.pdf'
@@ -328,7 +346,7 @@ WHERE NOT EXISTS (
 
 INSERT INTO public.papers (course, level, title, category, description, price_kes, preview_pdf_key, full_pdf_key, file_size_bytes, thumbnail_url, syllabus_version, tags, featured, published, sitting, year)
 SELECT 'cs', 'foundation', 'Communication Skills and Records Management — Notes + Revision Kit', 'notes', 'Communication Skills and Records Management — Notes + Revision Kit for CS Foundation Level. Includes concise notes, revision practice and tutor-written model answers for exam preparation in Kenya.', 150,
-       'content/cs/foundation/communication-skills-and-records-management-preview.pdf', 'content/cs/foundation/communication-skills-and-records-management.pdf', 214360, 'https://files.kasnebpapers.com/content/cs/foundation/communication-skills-and-records-management-thumbnail.png', 'current',
+       'content/cs/foundation/communication-skills-and-records-management-preview.pdf', 'content/cs/foundation/communication-skills-and-records-management.pdf', 214360, NULL, 'current',
        ARRAY['notes', 'revision-kit', 'auto-synced']::text[], false, true, '', 2026
 WHERE NOT EXISTS (
   SELECT 1 FROM public.papers WHERE course = 'cs' AND level = 'foundation' AND full_pdf_key = 'content/cs/foundation/communication-skills-and-records-management.pdf'
@@ -336,7 +354,7 @@ WHERE NOT EXISTS (
 
 INSERT INTO public.papers (course, level, title, category, description, price_kes, preview_pdf_key, full_pdf_key, file_size_bytes, thumbnail_url, syllabus_version, tags, featured, published, sitting, year)
 SELECT 'cs', 'foundation', 'Introduction to Law and Governance — Notes + Revision Kit', 'notes', 'Introduction to Law and Governance — Notes + Revision Kit for CS Foundation Level. Includes concise notes, revision practice and tutor-written model answers for exam preparation in Kenya.', 150,
-       'content/cs/foundation/introduction-to-law-and-governance-preview.pdf', 'content/cs/foundation/introduction-to-law-and-governance.pdf', 214719, 'https://files.kasnebpapers.com/content/cs/foundation/introduction-to-law-and-governance-thumbnail.png', 'current',
+       'content/cs/foundation/introduction-to-law-and-governance-preview.pdf', 'content/cs/foundation/introduction-to-law-and-governance.pdf', 214719, NULL, 'current',
        ARRAY['notes', 'revision-kit', 'auto-synced']::text[], false, true, '', 2026
 WHERE NOT EXISTS (
   SELECT 1 FROM public.papers WHERE course = 'cs' AND level = 'foundation' AND full_pdf_key = 'content/cs/foundation/introduction-to-law-and-governance.pdf'
@@ -344,7 +362,7 @@ WHERE NOT EXISTS (
 
 INSERT INTO public.papers (course, level, title, category, description, price_kes, preview_pdf_key, full_pdf_key, file_size_bytes, thumbnail_url, syllabus_version, tags, featured, published, sitting, year)
 SELECT 'cs', 'foundation', 'Principles of Accounting and Taxation — Notes + Revision Kit', 'notes', 'Principles of Accounting and Taxation — Notes + Revision Kit for CS Foundation Level. Includes concise notes, revision practice and tutor-written model answers for exam preparation in Kenya.', 150,
-       'content/cs/foundation/principles-of-accounting-and-taxation-preview.pdf', 'content/cs/foundation/principles-of-accounting-and-taxation.pdf', 207938, 'https://files.kasnebpapers.com/content/cs/foundation/principles-of-accounting-and-taxation-thumbnail.png', 'current',
+       'content/cs/foundation/principles-of-accounting-and-taxation-preview.pdf', 'content/cs/foundation/principles-of-accounting-and-taxation.pdf', 207938, NULL, 'current',
        ARRAY['notes', 'revision-kit', 'auto-synced']::text[], false, true, '', 2026
 WHERE NOT EXISTS (
   SELECT 1 FROM public.papers WHERE course = 'cs' AND level = 'foundation' AND full_pdf_key = 'content/cs/foundation/principles-of-accounting-and-taxation.pdf'
@@ -352,7 +370,7 @@ WHERE NOT EXISTS (
 
 INSERT INTO public.papers (course, level, title, category, description, price_kes, preview_pdf_key, full_pdf_key, file_size_bytes, thumbnail_url, syllabus_version, tags, featured, published, sitting, year)
 SELECT 'cs', 'foundation', 'Human Resources Management — Notes + Revision Kit', 'notes', 'Human Resources Management — Notes + Revision Kit for CS Foundation Level. Includes concise notes, revision practice and tutor-written model answers for exam preparation in Kenya.', 150,
-       'content/cs/foundation/human-resources-management-preview.pdf', 'content/cs/foundation/human-resources-management.pdf', 203242, 'https://files.kasnebpapers.com/content/cs/foundation/human-resources-management-thumbnail.png', 'current',
+       'content/cs/foundation/human-resources-management-preview.pdf', 'content/cs/foundation/human-resources-management.pdf', 203242, NULL, 'current',
        ARRAY['notes', 'revision-kit', 'auto-synced']::text[], false, true, '', 2026
 WHERE NOT EXISTS (
   SELECT 1 FROM public.papers WHERE course = 'cs' AND level = 'foundation' AND full_pdf_key = 'content/cs/foundation/human-resources-management.pdf'
@@ -360,7 +378,7 @@ WHERE NOT EXISTS (
 
 INSERT INTO public.papers (course, level, title, category, description, price_kes, preview_pdf_key, full_pdf_key, file_size_bytes, thumbnail_url, syllabus_version, tags, featured, published, sitting, year)
 SELECT 'cs', 'foundation', 'Information Communication Technology — Notes + Revision Kit', 'notes', 'Information Communication Technology — Notes + Revision Kit for CS Foundation Level. Includes concise notes, revision practice and tutor-written model answers for exam preparation in Kenya.', 150,
-       'content/cs/foundation/information-communication-technology-preview.pdf', 'content/cs/foundation/information-communication-technology.pdf', 202066, 'https://files.kasnebpapers.com/content/cs/foundation/information-communication-technology-thumbnail.png', 'current',
+       'content/cs/foundation/information-communication-technology-preview.pdf', 'content/cs/foundation/information-communication-technology.pdf', 202066, NULL, 'current',
        ARRAY['notes', 'revision-kit', 'auto-synced']::text[], false, true, '', 2026
 WHERE NOT EXISTS (
   SELECT 1 FROM public.papers WHERE course = 'cs' AND level = 'foundation' AND full_pdf_key = 'content/cs/foundation/information-communication-technology.pdf'
