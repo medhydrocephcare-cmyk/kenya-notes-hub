@@ -32,7 +32,10 @@ const PRICE_KES = 150;
 const CONTENT_PREFIX = "content/";
 
 const TITLE_OVERRIDES: Record<string, string> = {
+  "advanced-financial-management": "Advanced Financial Management",
+  "advanced-management-accounting": "Advanced Management Accounting",
   "advanced-taxation-business-income": "Advanced Taxation — Business Income",
+  "business-data-analytics": "Business Data Analytics",
   "business-environment": "Business Environment",
   "business-law": "Business Law",
   "business-mathematics-and-statistics": "Business Mathematics and Statistics",
@@ -56,6 +59,7 @@ const TITLE_OVERRIDES: Record<string, string> = {
   "introduction-to-law-and-ethics": "Introduction to Law and Ethics",
   "introduction-to-law-and-governance": "Introduction to Law and Governance",
   "law-governing-credit-practice": "Law Governing Credit Practice",
+  "leadership-and-management": "Leadership and Management",
   "communication-skills-and-records-management": "Communication Skills and Records Management",
   "management-accounting": "Management Accounting",
   "management-principles-and-practice": "Management Principles and Practice",
