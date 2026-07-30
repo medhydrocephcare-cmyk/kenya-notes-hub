@@ -44,7 +44,8 @@ export async function getDownloadUrl(payload: { reference: string; paperId: stri
   });
   if (!res.ok) throw new Error(await getErrorMessage(res, "Download URL failed"));
   const data = await res.json();
-  return { ...data, url: `${LOVABLE_BASE}${data.url}` }; // prepend base since url is relative
+  const url = typeof data.url === "string" && data.url.startsWith("http") ? data.url : `${LOVABLE_BASE}${data.url}`;
+  return { ...data, url };
 }
 
 export async function getMyOrders() {

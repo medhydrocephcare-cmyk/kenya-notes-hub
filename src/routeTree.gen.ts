@@ -9,52 +9,59 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as AccountRouteImport } from './routes/account'
-import { Route as AdminRouteImport } from './routes/admin'
-import { Route as AuthRouteImport } from './routes/auth'
-import { Route as CartRouteImport } from './routes/cart'
-import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
-import { Route as BlogIndexRouteImport } from './routes/blog/index'
-import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
+import { Route as SitemapPapersDotxmlRouteImport } from './routes/sitemap-papers[.]xml'
+import { Route as SitemapPagesDotxmlRouteImport } from './routes/sitemap-pages[.]xml'
+import { Route as SitemapCoursesDotxmlRouteImport } from './routes/sitemap-courses[.]xml'
+import { Route as SitemapBlogDotxmlRouteImport } from './routes/sitemap-blog[.]xml'
+import { Route as CheckoutRouteImport } from './routes/checkout'
+import { Route as CartRouteImport } from './routes/cart'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AdminRouteImport } from './routes/admin'
+import { Route as AccountRouteImport } from './routes/account'
+import { Route as IndexRouteImport } from './routes/index'
 import { Route as CoursesIndexRouteImport } from './routes/courses/index'
-import { Route as OrderReferenceRouteImport } from './routes/order/$reference'
+import { Route as BlogIndexRouteImport } from './routes/blog/index'
 import { Route as PapersPaperIdRouteImport } from './routes/papers/$paperId'
-import { Route as ApiAdminPapersRouteImport } from './routes/api/admin/papers'
+import { Route as OrderReferenceRouteImport } from './routes/order/$reference'
+import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
 import { Route as CoursesCourseSlugIndexRouteImport } from './routes/courses/$courseSlug/index'
-import { Route as ApiPublicCheckoutDownloadUrlRouteImport } from './routes/api/public/checkout/download-url'
-import { Route as ApiPublicCheckoutInitiateRouteImport } from './routes/api/public/checkout/initiate'
-import { Route as ApiPublicCheckoutMyOrdersRouteImport } from './routes/api/public/checkout/my-orders'
-import { Route as ApiPublicCheckoutStatusRouteImport } from './routes/api/public/checkout/status'
-import { Route as ApiPublicCloudcodePapersRouteImport } from './routes/api/public/cloudcode/papers'
+import { Route as ApiAdminPapersRouteImport } from './routes/api/admin/papers'
 import { Route as CoursesCourseSlugLevelSlugIndexRouteImport } from './routes/courses/$courseSlug/$levelSlug/index'
-import { Route as ApiPublicDownloadReferencePaperIdRouteImport } from './routes/api/public/download/$reference/$paperId'
+import { Route as ApiPublicCloudcodePapersRouteImport } from './routes/api/public/cloudcode/papers'
+import { Route as ApiPublicCheckoutStatusRouteImport } from './routes/api/public/checkout/status'
+import { Route as ApiPublicCheckoutMyOrdersRouteImport } from './routes/api/public/checkout/my-orders'
+import { Route as ApiPublicCheckoutInitiateRouteImport } from './routes/api/public/checkout/initiate'
+import { Route as ApiPublicCheckoutDownloadUrlRouteImport } from './routes/api/public/checkout/download-url'
+import { Route as ApiPublicAdminPricesRouteImport } from './routes/api/public/admin/prices'
+import { Route as ApiPublicAdminPapersRouteImport } from './routes/api/public/admin/papers'
+import { Route as ApiPublicAdminOrdersRouteImport } from './routes/api/public/admin/orders'
 import { Route as ApiPublicPalplussWebhookSecretRouteImport } from './routes/api/public/palpluss/webhook/$secret'
+import { Route as ApiPublicDownloadReferencePaperIdRouteImport } from './routes/api/public/download/$reference/$paperId'
 
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AccountRoute = AccountRouteImport.update({
-  id: '/account',
-  path: '/account',
+const SitemapPapersDotxmlRoute = SitemapPapersDotxmlRouteImport.update({
+  id: '/sitemap-papers.xml',
+  path: '/sitemap-papers.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminRoute = AdminRouteImport.update({
-  id: '/admin',
-  path: '/admin',
+const SitemapPagesDotxmlRoute = SitemapPagesDotxmlRouteImport.update({
+  id: '/sitemap-pages.xml',
+  path: '/sitemap-pages.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthRoute = AuthRouteImport.update({
-  id: '/auth',
-  path: '/auth',
+const SitemapCoursesDotxmlRoute = SitemapCoursesDotxmlRouteImport.update({
+  id: '/sitemap-courses.xml',
+  path: '/sitemap-courses.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CartRoute = CartRouteImport.update({
-  id: '/cart',
-  path: '/cart',
+const SitemapBlogDotxmlRoute = SitemapBlogDotxmlRouteImport.update({
+  id: '/sitemap-blog.xml',
+  path: '/sitemap-blog.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CheckoutRoute = CheckoutRouteImport.update({
@@ -62,19 +69,29 @@ const CheckoutRoute = CheckoutRouteImport.update({
   path: '/checkout',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
-  id: '/sitemap.xml',
-  path: '/sitemap.xml',
+const CartRoute = CartRouteImport.update({
+  id: '/cart',
+  path: '/cart',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BlogIndexRoute = BlogIndexRouteImport.update({
-  id: '/blog/',
-  path: '/blog/',
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BlogSlugRoute = BlogSlugRouteImport.update({
-  id: '/blog/$slug',
-  path: '/blog/$slug',
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountRoute = AccountRouteImport.update({
+  id: '/account',
+  path: '/account',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CoursesIndexRoute = CoursesIndexRouteImport.update({
@@ -82,9 +99,9 @@ const CoursesIndexRoute = CoursesIndexRouteImport.update({
   path: '/courses/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const OrderReferenceRoute = OrderReferenceRouteImport.update({
-  id: '/order/$reference',
-  path: '/order/$reference',
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PapersPaperIdRoute = PapersPaperIdRouteImport.update({
@@ -92,9 +109,14 @@ const PapersPaperIdRoute = PapersPaperIdRouteImport.update({
   path: '/papers/$paperId',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiAdminPapersRoute = ApiAdminPapersRouteImport.update({
-  id: '/api/admin/papers',
-  path: '/api/admin/papers',
+const OrderReferenceRoute = OrderReferenceRouteImport.update({
+  id: '/order/$reference',
+  path: '/order/$reference',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/blog/$slug',
+  path: '/blog/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CoursesCourseSlugIndexRoute = CoursesCourseSlugIndexRouteImport.update({
@@ -102,10 +124,32 @@ const CoursesCourseSlugIndexRoute = CoursesCourseSlugIndexRouteImport.update({
   path: '/courses/$courseSlug/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiPublicCheckoutDownloadUrlRoute =
-  ApiPublicCheckoutDownloadUrlRouteImport.update({
-    id: '/api/public/checkout/download-url',
-    path: '/api/public/checkout/download-url',
+const ApiAdminPapersRoute = ApiAdminPapersRouteImport.update({
+  id: '/api/admin/papers',
+  path: '/api/admin/papers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CoursesCourseSlugLevelSlugIndexRoute =
+  CoursesCourseSlugLevelSlugIndexRouteImport.update({
+    id: '/courses/$courseSlug/$levelSlug/',
+    path: '/courses/$courseSlug/$levelSlug/',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicCloudcodePapersRoute =
+  ApiPublicCloudcodePapersRouteImport.update({
+    id: '/api/public/cloudcode/papers',
+    path: '/api/public/cloudcode/papers',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicCheckoutStatusRoute = ApiPublicCheckoutStatusRouteImport.update({
+  id: '/api/public/checkout/status',
+  path: '/api/public/checkout/status',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicCheckoutMyOrdersRoute =
+  ApiPublicCheckoutMyOrdersRouteImport.update({
+    id: '/api/public/checkout/my-orders',
+    path: '/api/public/checkout/my-orders',
     getParentRoute: () => rootRouteImport,
   } as any)
 const ApiPublicCheckoutInitiateRoute =
@@ -114,39 +158,37 @@ const ApiPublicCheckoutInitiateRoute =
     path: '/api/public/checkout/initiate',
     getParentRoute: () => rootRouteImport,
   } as any)
-const ApiPublicCheckoutMyOrdersRoute =
-  ApiPublicCheckoutMyOrdersRouteImport.update({
-    id: '/api/public/checkout/my-orders',
-    path: '/api/public/checkout/my-orders',
+const ApiPublicCheckoutDownloadUrlRoute =
+  ApiPublicCheckoutDownloadUrlRouteImport.update({
+    id: '/api/public/checkout/download-url',
+    path: '/api/public/checkout/download-url',
     getParentRoute: () => rootRouteImport,
   } as any)
-const ApiPublicCheckoutStatusRoute = ApiPublicCheckoutStatusRouteImport.update({
-  id: '/api/public/checkout/status',
-  path: '/api/public/checkout/status',
+const ApiPublicAdminPricesRoute = ApiPublicAdminPricesRouteImport.update({
+  id: '/api/public/admin/prices',
+  path: '/api/public/admin/prices',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiPublicCloudcodePapersRoute =
-  ApiPublicCloudcodePapersRouteImport.update({
-    id: '/api/public/cloudcode/papers',
-    path: '/api/public/cloudcode/papers',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const CoursesCourseSlugLevelSlugIndexRoute =
-  CoursesCourseSlugLevelSlugIndexRouteImport.update({
-    id: '/courses/$courseSlug/$levelSlug/',
-    path: '/courses/$courseSlug/$levelSlug/',
+const ApiPublicAdminPapersRoute = ApiPublicAdminPapersRouteImport.update({
+  id: '/api/public/admin/papers',
+  path: '/api/public/admin/papers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicAdminOrdersRoute = ApiPublicAdminOrdersRouteImport.update({
+  id: '/api/public/admin/orders',
+  path: '/api/public/admin/orders',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicPalplussWebhookSecretRoute =
+  ApiPublicPalplussWebhookSecretRouteImport.update({
+    id: '/api/public/palpluss/webhook/$secret',
+    path: '/api/public/palpluss/webhook/$secret',
     getParentRoute: () => rootRouteImport,
   } as any)
 const ApiPublicDownloadReferencePaperIdRoute =
   ApiPublicDownloadReferencePaperIdRouteImport.update({
     id: '/api/public/download/$reference/$paperId',
     path: '/api/public/download/$reference/$paperId',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const ApiPublicPalplussWebhookSecretRoute =
-  ApiPublicPalplussWebhookSecretRouteImport.update({
-    id: '/api/public/palpluss/webhook/$secret',
-    path: '/api/public/palpluss/webhook/$secret',
     getParentRoute: () => rootRouteImport,
   } as any)
 
@@ -157,6 +199,10 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
+  '/sitemap-blog.xml': typeof SitemapBlogDotxmlRoute
+  '/sitemap-courses.xml': typeof SitemapCoursesDotxmlRoute
+  '/sitemap-pages.xml': typeof SitemapPagesDotxmlRoute
+  '/sitemap-papers.xml': typeof SitemapPapersDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/order/$reference': typeof OrderReferenceRoute
@@ -165,6 +211,9 @@ export interface FileRoutesByFullPath {
   '/courses/': typeof CoursesIndexRoute
   '/api/admin/papers': typeof ApiAdminPapersRoute
   '/courses/$courseSlug/': typeof CoursesCourseSlugIndexRoute
+  '/api/public/admin/orders': typeof ApiPublicAdminOrdersRoute
+  '/api/public/admin/papers': typeof ApiPublicAdminPapersRoute
+  '/api/public/admin/prices': typeof ApiPublicAdminPricesRoute
   '/api/public/checkout/download-url': typeof ApiPublicCheckoutDownloadUrlRoute
   '/api/public/checkout/initiate': typeof ApiPublicCheckoutInitiateRoute
   '/api/public/checkout/my-orders': typeof ApiPublicCheckoutMyOrdersRoute
@@ -181,6 +230,10 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
+  '/sitemap-blog.xml': typeof SitemapBlogDotxmlRoute
+  '/sitemap-courses.xml': typeof SitemapCoursesDotxmlRoute
+  '/sitemap-pages.xml': typeof SitemapPagesDotxmlRoute
+  '/sitemap-papers.xml': typeof SitemapPapersDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/order/$reference': typeof OrderReferenceRoute
@@ -189,6 +242,9 @@ export interface FileRoutesByTo {
   '/courses': typeof CoursesIndexRoute
   '/api/admin/papers': typeof ApiAdminPapersRoute
   '/courses/$courseSlug': typeof CoursesCourseSlugIndexRoute
+  '/api/public/admin/orders': typeof ApiPublicAdminOrdersRoute
+  '/api/public/admin/papers': typeof ApiPublicAdminPapersRoute
+  '/api/public/admin/prices': typeof ApiPublicAdminPricesRoute
   '/api/public/checkout/download-url': typeof ApiPublicCheckoutDownloadUrlRoute
   '/api/public/checkout/initiate': typeof ApiPublicCheckoutInitiateRoute
   '/api/public/checkout/my-orders': typeof ApiPublicCheckoutMyOrdersRoute
@@ -206,6 +262,10 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
+  '/sitemap-blog.xml': typeof SitemapBlogDotxmlRoute
+  '/sitemap-courses.xml': typeof SitemapCoursesDotxmlRoute
+  '/sitemap-pages.xml': typeof SitemapPagesDotxmlRoute
+  '/sitemap-papers.xml': typeof SitemapPapersDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/order/$reference': typeof OrderReferenceRoute
@@ -214,6 +274,9 @@ export interface FileRoutesById {
   '/courses/': typeof CoursesIndexRoute
   '/api/admin/papers': typeof ApiAdminPapersRoute
   '/courses/$courseSlug/': typeof CoursesCourseSlugIndexRoute
+  '/api/public/admin/orders': typeof ApiPublicAdminOrdersRoute
+  '/api/public/admin/papers': typeof ApiPublicAdminPapersRoute
+  '/api/public/admin/prices': typeof ApiPublicAdminPricesRoute
   '/api/public/checkout/download-url': typeof ApiPublicCheckoutDownloadUrlRoute
   '/api/public/checkout/initiate': typeof ApiPublicCheckoutInitiateRoute
   '/api/public/checkout/my-orders': typeof ApiPublicCheckoutMyOrdersRoute
@@ -232,6 +295,10 @@ export interface FileRouteTypes {
     | '/auth'
     | '/cart'
     | '/checkout'
+    | '/sitemap-blog.xml'
+    | '/sitemap-courses.xml'
+    | '/sitemap-pages.xml'
+    | '/sitemap-papers.xml'
     | '/sitemap.xml'
     | '/blog/$slug'
     | '/order/$reference'
@@ -240,6 +307,9 @@ export interface FileRouteTypes {
     | '/courses/'
     | '/api/admin/papers'
     | '/courses/$courseSlug/'
+    | '/api/public/admin/orders'
+    | '/api/public/admin/papers'
+    | '/api/public/admin/prices'
     | '/api/public/checkout/download-url'
     | '/api/public/checkout/initiate'
     | '/api/public/checkout/my-orders'
@@ -256,6 +326,10 @@ export interface FileRouteTypes {
     | '/auth'
     | '/cart'
     | '/checkout'
+    | '/sitemap-blog.xml'
+    | '/sitemap-courses.xml'
+    | '/sitemap-pages.xml'
+    | '/sitemap-papers.xml'
     | '/sitemap.xml'
     | '/blog/$slug'
     | '/order/$reference'
@@ -264,6 +338,9 @@ export interface FileRouteTypes {
     | '/courses'
     | '/api/admin/papers'
     | '/courses/$courseSlug'
+    | '/api/public/admin/orders'
+    | '/api/public/admin/papers'
+    | '/api/public/admin/prices'
     | '/api/public/checkout/download-url'
     | '/api/public/checkout/initiate'
     | '/api/public/checkout/my-orders'
@@ -280,6 +357,10 @@ export interface FileRouteTypes {
     | '/auth'
     | '/cart'
     | '/checkout'
+    | '/sitemap-blog.xml'
+    | '/sitemap-courses.xml'
+    | '/sitemap-pages.xml'
+    | '/sitemap-papers.xml'
     | '/sitemap.xml'
     | '/blog/$slug'
     | '/order/$reference'
@@ -288,6 +369,9 @@ export interface FileRouteTypes {
     | '/courses/'
     | '/api/admin/papers'
     | '/courses/$courseSlug/'
+    | '/api/public/admin/orders'
+    | '/api/public/admin/papers'
+    | '/api/public/admin/prices'
     | '/api/public/checkout/download-url'
     | '/api/public/checkout/initiate'
     | '/api/public/checkout/my-orders'
@@ -305,6 +389,10 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   CartRoute: typeof CartRoute
   CheckoutRoute: typeof CheckoutRoute
+  SitemapBlogDotxmlRoute: typeof SitemapBlogDotxmlRoute
+  SitemapCoursesDotxmlRoute: typeof SitemapCoursesDotxmlRoute
+  SitemapPagesDotxmlRoute: typeof SitemapPagesDotxmlRoute
+  SitemapPapersDotxmlRoute: typeof SitemapPapersDotxmlRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   BlogSlugRoute: typeof BlogSlugRoute
   OrderReferenceRoute: typeof OrderReferenceRoute
@@ -313,6 +401,9 @@ export interface RootRouteChildren {
   CoursesIndexRoute: typeof CoursesIndexRoute
   ApiAdminPapersRoute: typeof ApiAdminPapersRoute
   CoursesCourseSlugIndexRoute: typeof CoursesCourseSlugIndexRoute
+  ApiPublicAdminOrdersRoute: typeof ApiPublicAdminOrdersRoute
+  ApiPublicAdminPapersRoute: typeof ApiPublicAdminPapersRoute
+  ApiPublicAdminPricesRoute: typeof ApiPublicAdminPricesRoute
   ApiPublicCheckoutDownloadUrlRoute: typeof ApiPublicCheckoutDownloadUrlRoute
   ApiPublicCheckoutInitiateRoute: typeof ApiPublicCheckoutInitiateRoute
   ApiPublicCheckoutMyOrdersRoute: typeof ApiPublicCheckoutMyOrdersRoute
@@ -325,39 +416,39 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/account': {
-      id: '/account'
-      path: '/account'
-      fullPath: '/account'
-      preLoaderRoute: typeof AccountRouteImport
+    '/sitemap-papers.xml': {
+      id: '/sitemap-papers.xml'
+      path: '/sitemap-papers.xml'
+      fullPath: '/sitemap-papers.xml'
+      preLoaderRoute: typeof SitemapPapersDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin': {
-      id: '/admin'
-      path: '/admin'
-      fullPath: '/admin'
-      preLoaderRoute: typeof AdminRouteImport
+    '/sitemap-pages.xml': {
+      id: '/sitemap-pages.xml'
+      path: '/sitemap-pages.xml'
+      fullPath: '/sitemap-pages.xml'
+      preLoaderRoute: typeof SitemapPagesDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/auth': {
-      id: '/auth'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthRouteImport
+    '/sitemap-courses.xml': {
+      id: '/sitemap-courses.xml'
+      path: '/sitemap-courses.xml'
+      fullPath: '/sitemap-courses.xml'
+      preLoaderRoute: typeof SitemapCoursesDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/cart': {
-      id: '/cart'
-      path: '/cart'
-      fullPath: '/cart'
-      preLoaderRoute: typeof CartRouteImport
+    '/sitemap-blog.xml': {
+      id: '/sitemap-blog.xml'
+      path: '/sitemap-blog.xml'
+      fullPath: '/sitemap-blog.xml'
+      preLoaderRoute: typeof SitemapBlogDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/checkout': {
@@ -367,25 +458,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CheckoutRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/sitemap.xml': {
-      id: '/sitemap.xml'
-      path: '/sitemap.xml'
-      fullPath: '/sitemap.xml'
-      preLoaderRoute: typeof SitemapDotxmlRouteImport
+    '/cart': {
+      id: '/cart'
+      path: '/cart'
+      fullPath: '/cart'
+      preLoaderRoute: typeof CartRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/blog/': {
-      id: '/blog/'
-      path: '/blog'
-      fullPath: '/blog/'
-      preLoaderRoute: typeof BlogIndexRouteImport
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/blog/$slug': {
-      id: '/blog/$slug'
-      path: '/blog/$slug'
-      fullPath: '/blog/$slug'
-      preLoaderRoute: typeof BlogSlugRouteImport
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/account': {
+      id: '/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AccountRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/courses/': {
@@ -395,11 +500,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CoursesIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/order/$reference': {
-      id: '/order/$reference'
-      path: '/order/$reference'
-      fullPath: '/order/$reference'
-      preLoaderRoute: typeof OrderReferenceRouteImport
+    '/blog/': {
+      id: '/blog/'
+      path: '/blog'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof BlogIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/papers/$paperId': {
@@ -409,11 +514,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PapersPaperIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/admin/papers': {
-      id: '/api/admin/papers'
-      path: '/api/admin/papers'
-      fullPath: '/api/admin/papers'
-      preLoaderRoute: typeof ApiAdminPapersRouteImport
+    '/order/$reference': {
+      id: '/order/$reference'
+      path: '/order/$reference'
+      fullPath: '/order/$reference'
+      preLoaderRoute: typeof OrderReferenceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/blog/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/courses/$courseSlug/': {
@@ -423,39 +535,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CoursesCourseSlugIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/public/checkout/download-url': {
-      id: '/api/public/checkout/download-url'
-      path: '/api/public/checkout/download-url'
-      fullPath: '/api/public/checkout/download-url'
-      preLoaderRoute: typeof ApiPublicCheckoutDownloadUrlRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/public/checkout/initiate': {
-      id: '/api/public/checkout/initiate'
-      path: '/api/public/checkout/initiate'
-      fullPath: '/api/public/checkout/initiate'
-      preLoaderRoute: typeof ApiPublicCheckoutInitiateRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/public/checkout/my-orders': {
-      id: '/api/public/checkout/my-orders'
-      path: '/api/public/checkout/my-orders'
-      fullPath: '/api/public/checkout/my-orders'
-      preLoaderRoute: typeof ApiPublicCheckoutMyOrdersRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/public/checkout/status': {
-      id: '/api/public/checkout/status'
-      path: '/api/public/checkout/status'
-      fullPath: '/api/public/checkout/status'
-      preLoaderRoute: typeof ApiPublicCheckoutStatusRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/public/cloudcode/papers': {
-      id: '/api/public/cloudcode/papers'
-      path: '/api/public/cloudcode/papers'
-      fullPath: '/api/public/cloudcode/papers'
-      preLoaderRoute: typeof ApiPublicCloudcodePapersRouteImport
+    '/api/admin/papers': {
+      id: '/api/admin/papers'
+      path: '/api/admin/papers'
+      fullPath: '/api/admin/papers'
+      preLoaderRoute: typeof ApiAdminPapersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/courses/$courseSlug/$levelSlug/': {
@@ -465,11 +549,60 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CoursesCourseSlugLevelSlugIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/public/download/$reference/$paperId': {
-      id: '/api/public/download/$reference/$paperId'
-      path: '/api/public/download/$reference/$paperId'
-      fullPath: '/api/public/download/$reference/$paperId'
-      preLoaderRoute: typeof ApiPublicDownloadReferencePaperIdRouteImport
+    '/api/public/cloudcode/papers': {
+      id: '/api/public/cloudcode/papers'
+      path: '/api/public/cloudcode/papers'
+      fullPath: '/api/public/cloudcode/papers'
+      preLoaderRoute: typeof ApiPublicCloudcodePapersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/checkout/status': {
+      id: '/api/public/checkout/status'
+      path: '/api/public/checkout/status'
+      fullPath: '/api/public/checkout/status'
+      preLoaderRoute: typeof ApiPublicCheckoutStatusRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/checkout/my-orders': {
+      id: '/api/public/checkout/my-orders'
+      path: '/api/public/checkout/my-orders'
+      fullPath: '/api/public/checkout/my-orders'
+      preLoaderRoute: typeof ApiPublicCheckoutMyOrdersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/checkout/initiate': {
+      id: '/api/public/checkout/initiate'
+      path: '/api/public/checkout/initiate'
+      fullPath: '/api/public/checkout/initiate'
+      preLoaderRoute: typeof ApiPublicCheckoutInitiateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/checkout/download-url': {
+      id: '/api/public/checkout/download-url'
+      path: '/api/public/checkout/download-url'
+      fullPath: '/api/public/checkout/download-url'
+      preLoaderRoute: typeof ApiPublicCheckoutDownloadUrlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/admin/prices': {
+      id: '/api/public/admin/prices'
+      path: '/api/public/admin/prices'
+      fullPath: '/api/public/admin/prices'
+      preLoaderRoute: typeof ApiPublicAdminPricesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/admin/papers': {
+      id: '/api/public/admin/papers'
+      path: '/api/public/admin/papers'
+      fullPath: '/api/public/admin/papers'
+      preLoaderRoute: typeof ApiPublicAdminPapersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/admin/orders': {
+      id: '/api/public/admin/orders'
+      path: '/api/public/admin/orders'
+      fullPath: '/api/public/admin/orders'
+      preLoaderRoute: typeof ApiPublicAdminOrdersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/palpluss/webhook/$secret': {
@@ -477,6 +610,13 @@ declare module '@tanstack/react-router' {
       path: '/api/public/palpluss/webhook/$secret'
       fullPath: '/api/public/palpluss/webhook/$secret'
       preLoaderRoute: typeof ApiPublicPalplussWebhookSecretRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/download/$reference/$paperId': {
+      id: '/api/public/download/$reference/$paperId'
+      path: '/api/public/download/$reference/$paperId'
+      fullPath: '/api/public/download/$reference/$paperId'
+      preLoaderRoute: typeof ApiPublicDownloadReferencePaperIdRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -489,6 +629,10 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   CartRoute: CartRoute,
   CheckoutRoute: CheckoutRoute,
+  SitemapBlogDotxmlRoute: SitemapBlogDotxmlRoute,
+  SitemapCoursesDotxmlRoute: SitemapCoursesDotxmlRoute,
+  SitemapPagesDotxmlRoute: SitemapPagesDotxmlRoute,
+  SitemapPapersDotxmlRoute: SitemapPapersDotxmlRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   BlogSlugRoute: BlogSlugRoute,
   OrderReferenceRoute: OrderReferenceRoute,
@@ -497,6 +641,9 @@ const rootRouteChildren: RootRouteChildren = {
   CoursesIndexRoute: CoursesIndexRoute,
   ApiAdminPapersRoute: ApiAdminPapersRoute,
   CoursesCourseSlugIndexRoute: CoursesCourseSlugIndexRoute,
+  ApiPublicAdminOrdersRoute: ApiPublicAdminOrdersRoute,
+  ApiPublicAdminPapersRoute: ApiPublicAdminPapersRoute,
+  ApiPublicAdminPricesRoute: ApiPublicAdminPricesRoute,
   ApiPublicCheckoutDownloadUrlRoute: ApiPublicCheckoutDownloadUrlRoute,
   ApiPublicCheckoutInitiateRoute: ApiPublicCheckoutInitiateRoute,
   ApiPublicCheckoutMyOrdersRoute: ApiPublicCheckoutMyOrdersRoute,

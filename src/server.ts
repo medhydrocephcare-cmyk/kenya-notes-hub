@@ -35,6 +35,37 @@ async function normalizeCatastrophicSsrResponse(response: Response): Promise<Res
   });
 }
 
+function secondsUntilKenyaMidnight(now = new Date()) {
+  const kenyaNowMs = now.getTime() + 3 * 60 * 60 * 1000;
+  const kenyaNow = new Date(kenyaNowMs);
+  const nextKenyaMidnightMs = Date.UTC(
+    kenyaNow.getUTCFullYear(),
+    kenyaNow.getUTCMonth(),
+    kenyaNow.getUTCDate() + 1,
+    0,
+    0,
+    0,
+  );
+  return Math.max(60, Math.floor((nextKenyaMidnightMs - kenyaNowMs) / 1000));
+}
+
+function isPublicCacheablePage(request: Request, response: Response) {
+  if (request.method !== "GET" || response.status !== 200) return false;
+  const url = new URL(request.url);
+  if (url.pathname.startsWith("/api/") || url.pathname.includes(".")) return false;
+  if (["/admin", "/account", "/auth", "/cart", "/checkout"].some((path) => url.pathname === path || url.pathname.startsWith(`${path}/`))) return false;
+  if (url.pathname.startsWith("/order/")) return false;
+  const existing = response.headers.get("cache-control") ?? "";
+  return !/no-store|private/i.test(existing);
+}
+
+function withDailyPublicCache(request: Request, response: Response) {
+  if (!isPublicCacheablePage(request, response)) return response;
+  const headers = new Headers(response.headers);
+  headers.set("Cache-Control", `public, max-age=${secondsUntilKenyaMidnight()}, stale-while-revalidate=3600`);
+  return new Response(response.body, { status: response.status, statusText: response.statusText, headers });
+}
+
 function isH3SwallowedErrorBody(body: string): boolean {
   try {
     const payload = JSON.parse(body) as { unhandled?: unknown; message?: unknown };
@@ -49,7 +80,7 @@ export default {
     try {
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
-      return await normalizeCatastrophicSsrResponse(response);
+      return withDailyPublicCache(request, await normalizeCatastrophicSsrResponse(response));
     } catch (error) {
       console.error(error);
       return new Response(renderErrorPage(), {

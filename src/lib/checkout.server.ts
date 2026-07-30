@@ -74,7 +74,7 @@ export async function getPaidDownloadFile(reference: string, paperId: string) {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const { data: order, error: orderError } = await supabaseAdmin
     .from("orders")
-    .select("id, status, user_id, order_items(paper_id, file_key)")
+    .select("id, status, user_id, order_items(paper_id, title, file_key)")
     .eq("reference", reference)
     .maybeSingle();
   if (orderError) throw new Error(orderError.message);
@@ -84,6 +84,15 @@ export async function getPaidDownloadFile(reference: string, paperId: string) {
   const item = order.order_items?.find((i: { paper_id: string }) => i.paper_id === paperId);
   if (!item) throw new Error("Paper not part of order");
 
+  const itemKey = (item as { file_key: string | null }).file_key;
+  const itemTitle = (item as { title?: string | null }).title ?? "Kasneb paper";
+
+  const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+  if (!uuidPattern.test(paperId)) {
+    if (!itemKey) throw new Error("File not available yet");
+    return { key: itemKey, title: itemTitle, userId: order.user_id };
+  }
+
   const { data: paper, error: paperError } = await supabaseAdmin
     .from("papers")
     .select("title, full_pdf_key")
@@ -91,11 +100,10 @@ export async function getPaidDownloadFile(reference: string, paperId: string) {
     .maybeSingle();
   if (paperError) throw new Error(paperError.message);
 
-  const itemKey = (item as { file_key: string | null }).file_key;
   const key = paper?.full_pdf_key || itemKey;
   if (!key) throw new Error("File not available yet");
 
-  return { key, title: paper?.title ?? "Kasneb paper", userId: order.user_id };
+  return { key, title: paper?.title ?? itemTitle, userId: order.user_id };
 }
 // ---------------- Core business ops (host-agnostic) ----------------
 
