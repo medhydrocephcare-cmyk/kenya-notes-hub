@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { getCourse, getLevel } from "@/lib/data";
-import { getPaperIndexContent } from "@/lib/papers.functions";
+import { getPaperIndexContent, getPaperReviewsSummary } from "@/lib/papers.functions";
 import { allPapersQueryOptions } from "@/lib/papers.queries";
 import { findPaper, sittingLabel } from "@/lib/paper-catalog";
 import { SITE, SITE_URL } from "@/lib/site-config";
@@ -41,6 +41,7 @@ export const Route = createFileRoute("/papers/$paperId")({
     const level = getLevel(paper.courseSlug, paper.levelSlug);
     if (!course || !level) throw notFound();
     const previewText = await getPaperIndexContent({ data: { paperId: paper.id } });
+    const reviewsSummary = await getPaperReviewsSummary({ data: { paperId: paper.id } });
     const canonicalPath = paperPath(paper);
     return {
       paperId: paper.id,
@@ -52,6 +53,7 @@ export const Route = createFileRoute("/papers/$paperId")({
       price: paper.price,
       thumbnailUrl: paper.thumbnailUrl,
       previewText,
+      reviewsSummary,
     };
   },
   head: ({ loaderData }) => ({
@@ -91,6 +93,29 @@ export const Route = createFileRoute("/papers/$paperId")({
                 availability: "https://schema.org/InStock",
                 url: `${SITE_URL}${loaderData.canonicalPath}`,
               },
+              ...(loaderData.reviewsSummary
+                ? {
+                    aggregateRating: {
+                      "@type": "AggregateRating",
+                      ratingValue: loaderData.reviewsSummary.ratingValue,
+                      reviewCount: loaderData.reviewsSummary.ratingCount,
+                      bestRating: 5,
+                      worstRating: 1,
+                    },
+                    review: loaderData.reviewsSummary.reviews.map((r) => ({
+                      "@type": "Review",
+                      author: { "@type": "Person", name: r.author },
+                      datePublished: r.createdAt,
+                      reviewBody: r.comment,
+                      reviewRating: {
+                        "@type": "Rating",
+                        ratingValue: r.rating,
+                        bestRating: 5,
+                        worstRating: 1,
+                      },
+                    })),
+                  }
+                : {}),
             }),
           },
           ...(loaderData.previewText

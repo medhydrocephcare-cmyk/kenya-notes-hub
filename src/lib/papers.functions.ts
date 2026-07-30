@@ -63,6 +63,35 @@ export const getCatalogStats = createServerFn({ method: "GET" }).handler(async (
   };
 });
 
+/** Public: aggregate rating + a handful of reviews, for the paper detail page's Product structured data. */
+export const getPaperReviewsSummary = createServerFn({ method: "GET" })
+  .inputValidator((data: unknown) => z.object({ paperId: z.string().min(1) }).parse(data))
+  .handler(async ({ data }) => {
+    const supabase = serverPublishableClient();
+    const { data: rows, error } = await supabase
+      .from("paper_reviews")
+      .select("author_name, rating, comment, created_at")
+      .eq("paper_id", data.paperId)
+      .eq("approved", true)
+      .order("created_at", { ascending: false })
+      .limit(20);
+    if (error) throw new Error(error.message);
+    const reviews = rows ?? [];
+    if (reviews.length === 0) return null;
+    const ratingCount = reviews.length;
+    const ratingValue = reviews.reduce((sum, r) => sum + r.rating, 0) / ratingCount;
+    return {
+      ratingValue: Math.round(ratingValue * 10) / 10,
+      ratingCount,
+      reviews: reviews.slice(0, 5).map((r) => ({
+        author: r.author_name,
+        rating: r.rating,
+        comment: r.comment,
+        createdAt: r.created_at,
+      })),
+    };
+  });
+
 /** Public: presigned URL for a paper's free preview PDF — no payment required. */
 export const getPreviewUrl = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => z.object({ paperId: z.string().min(1) }).parse(data))
