@@ -11,6 +11,8 @@ import { getPaperIndexContent, getPaperReviewsSummary } from "@/lib/papers.funct
 import { allPapersQueryOptions } from "@/lib/papers.queries";
 import { findPaper, sittingLabel } from "@/lib/paper-catalog";
 import { SITE, SITE_URL } from "@/lib/site-config";
+import { digitalOffer } from "@/lib/product-schema";
+
 import { paperPath, paperUrlParam } from "@/lib/paper-slugs";
 import {
   Download,
@@ -86,13 +88,11 @@ export const Route = createFileRoute("/papers/$paperId")({
               category: `${loaderData.course.code} ${loaderData.level.name} study material`,
               image: loaderData.thumbnailUrl?.startsWith("https://") ? loaderData.thumbnailUrl : undefined,
               brand: { "@type": "Brand", name: SITE.name },
-              offers: {
-                "@type": "Offer",
-                priceCurrency: "KES",
+              offers: digitalOffer({
                 price: loaderData.price,
-                availability: "https://schema.org/InStock",
                 url: `${SITE_URL}${loaderData.canonicalPath}`,
-              },
+              }),
+
               ...(loaderData.reviewsSummary
                 ? {
                     aggregateRating: {
