@@ -12,6 +12,8 @@ import { allPapersQueryOptions } from "@/lib/papers.queries";
 import { findPaper, sittingLabel } from "@/lib/paper-catalog";
 import { SITE, SITE_URL } from "@/lib/site-config";
 import { digitalOffer } from "@/lib/product-schema";
+import { subjectImageFor } from "@/lib/subject-image";
+
 
 import { paperPath, paperUrlParam } from "@/lib/paper-slugs";
 import {
@@ -42,9 +44,18 @@ export const Route = createFileRoute("/papers/$paperId")({
     const course = getCourse(paper.courseSlug);
     const level = getLevel(paper.courseSlug, paper.levelSlug);
     if (!course || !level) throw notFound();
-    const previewText = await getPaperIndexContent({ data: { paperId: paper.id } });
-    const reviewsSummary = await getPaperReviewsSummary({ data: { paperId: paper.id } });
+    // Fetch preview text + reviews in parallel instead of sequentially (faster TTFB).
+    const [rawPreviewText, reviewsSummary] = await Promise.all([
+      getPaperIndexContent({ data: { paperId: paper.id } }),
+      getPaperReviewsSummary({ data: { paperId: paper.id } }),
+    ]);
+    // Cap indexed text so the SSR payload stays small; crawlers only need a sample.
+    const previewText = rawPreviewText ? rawPreviewText.slice(0, 8000) : "";
     const canonicalPath = paperPath(paper);
+    // Google Merchant listings require an `image` on every Product — always resolve one.
+    const rawImage = paper.thumbnailUrl?.startsWith("https://")
+      ? paper.thumbnailUrl
+      : `${SITE_URL}${subjectImageFor(paper.title, paper.courseSlug)}`;
     return {
       paperId: paper.id,
       canonicalPath,
@@ -54,9 +65,11 @@ export const Route = createFileRoute("/papers/$paperId")({
       seoDesc: paper.description,
       price: paper.price,
       thumbnailUrl: paper.thumbnailUrl,
+      imageUrl: rawImage,
       previewText,
       reviewsSummary,
     };
+
   },
   head: ({ loaderData }) => ({
     meta: loaderData
@@ -68,12 +81,9 @@ export const Route = createFileRoute("/papers/$paperId")({
           { property: "og:type", content: "product" },
           { property: "og:url", content: `${SITE_URL}${loaderData.canonicalPath}` },
           { name: "twitter:card", content: "summary_large_image" },
-          ...(loaderData.thumbnailUrl?.startsWith("https://")
-            ? [
-                { property: "og:image", content: loaderData.thumbnailUrl },
-                { name: "twitter:image", content: loaderData.thumbnailUrl },
-              ]
-            : []),
+          { property: "og:image", content: loaderData.imageUrl },
+          { name: "twitter:image", content: loaderData.imageUrl },
+
         ]
       : [{ title: "Paper not found" }, { name: "robots", content: "noindex" }],
     scripts: loaderData
@@ -86,7 +96,7 @@ export const Route = createFileRoute("/papers/$paperId")({
               name: loaderData.seoTitle,
               description: loaderData.seoDesc,
               category: `${loaderData.course.code} ${loaderData.level.name} study material`,
-              image: loaderData.thumbnailUrl?.startsWith("https://") ? loaderData.thumbnailUrl : undefined,
+              image: [loaderData.imageUrl],
               brand: { "@type": "Brand", name: SITE.name },
               offers: digitalOffer({
                 price: loaderData.price,

@@ -14,18 +14,22 @@ import { serverPublishableClient } from "./papers.server";
 
 type PaperRow = Database["public"]["Tables"]["papers"]["Row"];
 
-/** Public: list every published paper. */
+/** Public: list every published paper (memoized per server instance for speed). */
 export const listPapers = createServerFn({ method: "GET" }).handler(async () => {
-  const supabase = serverPublishableClient();
-  const { data, error } = await supabase
-    .from("papers")
-    .select("id, course, level, title, description, price_kes, discount_price_kes, sitting, updated_at, created_at, category, pages, file_size_bytes, thumbnail_url, syllabus_version, tags, download_count, preview_pdf_key, full_pdf_key, featured, year, published")
-    .eq("published", true)
-    .order("featured", { ascending: false })
-    .order("updated_at", { ascending: false });
-  if (error) throw new Error(error.message);
-  return (data ?? []).map((row) => rowToPaper(row as PaperRow));
+  const { cached } = await import("./server-cache");
+  return cached("papers:all", 120_000, async () => {
+    const supabase = serverPublishableClient();
+    const { data, error } = await supabase
+      .from("papers")
+      .select("id, course, level, title, description, price_kes, discount_price_kes, sitting, updated_at, created_at, category, pages, file_size_bytes, thumbnail_url, syllabus_version, tags, download_count, preview_pdf_key, full_pdf_key, featured, year, published")
+      .eq("published", true)
+      .order("featured", { ascending: false })
+      .order("updated_at", { ascending: false });
+    if (error) throw new Error(error.message);
+    return (data ?? []).map((row) => rowToPaper(row as PaperRow));
+  });
 });
+
 
 /** Public: heavy indexed PDF text only for the opened paper page. */
 export const getPaperIndexContent = createServerFn({ method: "GET" })
@@ -42,26 +46,30 @@ export const getPaperIndexContent = createServerFn({ method: "GET" })
     return paper?.preview_text ?? "";
   });
 
-/** Public: catalog-wide stats calculated from real DB rows. */
+/** Public: catalog-wide stats calculated from real DB rows (memoized). */
 export const getCatalogStats = createServerFn({ method: "GET" }).handler(async () => {
-  const supabase = serverPublishableClient();
-  const { data, error } = await supabase
-    .from("papers")
-    .select("course, updated_at")
-    .eq("published", true);
-  if (error) throw new Error(error.message);
-  const rows = data ?? [];
-  const courses = new Set(rows.map((r) => r.course));
-  const latest = rows.reduce<string | null>(
-    (acc, r) => (!acc || r.updated_at > acc ? r.updated_at : acc),
-    null,
-  );
-  return {
-    totalPapers: rows.length,
-    totalCourses: courses.size,
-    latestUpdate: latest,
-  };
+  const { cached } = await import("./server-cache");
+  return cached("papers:stats", 120_000, async () => {
+    const supabase = serverPublishableClient();
+    const { data, error } = await supabase
+      .from("papers")
+      .select("course, updated_at")
+      .eq("published", true);
+    if (error) throw new Error(error.message);
+    const rows = data ?? [];
+    const courses = new Set(rows.map((r) => r.course));
+    const latest = rows.reduce<string | null>(
+      (acc, r) => (!acc || r.updated_at > acc ? r.updated_at : acc),
+      null,
+    );
+    return {
+      totalPapers: rows.length,
+      totalCourses: courses.size,
+      latestUpdate: latest,
+    };
+  });
 });
+
 
 /** Public: aggregate rating + a handful of reviews, for the paper detail page's Product structured data. */
 export const getPaperReviewsSummary = createServerFn({ method: "GET" })
