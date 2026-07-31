@@ -79,12 +79,9 @@ export const Route = createFileRoute("/papers/$paperId")({
           { property: "og:type", content: "product" },
           { property: "og:url", content: `${SITE_URL}${loaderData.canonicalPath}` },
           { name: "twitter:card", content: "summary_large_image" },
-          ...(loaderData.thumbnailUrl?.startsWith("https://")
-            ? [
-                { property: "og:image", content: loaderData.thumbnailUrl },
-                { name: "twitter:image", content: loaderData.thumbnailUrl },
-              ]
-            : []),
+          { property: "og:image", content: loaderData.imageUrl },
+          { name: "twitter:image", content: loaderData.imageUrl },
+
         ]
       : [{ title: "Paper not found" }, { name: "robots", content: "noindex" }],
     scripts: loaderData
