@@ -94,7 +94,7 @@ export const Route = createFileRoute("/papers/$paperId")({
               name: loaderData.seoTitle,
               description: loaderData.seoDesc,
               category: `${loaderData.course.code} ${loaderData.level.name} study material`,
-              image: loaderData.thumbnailUrl?.startsWith("https://") ? loaderData.thumbnailUrl : undefined,
+              image: [loaderData.imageUrl],
               brand: { "@type": "Brand", name: SITE.name },
               offers: digitalOffer({
                 price: loaderData.price,
