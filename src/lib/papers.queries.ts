@@ -4,13 +4,17 @@ import { getCatalogStats, listPapers } from "./papers.functions";
 export const allPapersQueryOptions = queryOptions({
   queryKey: ["papers", "all"],
   queryFn: () => listPapers(),
-  staleTime: 60_000,
-  gcTime: 10 * 60_000,
+  staleTime: 10 * 60_000,
+  gcTime: 60 * 60_000,
+  refetchOnWindowFocus: false,
+  refetchOnMount: false,
 });
 
 export const catalogStatsQueryOptions = queryOptions({
   queryKey: ["papers", "stats"],
   queryFn: () => getCatalogStats(),
-  staleTime: 60_000,
-  gcTime: 10 * 60_000,
+  staleTime: 10 * 60_000,
+  gcTime: 60 * 60_000,
+  refetchOnWindowFocus: false,
+  refetchOnMount: false,
 });
