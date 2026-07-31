@@ -46,26 +46,30 @@ export const getPaperIndexContent = createServerFn({ method: "GET" })
     return paper?.preview_text ?? "";
   });
 
-/** Public: catalog-wide stats calculated from real DB rows. */
+/** Public: catalog-wide stats calculated from real DB rows (memoized). */
 export const getCatalogStats = createServerFn({ method: "GET" }).handler(async () => {
-  const supabase = serverPublishableClient();
-  const { data, error } = await supabase
-    .from("papers")
-    .select("course, updated_at")
-    .eq("published", true);
-  if (error) throw new Error(error.message);
-  const rows = data ?? [];
-  const courses = new Set(rows.map((r) => r.course));
-  const latest = rows.reduce<string | null>(
-    (acc, r) => (!acc || r.updated_at > acc ? r.updated_at : acc),
-    null,
-  );
-  return {
-    totalPapers: rows.length,
-    totalCourses: courses.size,
-    latestUpdate: latest,
-  };
+  const { cached } = await import("./server-cache");
+  return cached("papers:stats", 120_000, async () => {
+    const supabase = serverPublishableClient();
+    const { data, error } = await supabase
+      .from("papers")
+      .select("course, updated_at")
+      .eq("published", true);
+    if (error) throw new Error(error.message);
+    const rows = data ?? [];
+    const courses = new Set(rows.map((r) => r.course));
+    const latest = rows.reduce<string | null>(
+      (acc, r) => (!acc || r.updated_at > acc ? r.updated_at : acc),
+      null,
+    );
+    return {
+      totalPapers: rows.length,
+      totalCourses: courses.size,
+      latestUpdate: latest,
+    };
+  });
 });
+
 
 /** Public: aggregate rating + a handful of reviews, for the paper detail page's Product structured data. */
 export const getPaperReviewsSummary = createServerFn({ method: "GET" })
