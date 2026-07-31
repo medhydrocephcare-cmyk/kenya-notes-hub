@@ -14,18 +14,22 @@ import { serverPublishableClient } from "./papers.server";
 
 type PaperRow = Database["public"]["Tables"]["papers"]["Row"];
 
-/** Public: list every published paper. */
+/** Public: list every published paper (memoized per server instance for speed). */
 export const listPapers = createServerFn({ method: "GET" }).handler(async () => {
-  const supabase = serverPublishableClient();
-  const { data, error } = await supabase
-    .from("papers")
-    .select("id, course, level, title, description, price_kes, discount_price_kes, sitting, updated_at, created_at, category, pages, file_size_bytes, thumbnail_url, syllabus_version, tags, download_count, preview_pdf_key, full_pdf_key, featured, year, published")
-    .eq("published", true)
-    .order("featured", { ascending: false })
-    .order("updated_at", { ascending: false });
-  if (error) throw new Error(error.message);
-  return (data ?? []).map((row) => rowToPaper(row as PaperRow));
+  const { cached } = await import("./server-cache");
+  return cached("papers:all", 120_000, async () => {
+    const supabase = serverPublishableClient();
+    const { data, error } = await supabase
+      .from("papers")
+      .select("id, course, level, title, description, price_kes, discount_price_kes, sitting, updated_at, created_at, category, pages, file_size_bytes, thumbnail_url, syllabus_version, tags, download_count, preview_pdf_key, full_pdf_key, featured, year, published")
+      .eq("published", true)
+      .order("featured", { ascending: false })
+      .order("updated_at", { ascending: false });
+    if (error) throw new Error(error.message);
+    return (data ?? []).map((row) => rowToPaper(row as PaperRow));
+  });
 });
+
 
 /** Public: heavy indexed PDF text only for the opened paper page. */
 export const getPaperIndexContent = createServerFn({ method: "GET" })
