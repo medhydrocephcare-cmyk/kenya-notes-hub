@@ -11,6 +11,8 @@ import { getPaperIndexContent, getPaperReviewsSummary } from "@/lib/papers.funct
 import { allPapersQueryOptions } from "@/lib/papers.queries";
 import { findPaper, sittingLabel } from "@/lib/paper-catalog";
 import { SITE, SITE_URL } from "@/lib/site-config";
+import { digitalOffer } from "@/lib/product-schema";
+
 import { paperPath, paperUrlParam } from "@/lib/paper-slugs";
 import {
   Download,
