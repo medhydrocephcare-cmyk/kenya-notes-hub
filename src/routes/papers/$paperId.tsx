@@ -42,9 +42,18 @@ export const Route = createFileRoute("/papers/$paperId")({
     const course = getCourse(paper.courseSlug);
     const level = getLevel(paper.courseSlug, paper.levelSlug);
     if (!course || !level) throw notFound();
-    const previewText = await getPaperIndexContent({ data: { paperId: paper.id } });
-    const reviewsSummary = await getPaperReviewsSummary({ data: { paperId: paper.id } });
+    // Fetch preview text + reviews in parallel instead of sequentially (faster TTFB).
+    const [rawPreviewText, reviewsSummary] = await Promise.all([
+      getPaperIndexContent({ data: { paperId: paper.id } }),
+      getPaperReviewsSummary({ data: { paperId: paper.id } }),
+    ]);
+    // Cap indexed text so the SSR payload stays small; crawlers only need a sample.
+    const previewText = rawPreviewText ? rawPreviewText.slice(0, 8000) : "";
     const canonicalPath = paperPath(paper);
+    // Google Merchant listings require an `image` on every Product — always resolve one.
+    const rawImage = paper.thumbnailUrl?.startsWith("https://")
+      ? paper.thumbnailUrl
+      : `${SITE_URL}${subjectImageFor(paper.title, paper.courseSlug)}`;
     return {
       paperId: paper.id,
       canonicalPath,
@@ -54,9 +63,11 @@ export const Route = createFileRoute("/papers/$paperId")({
       seoDesc: paper.description,
       price: paper.price,
       thumbnailUrl: paper.thumbnailUrl,
+      imageUrl: rawImage,
       previewText,
       reviewsSummary,
     };
+
   },
   head: ({ loaderData }) => ({
     meta: loaderData
