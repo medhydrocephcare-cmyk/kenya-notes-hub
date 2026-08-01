@@ -33,25 +33,6 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-40 w-full">
-      <div className="bg-brand-gradient text-primary-foreground">
-        <div className="mx-auto flex h-9 max-w-7xl items-center justify-between gap-2 px-3 text-[11px] sm:text-xs sm:px-4">
-          <div className="flex min-w-0 items-center gap-4">
-            <span className="hidden items-center gap-1.5 sm:inline-flex">
-              <Phone className="h-3 w-3" /> {SITE.supportPhone}
-            </span>
-            <span className="hidden items-center gap-1.5 md:inline-flex">
-              <Mail className="h-3 w-3" /> {SITE.supportEmail}
-            </span>
-            <span className="truncate sm:hidden">📞 {SITE.supportPhone} · Pay with M-Pesa</span>
-          </div>
-          <div className="flex shrink-0 items-center gap-2 sm:gap-3">
-            <span className="rounded-full bg-gold px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-gold-foreground">
-              Sale
-            </span>
-            <span className="hidden sm:inline">Free preview on every paper • August 2026 sitting live</span>
-          </div>
-        </div>
-      </div>
 
       <div className="border-b border-border/60 bg-background/95 shadow-sm backdrop-blur">
         <div className="mx-auto flex h-16 max-w-7xl items-center gap-3 px-3 sm:px-4">
