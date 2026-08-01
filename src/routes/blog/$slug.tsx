@@ -30,13 +30,12 @@ export const Route = createFileRoute("/blog/$slug")({
           { property: "og:type", content: "article" },
           { property: "og:url", content: loaderData.canonical },
           { name: "twitter:card", content: "summary_large_image" },
+          { name: "keywords", content: keywords(loaderData.post.title.toLowerCase(), "kasneb study guide") },
           ...(loaderData.post.coverImageUrl?.startsWith("https://")
-            ? [
-                { property: "og:image", content: loaderData.post.coverImageUrl },
-                { name: "twitter:image", content: loaderData.post.coverImageUrl },
-              ]
-            : []),
+            ? socialImageMeta(loaderData.post.coverImageUrl)
+            : socialImageMeta()),
         ]
+
       : [{ title: "Article not found" }, { name: "robots", content: "noindex" }],
     links: loaderData ? [{ rel: "canonical", href: loaderData.canonical }] : undefined,
     scripts: loaderData
