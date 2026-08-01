@@ -13,6 +13,8 @@ import { findPaper, sittingLabel } from "@/lib/paper-catalog";
 import { SITE, SITE_URL } from "@/lib/site-config";
 import { digitalOffer } from "@/lib/product-schema";
 import { subjectImageFor } from "@/lib/subject-image";
+import { keywords } from "@/lib/seo";
+
 
 
 import { paperPath, paperUrlParam } from "@/lib/paper-slugs";
