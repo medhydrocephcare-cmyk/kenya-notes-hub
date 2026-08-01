@@ -7,6 +7,8 @@ import { ArrowLeft, Clock } from "lucide-react";
 import { getBlogPost } from "@/lib/blog.functions";
 import { renderMarkdown } from "@/lib/markdown";
 import { SITE, SITE_URL } from "@/lib/site-config";
+import { keywords, socialImageMeta } from "@/lib/seo";
+
 
 export const Route = createFileRoute("/blog/$slug")({
   loader: async ({ params }) => {

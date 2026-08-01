@@ -351,11 +351,46 @@ function Home() {
 
       <LatestBlog />
       <TestimonialsSection />
+      <PopularSearches />
 
       <SiteFooter />
     </div>
   );
 }
+
+function PopularSearches() {
+  return (
+    <section className="border-t border-border/60 bg-surface/40 py-12">
+      <div className="mx-auto max-w-7xl px-4">
+        <h2 className="font-display text-2xl font-extrabold tracking-tight">
+          Popular KASNEB past papers &amp; notes searches
+        </h2>
+        <p className="mt-2 max-w-3xl text-sm text-muted-foreground">
+          Students in Kenya use {SITE.name} to download KASNEB past papers with answers, revision kits and
+          updated study notes in PDF — for CPA, ATD, CS, CIFA, CCP, CICT, DCM and DICT. Every paper carries a
+          free preview, and payment is M-Pesa only with an instant download link.
+        </p>
+        <div className="mt-6 flex flex-wrap gap-2">
+          {courses.flatMap((c) => [
+            { label: `${c.code} past papers with answers`, slug: c.slug },
+            { label: `${c.code} notes PDF`, slug: c.slug },
+            { label: `${c.code} revision kit`, slug: c.slug },
+          ]).map((item) => (
+            <Link
+              key={item.label}
+              to="/courses/$courseSlug"
+              params={{ courseSlug: item.slug }}
+              className="rounded-full border border-border bg-background px-3 py-1.5 text-xs font-medium text-foreground transition hover:border-brand hover:text-brand"
+            >
+              {item.label}
+            </Link>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 
 function LatestBlog() {
   const fetchPosts = useServerFn(listBlogPosts);
