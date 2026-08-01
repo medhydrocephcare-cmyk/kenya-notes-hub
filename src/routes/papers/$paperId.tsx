@@ -13,6 +13,8 @@ import { findPaper, sittingLabel } from "@/lib/paper-catalog";
 import { SITE, SITE_URL } from "@/lib/site-config";
 import { digitalOffer } from "@/lib/product-schema";
 import { subjectImageFor } from "@/lib/subject-image";
+import { keywords } from "@/lib/seo";
+
 
 
 import { paperPath, paperUrlParam } from "@/lib/paper-slugs";
@@ -82,7 +84,14 @@ export const Route = createFileRoute("/papers/$paperId")({
           { property: "og:url", content: `${SITE_URL}${loaderData.canonicalPath}` },
           { name: "twitter:card", content: "summary_large_image" },
           { property: "og:image", content: loaderData.imageUrl },
+          { property: "og:image:alt", content: loaderData.seoTitle },
           { name: "twitter:image", content: loaderData.imageUrl },
+          { name: "keywords", content: keywords(
+            loaderData.seoTitle.toLowerCase(),
+            `${loaderData.course.code.toLowerCase()} ${loaderData.level.name.toLowerCase()} past papers`,
+            `${loaderData.course.code.toLowerCase()} past papers with answers pdf`,
+          ) },
+
 
         ]
       : [{ title: "Paper not found" }, { name: "robots", content: "noindex" }],

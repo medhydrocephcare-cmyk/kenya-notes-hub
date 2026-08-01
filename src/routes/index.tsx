@@ -16,6 +16,8 @@ import {
 import { countByCourse } from "@/lib/paper-catalog";
 import { listBlogPosts } from "@/lib/blog.functions";
 import { SITE, SITE_URL } from "@/lib/site-config";
+import { keywords, socialImageMeta } from "@/lib/seo";
+
 import {
   ArrowRight,
   Sparkles,
@@ -36,16 +38,62 @@ export const Route = createFileRoute("/")({
   },
   head: () => ({
     meta: [
-      { title: `KASNEB Past Papers & Notes Kenya | ${SITE.name}` },
-      { name: "description", content: `Updated KASNEB & KNEC notes, revision kits and past papers with answers. CPA, ATD, CS, CIFA and more. Pay with M-Pesa, download instantly.` },
-      { property: "og:title", content: `${SITE.name} — KASNEB & KNEC study notes` },
-      { property: "og:description", content: "Kenya's fastest-growing shop for updated KASNEB notes and past-paper answers. Free preview on every product." },
+      { title: "KASNEB Past Papers with Answers, Notes & Revision Kits | Kenya" },
+      { name: "description", content: "Download KASNEB & KNEC past papers with answers, updated notes and revision kits for CPA, ATD, CS, CIFA, CCP, CICT, DCM & DICT. Free preview, M-Pesa checkout, instant PDF." },
+      { name: "keywords", content: keywords("kasneb past papers with answers pdf download", "kasnebpapers") },
+      { property: "og:title", content: "KASNEB Past Papers with Answers, Notes & Revision Kits" },
+      { property: "og:description", content: "CPA, ATD, CS, CIFA, CCP & CICT past papers with model answers plus updated notes. Free preview on every paper, instant PDF download via M-Pesa." },
       { property: "og:type", content: "website" },
       { property: "og:url", content: SITE_URL },
       { name: "twitter:card", content: "summary_large_image" },
+      ...socialImageMeta(),
     ],
     links: [{ rel: "canonical", href: SITE_URL }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: [
+            {
+              "@type": "Question",
+              name: "Where can I download KASNEB past papers with answers?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: `You can download KASNEB past papers with model answers for CPA, ATD, CS, CIFA, CCP, CICT, DCM and DICT on ${SITE.name}. Every paper has a free preview and is delivered as an instant PDF download after M-Pesa payment.`,
+              },
+            },
+            {
+              "@type": "Question",
+              name: "Are the KASNEB revision kits updated for the latest syllabus?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "Yes. Notes, revision kits and past-paper answers are revised each sitting to match the current KASNEB syllabus, including the latest 2026 sittings.",
+              },
+            },
+            {
+              "@type": "Question",
+              name: "How do I pay for KASNEB notes and past papers?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "Checkout is M-Pesa only. Enter your phone number, approve the STK push prompt, and your download link is unlocked immediately.",
+              },
+            },
+            {
+              "@type": "Question",
+              name: "Which KASNEB courses are covered?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "CPA (Foundation, Intermediate, Advanced), ATD, CS, CIFA, CCP, CICT, DCM, DICT and FAB, plus KNEC materials.",
+              },
+            },
+          ],
+        }),
+      },
+    ],
   }),
+
   errorComponent: ({ error }) => (
     <div className="grid min-h-screen place-items-center p-8 text-center text-sm text-muted-foreground">
       Failed to load catalog: {error.message}
@@ -303,11 +351,46 @@ function Home() {
 
       <LatestBlog />
       <TestimonialsSection />
+      <PopularSearches />
 
       <SiteFooter />
     </div>
   );
 }
+
+function PopularSearches() {
+  return (
+    <section className="border-t border-border/60 bg-surface/40 py-12">
+      <div className="mx-auto max-w-7xl px-4">
+        <h2 className="font-display text-2xl font-extrabold tracking-tight">
+          Popular KASNEB past papers &amp; notes searches
+        </h2>
+        <p className="mt-2 max-w-3xl text-sm text-muted-foreground">
+          Students in Kenya use {SITE.name} to download KASNEB past papers with answers, revision kits and
+          updated study notes in PDF — for CPA, ATD, CS, CIFA, CCP, CICT, DCM and DICT. Every paper carries a
+          free preview, and payment is M-Pesa only with an instant download link.
+        </p>
+        <div className="mt-6 flex flex-wrap gap-2">
+          {courses.flatMap((c) => [
+            { label: `${c.code} past papers with answers`, slug: c.slug },
+            { label: `${c.code} notes PDF`, slug: c.slug },
+            { label: `${c.code} revision kit`, slug: c.slug },
+          ]).map((item) => (
+            <Link
+              key={item.label}
+              to="/courses/$courseSlug"
+              params={{ courseSlug: item.slug }}
+              className="rounded-full border border-border bg-background px-3 py-1.5 text-xs font-medium text-foreground transition hover:border-brand hover:text-brand"
+            >
+              {item.label}
+            </Link>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 
 function LatestBlog() {
   const fetchPosts = useServerFn(listBlogPosts);

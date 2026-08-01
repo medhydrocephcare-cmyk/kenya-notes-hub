@@ -7,6 +7,7 @@ import { getCourse, getLevelsForCourse } from "@/lib/data";
 import { allPapersQueryOptions } from "@/lib/papers.queries";
 import { papersByLevel } from "@/lib/paper-catalog";
 import { SITE, SITE_URL } from "@/lib/site-config";
+import { keywords, socialImageMeta } from "@/lib/seo";
 import { ChevronRight, FileText, ArrowRight } from "lucide-react";
 
 export const Route = createFileRoute("/courses/$courseSlug/")({
@@ -19,17 +20,42 @@ export const Route = createFileRoute("/courses/$courseSlug/")({
   head: ({ loaderData }) => ({
     meta: loaderData
       ? [
-          { title: `${loaderData.course.name} — Notes & past papers | ${SITE.name}` },
-          { name: "description", content: `${loaderData.course.name} (${loaderData.course.code}) notes, revision kits and past-paper answers organised by level. Free preview on every product.` },
-          { property: "og:title", content: `${loaderData.course.name} — ${SITE.name}` },
+          { title: `${loaderData.course.code} Past Papers with Answers, Notes & Revision Kits` },
+          { name: "description", content: `Download ${loaderData.course.code} (${loaderData.course.name}) KASNEB past papers with model answers, updated notes and revision kits for every level. Free preview, instant PDF, M-Pesa checkout.` },
+          { name: "keywords", content: keywords(
+            `${loaderData.course.code.toLowerCase()} past papers`,
+            `${loaderData.course.code.toLowerCase()} past papers with answers`,
+            `${loaderData.course.code.toLowerCase()} notes pdf`,
+            `${loaderData.course.code.toLowerCase()} revision kit`,
+            `${loaderData.course.name.toLowerCase()} kasneb`,
+          ) },
+          { property: "og:title", content: `${loaderData.course.code} past papers with answers — ${SITE.name}` },
           { property: "og:description", content: loaderData.course.description },
           { property: "og:type", content: "website" },
           { property: "og:url", content: `${SITE_URL}/courses/${loaderData.course.slug}` },
           { name: "twitter:card", content: "summary_large_image" },
+          ...socialImageMeta(),
         ]
       : [{ title: "Course not found" }, { name: "robots", content: "noindex" }],
     links: loaderData ? [{ rel: "canonical", href: `${SITE_URL}/courses/${loaderData.course.slug}` }] : undefined,
+    scripts: loaderData
+      ? [
+          {
+            type: "application/ld+json",
+            children: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "BreadcrumbList",
+              itemListElement: [
+                { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+                { "@type": "ListItem", position: 2, name: "Courses", item: `${SITE_URL}/courses` },
+                { "@type": "ListItem", position: 3, name: loaderData.course.code, item: `${SITE_URL}/courses/${loaderData.course.slug}` },
+              ],
+            }),
+          },
+        ]
+      : undefined,
   }),
+
   errorComponent: ({ error }) => (
     <div className="grid min-h-screen place-items-center p-8 text-sm text-muted-foreground">{error.message}</div>
   ),

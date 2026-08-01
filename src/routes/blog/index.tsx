@@ -9,20 +9,24 @@ import { Badge } from "@/components/ui/badge";
 import { Clock, ArrowRight, BookOpen, Loader2 } from "lucide-react";
 import { listBlogPosts } from "@/lib/blog.functions";
 import { SITE, SITE_URL } from "@/lib/site-config";
+import { keywords, socialImageMeta } from "@/lib/seo";
 
 export const Route = createFileRoute("/blog/")({
   head: () => ({
     meta: [
-      { title: `Study Tips & KASNEB Guides — ${SITE.name} Blog` },
-      { name: "description", content: "Study strategies, KASNEB syllabus updates, revision tips and career guides for accounting, IT and credit students in Kenya." },
-      { property: "og:title", content: `${SITE.name} Blog — KASNEB study tips` },
-      { property: "og:description", content: "Fresh study guides and past-paper walkthroughs from qualified Kenyan tutors." },
+      { title: "KASNEB Study Tips, Syllabus Guides & Exam Advice — Blog" },
+      { name: "description", content: "KASNEB study tips, syllabus breakdowns, revision timetables, exam-day checklists and career guides for CPA, ATD, CS, CIFA and CCP students in Kenya." },
+      { name: "keywords", content: keywords("kasneb study tips", "kasneb syllabus breakdown", "cpa revision timetable", "kasneb exam guide kenya") },
+      { property: "og:title", content: `KASNEB study tips and exam guides — ${SITE.name} Blog` },
+      { property: "og:description", content: "Practical revision strategies, syllabus updates and past-paper walkthroughs written by qualified Kenyan tutors." },
       { property: "og:type", content: "website" },
       { property: "og:url", content: `${SITE_URL}/blog` },
       { name: "twitter:card", content: "summary_large_image" },
+      ...socialImageMeta(),
     ],
     links: [{ rel: "canonical", href: `${SITE_URL}/blog` }],
   }),
+
   component: BlogIndex,
 });
 

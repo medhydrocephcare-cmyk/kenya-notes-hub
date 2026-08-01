@@ -8,21 +8,25 @@ import { courses } from "@/lib/data";
 import { allPapersQueryOptions } from "@/lib/papers.queries";
 import { LayoutGrid } from "lucide-react";
 import { SITE, SITE_URL } from "@/lib/site-config";
+import { keywords, socialImageMeta } from "@/lib/seo";
 
 export const Route = createFileRoute("/courses/")({
   loader: ({ context }) => context.queryClient.ensureQueryData(allPapersQueryOptions),
   head: () => ({
     meta: [
-      { title: `Shop all KASNEB & KNEC papers — ${SITE.name}` },
-      { name: "description", content: "Browse every KASNEB and KNEC paper, note and revision kit. CPA, ATD, CS, CIFA, CCP, CICT and more. Free preview on every product." },
-      { property: "og:title", content: `All KASNEB & KNEC papers — ${SITE.name}` },
-      { property: "og:description", content: "Notes, revision kits and past-paper answers organised by course and level." },
+      { title: "All KASNEB Past Papers, Notes & Revision Kits — CPA, ATD, CS, CIFA" },
+      { name: "description", content: "Browse every KASNEB and KNEC past paper with answers, note and revision kit — CPA, ATD, CS, CIFA, CCP, CICT, DCM, DICT. Free preview, instant PDF download." },
+      { name: "keywords", content: keywords("all kasneb past papers", "kasneb revision kits download", "kasneb notes shop kenya") },
+      { property: "og:title", content: `All KASNEB & KNEC past papers, notes and revision kits — ${SITE.name}` },
+      { property: "og:description", content: "Every KASNEB course and level in one shop: past papers with model answers, notes and revision kits. Pay with M-Pesa, download instantly." },
       { property: "og:type", content: "website" },
       { property: "og:url", content: `${SITE_URL}/courses` },
       { name: "twitter:card", content: "summary_large_image" },
+      ...socialImageMeta(),
     ],
     links: [{ rel: "canonical", href: `${SITE_URL}/courses` }],
   }),
+
   errorComponent: ({ error }) => (
     <div className="grid min-h-screen place-items-center p-8 text-sm text-muted-foreground">{error.message}</div>
   ),

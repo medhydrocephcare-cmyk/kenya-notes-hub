@@ -8,6 +8,7 @@ import { getCourse, getLevel } from "@/lib/data";
 import { allPapersQueryOptions } from "@/lib/papers.queries";
 import { papersByLevel } from "@/lib/paper-catalog";
 import { SITE, SITE_URL } from "@/lib/site-config";
+import { keywords, socialImageMeta } from "@/lib/seo";
 import { ChevronRight, LayoutGrid } from "lucide-react";
 
 export const Route = createFileRoute("/courses/$courseSlug/$levelSlug/")({
@@ -21,17 +22,41 @@ export const Route = createFileRoute("/courses/$courseSlug/$levelSlug/")({
   head: ({ loaderData }) => ({
     meta: loaderData
       ? [
-          { title: `${loaderData.course.code} ${loaderData.level.name} — Notes & past papers | ${SITE.name}` },
-          { name: "description", content: `${loaderData.course.name} ${loaderData.level.name} notes, revision kits and past-paper answers. Free preview on every paper.` },
-          { property: "og:title", content: `${loaderData.course.code} ${loaderData.level.name} — ${SITE.name}` },
-          { property: "og:description", content: `Papers, notes and answers for ${loaderData.course.name} ${loaderData.level.name}.` },
+          { title: `${loaderData.course.code} ${loaderData.level.name} Past Papers with Answers & Notes` },
+          { name: "description", content: `${loaderData.course.name} ${loaderData.level.name} KASNEB past papers with model answers, revision kits and updated notes. Free preview on every paper, instant PDF download via M-Pesa.` },
+          { name: "keywords", content: keywords(
+            `${loaderData.course.code.toLowerCase()} ${loaderData.level.name.toLowerCase()} past papers`,
+            `${loaderData.course.code.toLowerCase()} ${loaderData.level.name.toLowerCase()} notes`,
+            `${loaderData.course.code.toLowerCase()} ${loaderData.level.name.toLowerCase()} revision kit`,
+          ) },
+          { property: "og:title", content: `${loaderData.course.code} ${loaderData.level.name} past papers & answers — ${SITE.name}` },
+          { property: "og:description", content: `Every ${loaderData.course.name} ${loaderData.level.name} paper, note and model-answer revision kit in one place.` },
           { property: "og:type", content: "website" },
           { property: "og:url", content: `${SITE_URL}/courses/${loaderData.course.slug}/${loaderData.level.slug}` },
           { name: "twitter:card", content: "summary_large_image" },
+          ...socialImageMeta(),
         ]
       : [{ title: "Not found" }, { name: "robots", content: "noindex" }],
     links: loaderData ? [{ rel: "canonical", href: `${SITE_URL}/courses/${loaderData.course.slug}/${loaderData.level.slug}` }] : undefined,
+    scripts: loaderData
+      ? [
+          {
+            type: "application/ld+json",
+            children: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "BreadcrumbList",
+              itemListElement: [
+                { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+                { "@type": "ListItem", position: 2, name: "Courses", item: `${SITE_URL}/courses` },
+                { "@type": "ListItem", position: 3, name: loaderData.course.code, item: `${SITE_URL}/courses/${loaderData.course.slug}` },
+                { "@type": "ListItem", position: 4, name: loaderData.level.name, item: `${SITE_URL}/courses/${loaderData.course.slug}/${loaderData.level.slug}` },
+              ],
+            }),
+          },
+        ]
+      : undefined,
   }),
+
   errorComponent: ({ error }) => (
     <div className="grid min-h-screen place-items-center p-8 text-sm text-muted-foreground">{error.message}</div>
   ),
