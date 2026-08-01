@@ -16,6 +16,8 @@ import {
 import { countByCourse } from "@/lib/paper-catalog";
 import { listBlogPosts } from "@/lib/blog.functions";
 import { SITE, SITE_URL } from "@/lib/site-config";
+import { keywords, socialImageMeta } from "@/lib/seo";
+
 import {
   ArrowRight,
   Sparkles,
