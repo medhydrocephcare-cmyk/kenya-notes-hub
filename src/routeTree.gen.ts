@@ -9,11 +9,14 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SitemapPapersDotxmlRouteImport } from './routes/sitemap-papers[.]xml'
 import { Route as SitemapPagesDotxmlRouteImport } from './routes/sitemap-pages[.]xml'
 import { Route as SitemapCoursesDotxmlRouteImport } from './routes/sitemap-courses[.]xml'
 import { Route as SitemapBlogDotxmlRouteImport } from './routes/sitemap-blog[.]xml'
+import { Route as RefundsRouteImport } from './routes/refunds'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
 import { Route as FaqRouteImport } from './routes/faq'
@@ -44,6 +47,11 @@ import { Route as ApiPublicAdminOrdersRouteImport } from './routes/api/public/ad
 import { Route as ApiPublicPalplussWebhookSecretRouteImport } from './routes/api/public/palpluss/webhook/$secret'
 import { Route as ApiPublicDownloadReferencePaperIdRouteImport } from './routes/api/public/download/$reference/$paperId'
 
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
@@ -67,6 +75,16 @@ const SitemapCoursesDotxmlRoute = SitemapCoursesDotxmlRouteImport.update({
 const SitemapBlogDotxmlRoute = SitemapBlogDotxmlRouteImport.update({
   id: '/sitemap-blog.xml',
   path: '/sitemap-blog.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RefundsRoute = RefundsRouteImport.update({
+  id: '/refunds',
+  path: '/refunds',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PricingRoute = PricingRouteImport.update({
@@ -234,11 +252,14 @@ export interface FileRoutesByFullPath {
   '/faq': typeof FaqRoute
   '/how-it-works': typeof HowItWorksRoute
   '/pricing': typeof PricingRoute
+  '/privacy': typeof PrivacyRoute
+  '/refunds': typeof RefundsRoute
   '/sitemap-blog.xml': typeof SitemapBlogDotxmlRoute
   '/sitemap-courses.xml': typeof SitemapCoursesDotxmlRoute
   '/sitemap-pages.xml': typeof SitemapPagesDotxmlRoute
   '/sitemap-papers.xml': typeof SitemapPapersDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/terms': typeof TermsRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/order/$reference': typeof OrderReferenceRoute
   '/papers/$paperId': typeof PapersPaperIdRoute
@@ -270,11 +291,14 @@ export interface FileRoutesByTo {
   '/faq': typeof FaqRoute
   '/how-it-works': typeof HowItWorksRoute
   '/pricing': typeof PricingRoute
+  '/privacy': typeof PrivacyRoute
+  '/refunds': typeof RefundsRoute
   '/sitemap-blog.xml': typeof SitemapBlogDotxmlRoute
   '/sitemap-courses.xml': typeof SitemapCoursesDotxmlRoute
   '/sitemap-pages.xml': typeof SitemapPagesDotxmlRoute
   '/sitemap-papers.xml': typeof SitemapPapersDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/terms': typeof TermsRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/order/$reference': typeof OrderReferenceRoute
   '/papers/$paperId': typeof PapersPaperIdRoute
@@ -307,11 +331,14 @@ export interface FileRoutesById {
   '/faq': typeof FaqRoute
   '/how-it-works': typeof HowItWorksRoute
   '/pricing': typeof PricingRoute
+  '/privacy': typeof PrivacyRoute
+  '/refunds': typeof RefundsRoute
   '/sitemap-blog.xml': typeof SitemapBlogDotxmlRoute
   '/sitemap-courses.xml': typeof SitemapCoursesDotxmlRoute
   '/sitemap-pages.xml': typeof SitemapPagesDotxmlRoute
   '/sitemap-papers.xml': typeof SitemapPapersDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/terms': typeof TermsRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/order/$reference': typeof OrderReferenceRoute
   '/papers/$paperId': typeof PapersPaperIdRoute
@@ -345,11 +372,14 @@ export interface FileRouteTypes {
     | '/faq'
     | '/how-it-works'
     | '/pricing'
+    | '/privacy'
+    | '/refunds'
     | '/sitemap-blog.xml'
     | '/sitemap-courses.xml'
     | '/sitemap-pages.xml'
     | '/sitemap-papers.xml'
     | '/sitemap.xml'
+    | '/terms'
     | '/blog/$slug'
     | '/order/$reference'
     | '/papers/$paperId'
@@ -381,11 +411,14 @@ export interface FileRouteTypes {
     | '/faq'
     | '/how-it-works'
     | '/pricing'
+    | '/privacy'
+    | '/refunds'
     | '/sitemap-blog.xml'
     | '/sitemap-courses.xml'
     | '/sitemap-pages.xml'
     | '/sitemap-papers.xml'
     | '/sitemap.xml'
+    | '/terms'
     | '/blog/$slug'
     | '/order/$reference'
     | '/papers/$paperId'
@@ -417,11 +450,14 @@ export interface FileRouteTypes {
     | '/faq'
     | '/how-it-works'
     | '/pricing'
+    | '/privacy'
+    | '/refunds'
     | '/sitemap-blog.xml'
     | '/sitemap-courses.xml'
     | '/sitemap-pages.xml'
     | '/sitemap-papers.xml'
     | '/sitemap.xml'
+    | '/terms'
     | '/blog/$slug'
     | '/order/$reference'
     | '/papers/$paperId'
@@ -454,11 +490,14 @@ export interface RootRouteChildren {
   FaqRoute: typeof FaqRoute
   HowItWorksRoute: typeof HowItWorksRoute
   PricingRoute: typeof PricingRoute
+  PrivacyRoute: typeof PrivacyRoute
+  RefundsRoute: typeof RefundsRoute
   SitemapBlogDotxmlRoute: typeof SitemapBlogDotxmlRoute
   SitemapCoursesDotxmlRoute: typeof SitemapCoursesDotxmlRoute
   SitemapPagesDotxmlRoute: typeof SitemapPagesDotxmlRoute
   SitemapPapersDotxmlRoute: typeof SitemapPapersDotxmlRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  TermsRoute: typeof TermsRoute
   BlogSlugRoute: typeof BlogSlugRoute
   OrderReferenceRoute: typeof OrderReferenceRoute
   PapersPaperIdRoute: typeof PapersPaperIdRoute
@@ -481,6 +520,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sitemap.xml': {
       id: '/sitemap.xml'
       path: '/sitemap.xml'
@@ -514,6 +560,20 @@ declare module '@tanstack/react-router' {
       path: '/sitemap-blog.xml'
       fullPath: '/sitemap-blog.xml'
       preLoaderRoute: typeof SitemapBlogDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/refunds': {
+      id: '/refunds'
+      path: '/refunds'
+      fullPath: '/refunds'
+      preLoaderRoute: typeof RefundsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/pricing': {
@@ -734,11 +794,14 @@ const rootRouteChildren: RootRouteChildren = {
   FaqRoute: FaqRoute,
   HowItWorksRoute: HowItWorksRoute,
   PricingRoute: PricingRoute,
+  PrivacyRoute: PrivacyRoute,
+  RefundsRoute: RefundsRoute,
   SitemapBlogDotxmlRoute: SitemapBlogDotxmlRoute,
   SitemapCoursesDotxmlRoute: SitemapCoursesDotxmlRoute,
   SitemapPagesDotxmlRoute: SitemapPagesDotxmlRoute,
   SitemapPapersDotxmlRoute: SitemapPapersDotxmlRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  TermsRoute: TermsRoute,
   BlogSlugRoute: BlogSlugRoute,
   OrderReferenceRoute: OrderReferenceRoute,
   PapersPaperIdRoute: PapersPaperIdRoute,
