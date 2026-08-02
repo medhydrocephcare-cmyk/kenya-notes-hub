@@ -99,10 +99,14 @@ export function SiteFooter() {
             <ul className="mt-4 space-y-2.5 text-sm text-sidebar-foreground/80">
               <li><Link to="/courses" className="hover:text-gold">All papers</Link></li>
               <li><Link to="/blog" className="hover:text-gold">Blog</Link></li>
-              <li><Link to="/courses" className="hover:text-gold">Revision kits</Link></li>
-              <li><Link to="/courses" className="hover:text-gold">Bundles</Link></li>
+              <li><Link to="/pricing" className="hover:text-gold">Pricing</Link></li>
+              <li><Link to="/how-it-works" className="hover:text-gold">How it works</Link></li>
+              <li><Link to="/faq" className="hover:text-gold">FAQ</Link></li>
+              <li><Link to="/about" className="hover:text-gold">About us</Link></li>
+              <li><Link to="/contact" className="hover:text-gold">Contact</Link></li>
               <li><Link to="/cart" className="hover:text-gold">Cart</Link></li>
               <li><Link to="/account" className="hover:text-gold">My downloads</Link></li>
+
             </ul>
           </div>
 
@@ -135,9 +139,10 @@ export function SiteFooter() {
           <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-4 py-5 text-xs text-sidebar-foreground/70 md:flex-row">
             <div>© {new Date().getFullYear()} {SITE.name}. Not affiliated with KASNEB or KNEC.</div>
             <div className="flex gap-4">
-              <a href="#" className="hover:text-gold">Terms</a>
-              <a href="#" className="hover:text-gold">Privacy</a>
-              <a href="#" className="hover:text-gold">Refunds</a>
+              <Link to="/terms" className="hover:text-gold">Terms</Link>
+              <Link to="/privacy" className="hover:text-gold">Privacy</Link>
+              <Link to="/refunds" className="hover:text-gold">Refunds</Link>
+
             </div>
           </div>
         </div>
