@@ -139,9 +139,10 @@ export function SiteFooter() {
           <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-4 py-5 text-xs text-sidebar-foreground/70 md:flex-row">
             <div>© {new Date().getFullYear()} {SITE.name}. Not affiliated with KASNEB or KNEC.</div>
             <div className="flex gap-4">
-              <a href="#" className="hover:text-gold">Terms</a>
-              <a href="#" className="hover:text-gold">Privacy</a>
-              <a href="#" className="hover:text-gold">Refunds</a>
+              <Link to="/terms" className="hover:text-gold">Terms</Link>
+              <Link to="/privacy" className="hover:text-gold">Privacy</Link>
+              <Link to="/refunds" className="hover:text-gold">Refunds</Link>
+
             </div>
           </div>
         </div>
