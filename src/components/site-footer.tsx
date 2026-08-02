@@ -99,10 +99,14 @@ export function SiteFooter() {
             <ul className="mt-4 space-y-2.5 text-sm text-sidebar-foreground/80">
               <li><Link to="/courses" className="hover:text-gold">All papers</Link></li>
               <li><Link to="/blog" className="hover:text-gold">Blog</Link></li>
-              <li><Link to="/courses" className="hover:text-gold">Revision kits</Link></li>
-              <li><Link to="/courses" className="hover:text-gold">Bundles</Link></li>
+              <li><Link to="/pricing" className="hover:text-gold">Pricing</Link></li>
+              <li><Link to="/how-it-works" className="hover:text-gold">How it works</Link></li>
+              <li><Link to="/faq" className="hover:text-gold">FAQ</Link></li>
+              <li><Link to="/about" className="hover:text-gold">About us</Link></li>
+              <li><Link to="/contact" className="hover:text-gold">Contact</Link></li>
               <li><Link to="/cart" className="hover:text-gold">Cart</Link></li>
               <li><Link to="/account" className="hover:text-gold">My downloads</Link></li>
+
             </ul>
           </div>
 
