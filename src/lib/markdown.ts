@@ -33,7 +33,9 @@ export function renderMarkdown(md: string): string {
 
     const h = /^(#{1,6})\s+(.*)$/.exec(line);
     if (h) {
-      const level = h[1].length;
+      // Demote H1 to H2: the page shell already renders the single page H1,
+      // so a markdown "# Title" would create a duplicate H1 (SEO issue).
+      const level = Math.min(6, Math.max(2, h[1].length === 1 ? 2 : h[1].length));
       out.push(`<h${level}>${inline(h[2])}</h${level}>`);
       i++;
       continue;
