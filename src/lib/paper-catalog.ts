@@ -55,8 +55,15 @@ export function countByCourse(all: Paper[], courseSlug: string): number {
   return papersByCourse(all, courseSlug).length;
 }
 
+const UUID_TAIL_RE = /([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/i;
+
 export function findPaper(all: Paper[], id: string): Paper | undefined {
-  return all.find((paper) => paper.id === id || paper.slug === id || paperUrlParam(paper) === id);
+  const direct = all.find((paper) => paper.id === id || paper.slug === id || paperUrlParam(paper) === id);
+  if (direct) return direct;
+  // Legacy indexed URLs like /papers/cpa-advanced-1-<uuid> — resolve by the trailing id
+  // so old crawled links redirect to the canonical slug instead of 404ing.
+  const tail = UUID_TAIL_RE.exec(id)?.[1];
+  return tail ? all.find((paper) => paper.id.toLowerCase() === tail.toLowerCase()) : undefined;
 }
 
 export function sittingLabel(paper: Paper): string {

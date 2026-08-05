@@ -13,7 +13,7 @@ import { findPaper, sittingLabel } from "@/lib/paper-catalog";
 import { SITE, SITE_URL } from "@/lib/site-config";
 import { digitalOffer } from "@/lib/product-schema";
 import { subjectImageFor } from "@/lib/subject-image";
-import { keywords } from "@/lib/seo";
+import { keywords, clampTitle, clampDescription } from "@/lib/seo";
 
 
 
@@ -76,10 +76,10 @@ export const Route = createFileRoute("/papers/$paperId")({
   head: ({ loaderData }) => ({
     meta: loaderData
       ? [
-          { title: `${loaderData.seoTitle} — ${loaderData.course.code} ${loaderData.level.name} past papers & answers` },
-          { name: "description", content: `${loaderData.seoDesc} Free preview. Instant PDF download. Pay securely with M-Pesa.` },
-          { property: "og:title", content: `${loaderData.seoTitle} — ${SITE.name}` },
-          { property: "og:description", content: loaderData.seoDesc },
+          { title: clampTitle(`${loaderData.seoTitle} — ${loaderData.course.code} past paper & answers`) },
+          { name: "description", content: clampDescription(`${loaderData.seoDesc || `${loaderData.seoTitle} for ${loaderData.course.code} ${loaderData.level.name}.`} Free preview, instant PDF download, pay with M-Pesa.`) },
+          { property: "og:title", content: clampTitle(`${loaderData.seoTitle} — ${SITE.name}`) },
+          { property: "og:description", content: clampDescription(loaderData.seoDesc || `${loaderData.seoTitle} — ${loaderData.course.code} ${loaderData.level.name} notes and past paper with answers.`) },
           { property: "og:type", content: "product" },
           { property: "og:url", content: `${SITE_URL}${loaderData.canonicalPath}` },
           { name: "twitter:card", content: "summary_large_image" },

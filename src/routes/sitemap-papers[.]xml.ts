@@ -30,18 +30,18 @@ export const Route = createFileRoute("/sitemap-papers.xml")({
         try {
           const { data } = await publicClient()
             .from("papers")
-            .select("course, level, title, full_pdf_key, preview_pdf_key, updated_at")
+            .select("course, level, title, updated_at")
             .eq("published", true)
             .order("updated_at", { ascending: false })
             .limit(50000);
           for (const paper of data ?? []) {
             entries.push({
+              // Must match rowToPaper()'s slug exactly (course + level + title),
+              // otherwise the sitemap advertises URLs the route 404s on.
               path: `/papers/${paperSlugFromFields({
                 course: paper.course,
                 level: paper.level,
                 title: paper.title,
-                fullPdfKey: paper.full_pdf_key,
-                previewPdfKey: paper.preview_pdf_key,
               })}`,
               lastmod: paper.updated_at?.slice(0, 10),
               changefreq: "weekly",

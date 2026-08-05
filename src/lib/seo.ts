@@ -49,6 +49,27 @@ export function keywords(...extra: string[]): string {
   return [...extra, ...BASE_KEYWORDS].join(", ");
 }
 
+/** Trim to a max length on a word boundary, without a trailing ellipsis for titles. */
+function clamp(value: string, max: number, ellipsis: boolean) {
+  const text = value.replace(/\s+/g, " ").trim();
+  if (text.length <= max) return text;
+  const budget = ellipsis ? max - 1 : max;
+  const cut = text.slice(0, budget);
+  const trimmed = cut.slice(0, Math.max(cut.lastIndexOf(" "), Math.floor(budget * 0.6))).replace(/[\s,;:\-–—]+$/, "");
+  return ellipsis ? `${trimmed}…` : trimmed;
+}
+
+/** Keep <title> within Google's ~60 character display limit. */
+export function clampTitle(value: string, max = 60): string {
+  return clamp(value, max, false);
+}
+
+/** Keep meta descriptions between ~70 and ~155 characters. */
+export function clampDescription(value: string, max = 155): string {
+  return clamp(value, max, true);
+}
+
+
 /** Standard social-preview meta entries for a page (absolute image URL). */
 export function socialImageMeta(image: string = OG_IMAGE) {
   return [
